@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool LP - ビジュアルダッシュボード</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #4EB5FF;
+            --primary-green: #38C172;
+            --accent-red: #FF6B6B;
+            --accent-yellow: #FFD93D;
+            --text-dark: #1a202c;
+            --text-gray: #4a5568;
+            --bg-light: #f7fafc;
+            --bg-white: #ffffff;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-hover: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .dashboard-header {
+            background: var(--bg-white);
+            box-shadow: var(--shadow);
+            padding: 24px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        
+        .dashboard-subtitle {
+            color: var(--text-gray);
+            font-size: 16px;
+        }
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .filter-section {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+        
+        .filter-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 20px;
+            border: 2px solid #e2e8f0;
+            background: var(--bg-white);
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: var(--text-gray);
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+        
+        .filter-btn.active {
+            background: var(--primary-blue);
+            border-color: var(--primary-blue);
+            color: white;
+        }
+        
+        .assets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .asset-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .asset-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .asset-preview {
+            width: 100%;
+            height: 200px;
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .asset-preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transform: scale(0.5);
+            transform-origin: top left;
+            width: 200%;
+            height: 200%;
+            pointer-events: none;
+        }
+        
+        .asset-info {
+            padding: 20px;
+        }
+        
+        .asset-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+        
+        .asset-description {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+        }
+        
+        .asset-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .asset-tag {
+            padding: 4px 12px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .asset-tag.primary {
+            background: rgba(78, 181, 255, 0.1);
+            color: var(--primary-blue);
+        }
+        
+        .asset-tag.success {
+            background: rgba(56, 193, 114, 0.1);
+            color: var(--primary-green);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--bg-white);
+            border-radius: 12px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: background 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: #e2e8f0;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .modal-iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        
+        .stats-section {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-top: 16px;
+        }
+        
+        .stat-card {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+        
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            .assets-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-title {
+                font-size: 24px;
+            }
+            
+            .modal-content {
+                max-width: 95%;
+                max-height: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1 class="dashboard-title">AIDXschool LP ビジュアルダッシュボード</h1>
+            <p class="dashboard-subtitle">プロジェクト内の全ての視覚的成果物を一覧で確認できます</p>
+        </div>
+    </header>
+    
+    <main class="dashboard-container">
+        <section class="stats-section">
+            <h2 class="filter-title">プロジェクト統計</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalPages">0</div>
+                    <div class="stat-label">総ページ数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="mainPages">0</div>
+                    <div class="stat-label">メインページ</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="utilityPages">0</div>
+                    <div class="stat-label">ユーティリティページ</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="assetFiles">0</div>
+                    <div class="stat-label">アセットファイル</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="filter-section">
+            <h2 class="filter-title">フィルター</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">すべて</button>
+                <button class="filter-btn" data-filter="landing">ランディングページ</button>
+                <button class="filter-btn" data-filter="utility">ユーティリティ</button>
+                <button class="filter-btn" data-filter="assets">アセット</button>
+                <button class="filter-btn" data-filter="legal">法的文書</button>
+            </div>
+        </section>
+        
+        <section class="assets-grid" id="assetsGrid">
+        </section>
+    </main>
+    
+    <div class="modal" id="previewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">プレビュー</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <iframe class="modal-iframe" id="modalIframe"></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const projectAssets = [
+            {
+                id: 'lp-main',
+                title: 'AI×ノーコード自動化 メインLP',
+                description: 'AI技術とノーコードツールを組み合わせた自動化サービスのメインランディングページ',
+                file: 'ai-biz-freemium-lp.html',
+                category: 'landing',
+                tags: ['メイン', 'LP', 'LINE連携']
+            },
+            {
+                id: 'lp-main-v2',
+                title: 'AI×ノーコード自動化 LP v2',
+                description: 'メインランディングページの改良版',
+                file: 'ai-biz-freemium-lp-v2.html',
+                category: 'landing',
+                tags: ['メイン', 'LP', 'v2']
+            },
+            {
+                id: 'lp-main-v3',
+                title: 'AI×ノーコード自動化 LP v3',
+                description: '全ビジュアル素材を活用した完全版ランディングページ。高度なアニメーションとインタラクティブ要素を実装',
+                file: 'ai-biz-freemium-lp-v3.html',
+                category: 'landing',
+                tags: ['メイン', 'LP', 'v3', '完全版']
+            },
+            {
+                id: 'lp-main-v4',
+                title: 'AI業務自動化診断 LP v4',
+                description: 'インタラクティブ診断型LP。パーソナライズされた提案を生成。ゲーミフィケーション要素とAIアバター搭載',
+                file: 'ai-biz-freemium-lp-v4.html',
+                category: 'landing',
+                tags: ['診断型', 'LP', 'v4', 'インタラクティブ']
+            },
+            {
+                id: 'lp-main-v5',
+                title: '業務改革ストーリー LP v5',
+                description: 'ストーリーテリング型没入体験LP。実話ベースの感動的な物語で訪問者を主人公に。音声ナレーション・リアルタイムチャット搭載',
+                file: 'ai-biz-freemium-lp-v5.html',
+                category: 'landing',
+                tags: ['ストーリー型', 'LP', 'v5', '没入体験']
+            },
+            {
+                id: 'lp-main-v6',
+                title: '共感型ストーリーテリング LP v6',
+                description: 'ペルソナの課題に深く共感し、実在する顧客の成功体験を中心に構成。感情に訴える共感型LP',
+                file: 'ai-biz-freemium-lp-v6.html',
+                category: 'landing',
+                tags: ['共感型', 'LP', 'v6', 'ストーリー']
+            },
+            {
+                id: 'lp-main-v4-improved',
+                title: 'AI業務自動化診断 LP v4改善版',
+                description: 'V4の過剰な余白を解消したコンパクト版。効率的なレイアウトで情報を整理',
+                file: 'ai-biz-freemium-lp-v4-improved.html',
+                category: 'landing',
+                tags: ['診断型', 'LP', 'v4改善版', 'コンパクト']
+            },
+            {
+                id: 'visual-assets',
+                title: 'ビジュアル素材集',
+                description: 'プロジェクトで使用されているビジュアルアセットとデザインコンポーネントの一覧',
+                file: 'lp-visual-assets.html',
+                category: 'assets',
+                tags: ['アセット', 'デザイン', 'コンポーネント']
+            },
+            {
+                id: 'visual-dashboard',
+                title: 'ビジュアルダッシュボード',
+                description: 'プロジェクト内の全ての視覚的成果物を一覧で確認できるダッシュボード',
+                file: 'visual-dashboard.html',
+                category: 'utility',
+                tags: ['ダッシュボード', '管理画面', 'ユーティリティ']
+            },
+            {
+                id: 'company',
+                title: '会社情報ページ',
+                description: '会社概要と企業情報を掲載したページ',
+                file: 'company.html',
+                category: 'utility',
+                tags: ['会社情報', 'ユーティリティ']
+            },
+            {
+                id: 'privacy',
+                title: 'プライバシーポリシー',
+                description: 'サービスのプライバシーポリシーに関する法的文書',
+                file: 'privacy-policy.html',
+                category: 'legal',
+                tags: ['法的文書', 'プライバシー']
+            },
+            {
+                id: 'terms',
+                title: '利用規約',
+                description: 'サービスの利用規約に関する法的文書',
+                file: 'terms.html',
+                category: 'legal',
+                tags: ['法的文書', '利用規約']
+            }
+        ];
+        
+        const assetFiles = [
+            {
+                id: 'animations-css',
+                title: 'アニメーションCSS',
+                description: 'プロジェクト全体で使用されるCSSアニメーション定義',
+                file: 'assets/animations.css',
+                category: 'assets',
+                tags: ['CSS', 'アニメーション']
+            },
+            {
+                id: 'animations-js',
+                title: 'アニメーションJS',
+                description: 'JavaScriptベースのアニメーション制御',
+                file: 'assets/animations.js',
+                category: 'assets',
+                tags: ['JavaScript', 'アニメーション']
+            },
+            {
+                id: 'icons-css',
+                title: 'アイコンCSS',
+                description: 'カスタムアイコンのスタイル定義',
+                file: 'assets/icons.css',
+                category: 'assets',
+                tags: ['CSS', 'アイコン']
+            },
+            {
+                id: 'loader-css',
+                title: 'ローダーCSS',
+                description: 'ローディングアニメーションのスタイル',
+                file: 'assets/loader.css',
+                category: 'assets',
+                tags: ['CSS', 'ローダー']
+            },
+            {
+                id: 'strategy-doc',
+                title: 'LP制作戦略ドキュメント',
+                description: '全LP制作の戦略・設計思想・意思決定の詳細な記録。各LPの制作背景と学びを文書化',
+                file: 'LP-Strategy-Documentation.md',
+                category: 'assets',
+                tags: ['ドキュメント', '戦略', '設計']
+            }
+        ];
+        
+        const allAssets = [...projectAssets, ...assetFiles];
+        
+        function updateStats() {
+            const totalPages = allAssets.length;
+            const mainPages = allAssets.filter(a => a.category === 'landing').length;
+            const utilityPages = allAssets.filter(a => a.category === 'utility').length;
+            const assetFilesCount = allAssets.filter(a => a.category === 'assets').length;
+            
+            document.getElementById('totalPages').textContent = totalPages;
+            document.getElementById('mainPages').textContent = mainPages;
+            document.getElementById('utilityPages').textContent = utilityPages;
+            document.getElementById('assetFiles').textContent = assetFilesCount;
+        }
+        
+        function createAssetCard(asset) {
+            const card = document.createElement('div');
+            card.className = 'asset-card';
+            card.dataset.category = asset.category;
+            card.onclick = () => openAsset(asset);
+            
+            const isHTML = asset.file.endsWith('.html');
+            const isCSS = asset.file.endsWith('.css');
+            const isJS = asset.file.endsWith('.js');
+            
+            card.innerHTML = `
+                <div class="asset-preview">
+                    ${isHTML ? `<iframe src="${asset.file}" loading="lazy"></iframe>` : 
+                      isCSS || isJS ? `<div style="font-family: monospace; padding: 20px; text-align: left; font-size: 12px; color: #4a5568;">
+                        ${isCSS ? 'CSS' : 'JavaScript'} ファイル<br>
+                        ${asset.file}
+                      </div>` : ''}
+                </div>
+                <div class="asset-info">
+                    <h3 class="asset-title">${asset.title}</h3>
+                    <p class="asset-description">${asset.description}</p>
+                    <div class="asset-tags">
+                        ${asset.tags.map(tag => `
+                            <span class="asset-tag ${asset.category === 'landing' ? 'primary' : asset.category === 'assets' ? 'success' : ''}">${tag}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        function renderAssets(filter = 'all') {
+            const grid = document.getElementById('assetsGrid');
+            grid.innerHTML = '';
+            
+            const filteredAssets = filter === 'all' 
+                ? allAssets 
+                : allAssets.filter(asset => asset.category === filter);
+            
+            filteredAssets.forEach(asset => {
+                grid.appendChild(createAssetCard(asset));
+            });
+        }
+        
+        function openAsset(asset) {
+            if (asset.file.endsWith('.html')) {
+                window.open(asset.file, '_blank');
+            } else {
+                openModal(asset);
+            }
+        }
+        
+        function openModal(asset) {
+            const modal = document.getElementById('previewModal');
+            const modalBody = document.querySelector('.modal-body');
+            const title = document.getElementById('modalTitle');
+            
+            title.textContent = asset.title;
+            
+            modalBody.innerHTML = `
+                <div style="padding: 40px; text-align: center;">
+                    <h3 style="margin-bottom: 20px;">${asset.title}</h3>
+                    <p style="color: #4a5568; margin-bottom: 24px;">${asset.description}</p>
+                    <p style="font-family: monospace; background: #f7fafc; padding: 12px; border-radius: 8px;">${asset.file}</p>
+                    <p style="margin-top: 20px; color: #718096;">このファイルタイプはプレビューできません。直接ファイルを確認してください。</p>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('previewModal');
+            const modalBody = document.querySelector('.modal-body');
+            modal.classList.remove('active');
+            
+            setTimeout(() => {
+                modalBody.innerHTML = '<iframe class="modal-iframe" id="modalIframe"></iframe>';
+            }, 300);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats();
+            renderAssets();
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderAssets(e.target.dataset.filter);
+                });
+            });
+            
+            window.addEventListener('click', (e) => {
+                const modal = document.getElementById('previewModal');
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

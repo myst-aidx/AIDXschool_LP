@@ -1,0 +1,339 @@
+/* SVG Icons and Icon Animations */
+
+/* Icon Base Styles */
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    transition: all 0.3s ease;
+}
+
+.icon-lg {
+    width: 48px;
+    height: 48px;
+}
+
+.icon-xl {
+    width: 64px;
+    height: 64px;
+}
+
+/* Play Icon (replacing ▶) */
+.icon-play {
+    position: relative;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 8px 0 8px 14px;
+    border-color: transparent transparent transparent currentColor;
+    margin-left: 2px;
+}
+
+.icon-play-animated {
+    animation: playPulse 2s ease-in-out infinite;
+}
+
+@keyframes playPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+/* Check Icon (replacing ✓) */
+.icon-check {
+    position: relative;
+}
+
+.icon-check::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 8px;
+    border-left: 3px solid currentColor;
+    border-bottom: 3px solid currentColor;
+    transform: rotate(-45deg);
+    top: 50%;
+    left: 50%;
+    margin-top: -6px;
+    margin-left: -8px;
+}
+
+.icon-check-animated {
+    animation: checkDraw 0.4s ease-out forwards;
+}
+
+@keyframes checkDraw {
+    from {
+        transform: scale(0) rotate(-45deg);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) rotate(-45deg);
+        opacity: 1;
+    }
+}
+
+/* Clock Icon (replacing ⏰) */
+.icon-clock {
+    position: relative;
+    border: 3px solid currentColor;
+    border-radius: 50%;
+}
+
+.icon-clock::before,
+.icon-clock::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+    left: 50%;
+    top: 50%;
+    transform-origin: center bottom;
+}
+
+.icon-clock::before {
+    width: 2px;
+    height: 35%;
+    transform: translate(-50%, -100%) rotate(90deg);
+}
+
+.icon-clock::after {
+    width: 2px;
+    height: 45%;
+    transform: translate(-50%, -100%) rotate(180deg);
+}
+
+.icon-clock-animated {
+    animation: clockTick 2s steps(12) infinite;
+}
+
+@keyframes clockTick {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Fire Icon (replacing 🔥) */
+.icon-fire {
+    position: relative;
+    width: 24px;
+    height: 30px;
+    background: linear-gradient(to top, #ff6b6b 0%, #ffa500 50%, #ffdd00 100%);
+    border-radius: 0 50% 50% 50%;
+    transform: rotate(-45deg);
+    animation: fireFlicker 1.5s ease-in-out infinite;
+}
+
+.icon-fire::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 20px;
+    background: linear-gradient(to top, #ff4444 0%, #ff8800 50%, #ffaa00 100%);
+    border-radius: 0 50% 50% 50%;
+    top: 5px;
+    left: -3px;
+    transform: rotate(15deg);
+}
+
+@keyframes fireFlicker {
+    0%, 100% {
+        transform: rotate(-45deg) scale(1);
+    }
+    25% {
+        transform: rotate(-42deg) scale(1.05);
+    }
+    50% {
+        transform: rotate(-48deg) scale(0.95);
+    }
+    75% {
+        transform: rotate(-43deg) scale(1.02);
+    }
+}
+
+/* Star Icon (replacing ⭐) */
+.icon-star {
+    position: relative;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 9px solid currentColor;
+    transform: rotate(35deg);
+}
+
+.icon-star::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: -6px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 9px solid currentColor;
+    transform: rotate(-70deg);
+}
+
+.icon-star::after {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 3px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 9px solid currentColor;
+    transform: rotate(70deg);
+}
+
+.icon-star-animated {
+    animation: starSparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes starSparkle {
+    0%, 100% {
+        transform: rotate(35deg) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: rotate(35deg) scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+/* Sparkle Icon (replacing ✨) */
+.icon-sparkle {
+    position: relative;
+    width: 24px;
+    height: 24px;
+}
+
+.icon-sparkle::before,
+.icon-sparkle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: currentColor;
+    border-radius: 50%;
+}
+
+.icon-sparkle::before {
+    box-shadow: 
+        -8px -8px 0 0 currentColor,
+        8px -8px 0 0 currentColor,
+        -8px 8px 0 0 currentColor,
+        8px 8px 0 0 currentColor;
+    transform: translate(-50%, -50%);
+    animation: sparkleRotate 3s linear infinite;
+}
+
+.icon-sparkle::after {
+    box-shadow: 
+        0 -12px 0 0 currentColor,
+        12px 0 0 0 currentColor,
+        0 12px 0 0 currentColor,
+        -12px 0 0 0 currentColor;
+    transform: translate(-50%, -50%) rotate(45deg) scale(0.7);
+    animation: sparkleRotate 3s linear infinite reverse;
+}
+
+@keyframes sparkleRotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Chart Icon (replacing 📈) */
+.icon-chart {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+}
+
+.icon-chart::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    background: linear-gradient(to top right, 
+        transparent 48%, 
+        currentColor 48%, 
+        currentColor 52%, 
+        transparent 52%);
+}
+
+.icon-chart-animated::before {
+    animation: chartGrow 1.5s ease-out forwards;
+}
+
+@keyframes chartGrow {
+    from {
+        clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    }
+    to {
+        clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 40%);
+    }
+}
+
+/* Trophy Icon (replacing 🏆) */
+.icon-trophy {
+    position: relative;
+    width: 30px;
+    height: 30px;
+}
+
+.icon-trophy::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 15px;
+    background: currentColor;
+    border-radius: 0 0 50% 50%;
+}
+
+.icon-trophy::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 8px;
+    background: currentColor;
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+}
+
+.icon-trophy-animated {
+    animation: trophyShine 2s ease-in-out infinite;
+}
+
+@keyframes trophyShine {
+    0%, 100% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.3);
+    }
+}
