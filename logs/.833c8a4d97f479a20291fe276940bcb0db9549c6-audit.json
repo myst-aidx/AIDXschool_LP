@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/mnt/c/Users/march/Downloads/AIDXschool_LP/AIDXschool_LP/logs/.833c8a4d97f479a20291fe276940bcb0db9549c6-audit.json",
+    "files": [
+        {
+            "date": 1751037288855,
+            "name": "/mnt/c/Users/march/Downloads/AIDXschool_LP/AIDXschool_LP/logs/mcp-puppeteer-2025-06-28.log",
+            "hash": "38cb1dfbb8ce2a97ae9dbeddb013df03097dd763dd96b29b43fcef6b9dc6f517"
+        }
+    ],
+    "hashType": "sha256"
+}
