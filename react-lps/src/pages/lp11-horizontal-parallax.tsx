@@ -1631,8 +1631,6 @@ export default function HorizontalParallax() {
         </div>
       </div>
     </Section>
-      </TechComparisonContent>
-    </TechComparisonSection>
     </>
   )
 }

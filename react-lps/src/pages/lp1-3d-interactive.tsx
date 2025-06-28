@@ -231,7 +231,7 @@ function SuccessStory3D({ story, position }: { story: any, position: [number, nu
 }
 
 function Hero3D() {
-  const textRef = useRef<THREE.Mesh>(null)
+  const textRef = useRef<THREE.Group>(null)
   
   useFrame((state) => {
     if (textRef.current) {
@@ -470,6 +470,7 @@ function Scene() {
           maxDepthThreshold={1.4}
           color="#101010"
           metalness={0.5}
+          mirror={0}
         />
       </mesh>
       
