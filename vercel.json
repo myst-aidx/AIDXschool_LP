@@ -1,0 +1,12 @@
+{
+  "buildCommand": "cd react-lps && npm install && npm run build",
+  "outputDirectory": "react-lps/.next",
+  "installCommand": "cd react-lps && npm install",
+  "framework": "nextjs",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/react-lps/$1"
+    }
+  ]
+}
