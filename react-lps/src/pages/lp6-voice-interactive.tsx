@@ -922,7 +922,7 @@ function EnhancedMicrophoneButton() {
     
     // Update topics discussed
     const currentTopics = useVoiceStore.getState().analytics.topicsDiscussed
-    const newTopics = [...new Set([...currentTopics, ...topics])]
+    const newTopics = Array.from(new Set([...currentTopics, ...topics]))
     updateAnalytics({ topicsDiscussed: newTopics })
     
     // Add AI response with delay

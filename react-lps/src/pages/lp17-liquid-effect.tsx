@@ -700,8 +700,8 @@ const useLiquidEffect = (canvasRef: React.RefObject<HTMLCanvasElement>) => {
       hue: number
       
       constructor() {
-        this.x = Math.random() * canvas.width
-        this.y = Math.random() * canvas.height
+        this.x = Math.random() * (canvas?.width || window.innerWidth)
+        this.y = Math.random() * (canvas?.height || window.innerHeight)
         this.vx = (Math.random() - 0.5) * 3
         this.vy = (Math.random() - 0.5) * 3
         this.radius = Math.random() * 80 + 30
@@ -714,10 +714,10 @@ const useLiquidEffect = (canvasRef: React.RefObject<HTMLCanvasElement>) => {
         this.y += this.vy
         
         // 画面端で反射
-        if (this.x < this.radius || this.x > canvas.width - this.radius) {
+        if (this.x < this.radius || this.x > (canvas?.width || window.innerWidth) - this.radius) {
           this.vx *= -1
         }
-        if (this.y < this.radius || this.y > canvas.height - this.radius) {
+        if (this.y < this.radius || this.y > (canvas?.height || window.innerHeight) - this.radius) {
           this.vy *= -1
         }
         

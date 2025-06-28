@@ -985,6 +985,7 @@ function Carousel({ activeIndex, onItemClick }: {
           maxDepthThreshold={1.4}
           color="#101010"
           metalness={0.5}
+          mirror={0}
         />
       </Plane>
     </>
@@ -1011,17 +1012,11 @@ function BackgroundEffects() {
         position={[20, 10, -30]}
         opacity={0.3}
         speed={0.4}
-        width={30}
-        depth={5}
-        segments={20}
       />
       <Cloud
         position={[-20, 5, -20]}
         opacity={0.2}
         speed={0.3}
-        width={25}
-        depth={3}
-        segments={15}
       />
       
       {/* パーティクル */}

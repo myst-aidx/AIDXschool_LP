@@ -6,8 +6,6 @@ import {
   Text3D,
   MeshDistortMaterial,
   Environment,
-  Portal,
-  MeshPortalMaterial,
   RoundedBox,
   Float,
   PerspectiveCamera,
@@ -139,7 +137,7 @@ const ProgressRing = styled(motion.div)`
   }
 `
 
-const NavigationDot = styled(motion.div)`
+const NavigationDot = styled(motion.div)<{ active?: boolean }>`
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -255,7 +253,7 @@ const useMultiverseStore = create<MultiverseState>((set, get) => ({
   cameraMode: 'explore',
   setSelectedUniverse: (universe) => set({ selectedUniverse: universe }),
   addVisitedUniverse: (id) => set((state) => ({
-    visitedUniverses: [...new Set([...state.visitedUniverses, id])]
+    visitedUniverses: Array.from(new Set([...state.visitedUniverses, id]))
   })),
   setTransitioning: (value) => set({ isTransitioning: value }),
   updatePersonalityProfile: (updates) => set((state) => ({
@@ -1851,12 +1849,12 @@ export default function LP7_MultiverseSelection() {
           <>
             {/* Main 3D Scene */}
             <Canvas className="absolute inset-0">
-              <MultiverseScene />
+              <EnhancedMultiverseScene />
             </Canvas>
             
             {/* UI Overlay */}
             <div className="absolute inset-0 pointer-events-none">
-              <ProgressIndicator />
+              <EnhancedProgressIndicator />
               
               {/* Instructions */}
               <motion.div
@@ -1888,7 +1886,7 @@ export default function LP7_MultiverseSelection() {
             {/* Universe Details Modal */}
             <AnimatePresence>
               {selectedUniverse && (
-                <UniverseDetails universe={selectedUniverse} />
+                <EnhancedUniverseDetails universe={selectedUniverse} />
               )}
             </AnimatePresence>
             

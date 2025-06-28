@@ -1,0 +1,325 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, Text, Box, Sphere } from '@react-three/drei';
+import * as THREE from 'three';
+import { getProject, types } from '@theatre/core';
+import studio from '@theatre/studio';
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+
+// Theatre.js プロジェクト設定
+const theatreProject = getProject('AIDXschool Journey', {
+  state: {
+    sheetsById: {
+      'Scene': {
+        staticOverrides: {
+          byObject: {}
+        }
+      }
+    }
+  }
+});
+
+const mainSheet = theatreProject.sheet('Scene');
+
+// スタイルコンポーネント
+const PageContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+`;
+
+const CanvasContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`;
+
+const UIOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+`;
+
+const StoryText = styled(motion.div)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  pointer-events: auto;
+`;
+
+const Title = styled.h1`
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #4EB5FF 0%, #38C172 50%, #FFD93D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+`;
+
+const Subtitle = styled.p`
+  font-size: 1.5rem;
+  opacity: 0.8;
+  margin-bottom: 2rem;
+`;
+
+const PlayButton = styled(motion.button)`
+  padding: 20px 50px;
+  background: linear-gradient(135deg, #4EB5FF 0%, #38C172 100%);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(78, 181, 255, 0.3);
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(78, 181, 255, 0.5);
+  }
+`;
+
+const Timeline = styled.div`
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 800px;
+  pointer-events: auto;
+`;
+
+const TimelineBar = styled.div`
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+`;
+
+const TimelineProgress = styled.div<{ progress: number }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: ${props => props.progress}%;
+  background: linear-gradient(90deg, #4EB5FF 0%, #38C172 100%);
+  transition: width 0.1s linear;
+`;
+
+const ChapterMarkers = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+`;
+
+const ChapterMarker = styled.div<{ active: boolean }>`
+  color: ${props => props.active ? '#4EB5FF' : 'rgba(255, 255, 255, 0.5)'};
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: #38C172;
+  }
+`;
+
+// 3Dシーンコンポーネント
+function AnimatedScene({ sheet }: { sheet: any }) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const lightRef = useRef<THREE.DirectionalLight>(null);
+  
+  // Theatre.js オブジェクトの作成
+  const cubeObject = sheet.object('Cube', {
+    position: types.compound({
+      x: types.number(0, { range: [-10, 10] }),
+      y: types.number(0, { range: [-10, 10] }),
+      z: types.number(0, { range: [-10, 10] }),
+    }),
+    rotation: types.compound({
+      x: types.number(0, { range: [-Math.PI * 2, Math.PI * 2] }),
+      y: types.number(0, { range: [-Math.PI * 2, Math.PI * 2] }),
+      z: types.number(0, { range: [-Math.PI * 2, Math.PI * 2] }),
+    }),
+    scale: types.number(1, { range: [0, 3] }),
+    color: types.rgba({ r: 0.31, g: 0.71, b: 1, a: 1 }),
+  });
+  
+  const lightObject = sheet.object('Light', {
+    intensity: types.number(1, { range: [0, 10] }),
+    position: types.compound({
+      x: types.number(5, { range: [-20, 20] }),
+      y: types.number(5, { range: [-20, 20] }),
+      z: types.number(5, { range: [-20, 20] }),
+    }),
+  });
+  
+  useFrame(() => {
+    if (!meshRef.current || !lightRef.current) return;
+    
+    // Theatre.jsの値を適用
+    const cubeValues = cubeObject.value;
+    meshRef.current.position.set(cubeValues.position.x, cubeValues.position.y, cubeValues.position.z);
+    meshRef.current.rotation.set(cubeValues.rotation.x, cubeValues.rotation.y, cubeValues.rotation.z);
+    meshRef.current.scale.setScalar(cubeValues.scale);
+    
+    const material = meshRef.current.material as THREE.MeshStandardMaterial;
+    material.color.setRGB(cubeValues.color.r, cubeValues.color.g, cubeValues.color.b);
+    
+    const lightValues = lightObject.value;
+    lightRef.current.intensity = lightValues.intensity;
+    lightRef.current.position.set(lightValues.position.x, lightValues.position.y, lightValues.position.z);
+  });
+  
+  return (
+    <>
+      <ambientLight intensity={0.5} />
+      <directionalLight ref={lightRef} castShadow />
+      <Box ref={meshRef} args={[2, 2, 2]} castShadow>
+        <meshStandardMaterial />
+      </Box>
+      <Text
+        position={[0, -3, 0]}
+        fontSize={1}
+        color="#FFD93D"
+        anchorX="center"
+        anchorY="middle"
+      >
+        AIDXschool
+      </Text>
+      <OrbitControls enableDamping />
+    </>
+  );
+}
+
+// メインコンポーネント
+const TheatreTimelineLandingPage: React.FC = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [currentChapter, setCurrentChapter] = useState(0);
+  
+  const chapters = [
+    '序章: 挑戦',
+    '発見: AI×DX',
+    '成長: 学習',
+    '変革: 起業',
+    '成功: 未来'
+  ];
+  
+  useEffect(() => {
+    // Theatre.js Studio の初期化（開発時のみ）
+    if (process.env.NODE_ENV === 'development') {
+      studio.initialize();
+    }
+    
+    // タイムラインの再生制御
+    mainSheet.sequence.position = 0;
+    
+    return () => {
+      if (process.env.NODE_ENV === 'development') {
+        studio.ui.hide();
+      }
+    };
+  }, []);
+  
+  const playTimeline = () => {
+    setIsPlaying(true);
+    mainSheet.sequence.play({
+      range: [0, 10],
+      rate: 1,
+    }).then(() => {
+      setIsPlaying(false);
+    });
+    
+    // プログレスバーの更新
+    const updateProgress = () => {
+      const position = mainSheet.sequence.position;
+      const duration = 10; // 10秒のアニメーション
+      const progressPercent = (position / duration) * 100;
+      setProgress(progressPercent);
+      
+      // チャプターの更新
+      const chapterIndex = Math.floor((position / duration) * chapters.length);
+      setCurrentChapter(Math.min(chapterIndex, chapters.length - 1));
+      
+      if (isPlaying) {
+        requestAnimationFrame(updateProgress);
+      }
+    };
+    updateProgress();
+  };
+  
+  const jumpToChapter = (index: number) => {
+    const duration = 10;
+    const position = (index / chapters.length) * duration;
+    mainSheet.sequence.position = position;
+    setCurrentChapter(index);
+    setProgress((position / duration) * 100);
+  };
+  
+  return (
+    <PageContainer>
+      <CanvasContainer>
+        <Canvas
+          shadows
+          camera={{ position: [0, 0, 10], fov: 75 }}
+        >
+          <AnimatedScene sheet={mainSheet} />
+        </Canvas>
+      </CanvasContainer>
+      
+      <UIOverlay>
+        <StoryText
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <Title>あなたの起業ストーリーが始まる</Title>
+          <Subtitle>
+            Theatre.jsが描く、タイムラインベースの成功への道のり
+          </Subtitle>
+          {!isPlaying && (
+            <PlayButton
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={playTimeline}
+            >
+              ストーリーを再生
+            </PlayButton>
+          )}
+        </StoryText>
+        
+        <Timeline>
+          <TimelineBar>
+            <TimelineProgress progress={progress} />
+          </TimelineBar>
+          <ChapterMarkers>
+            {chapters.map((chapter, index) => (
+              <ChapterMarker
+                key={index}
+                active={currentChapter === index}
+                onClick={() => jumpToChapter(index)}
+              >
+                {chapter}
+              </ChapterMarker>
+            ))}
+          </ChapterMarkers>
+        </Timeline>
+      </UIOverlay>
+    </PageContainer>
+  );
+};
+
+export default TheatreTimelineLandingPage;

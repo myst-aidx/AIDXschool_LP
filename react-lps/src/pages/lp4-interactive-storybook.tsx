@@ -341,7 +341,7 @@ const useStoryStore = create<StoryStore>((set, get) => ({
   addVisitedPage: (page) => set((state) => ({
     storyState: {
       ...state.storyState,
-      visitedPages: [...new Set([...state.storyState.visitedPages, page])],
+      visitedPages: Array.from(new Set([...state.storyState.visitedPages, page])),
       pagesRead: state.storyState.visitedPages.length + 1
     }
   })),
@@ -1453,8 +1453,8 @@ function NavigationDots({ currentPage, totalPages, onPageChange }: {
   )
 }
 
-// Main Component
-export default function LP4_InteractiveStorybook() {
+// Achievement Sparkles Component
+function AchievementSparkles({ achievement }: { achievement: string }) {
   const [isOpen, setIsOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(0)
   const [visitedPages, setVisitedPages] = useState<number[]>([0])
@@ -1547,14 +1547,7 @@ export default function LP4_InteractiveStorybook() {
             </div>
             
             <PageContainer>
-              <PageContent page={storyPages[currentPage]} />
-              
-              {storyPages[currentPage].choices && (
-                <ChoiceSelector
-                  choices={storyPages[currentPage].choices!}
-                  onChoice={(choice) => handleChoice(choice.nextPage)}
-                />
-              )}
+              <PageContent page={storyPages[currentPage]} onChoice={handleChoice} />
               
               <ProgressBar>
                 <div 
@@ -1618,6 +1611,55 @@ export default function LP4_InteractiveStorybook() {
     </div>
   )
 }
+
+// Main page component
+export default function LP4_InteractiveStorybook() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState(0)
+  const [showCTA, setShowCTA] = useState(false)
+  const { addVisitedPage, addChoice, unlockAchievement } = useStoryStore()
+  const storyPages = enhancedStoryPages
+  
+  const handleChoice = (nextPage: number) => {
+    setCurrentPage(nextPage)
+    addVisitedPage(nextPage)
+  }
+  
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+  
+  const nextPage = () => {
+    if (currentPage < storyPages.length - 1) {
+      setCurrentPage(currentPage + 1)
+      addVisitedPage(currentPage + 1)
+    }
+  }
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (currentPage > 2) {
+        setShowCTA(true)
+      }
+    }, 5000)
+    return () => clearTimeout(timer)
+  }, [currentPage])
+  
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-pink-900">
+      {/* Background Animation */}
+      <div className="fixed inset-0">
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-white rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
               animate={{
                 opacity: [0, 1, 0],
                 scale: [0, 1, 0],
@@ -1674,7 +1716,7 @@ export default function LP4_InteractiveStorybook() {
                   
                   <button
                     onClick={nextPage}
-                    disabled={currentPage === storyPages.length - 1 || storyPages[currentPage].choices}
+                    disabled={currentPage === storyPages.length - 1 || !!storyPages[currentPage].choices}
                     className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                       currentPage === storyPages.length - 1 || storyPages[currentPage].choices
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 

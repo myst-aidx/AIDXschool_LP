@@ -586,7 +586,12 @@ const useGameStore = create<GameStore>((set, get) => ({
     expToNext: 100,
     skillPoints: 3,
     unlockedSkills: [],
-    achievements: []
+    achievements: [],
+    totalTimeSpent: 0,
+    questsCompleted: 0,
+    favoriteCategory: null,
+    streakDays: 0,
+    completionPercentage: 0
   },
   skills: {
     'ai-basics': {
@@ -599,7 +604,12 @@ const useGameStore = create<GameStore>((set, get) => ({
       requiredSkills: [],
       icon: '🤖',
       position: { x: 50, y: 20 },
-      category: 'ai'
+      category: 'ai',
+      benefits: ['AI基礎知識の習得', '業務効率化', '創造性の向上'],
+      realWorldApplication: '日常業務の自動化とアイデア創出',
+      timeToMaster: '1-2週間',
+      difficulty: 'beginner',
+      relatedCareers: ['AIエンジニア', 'プロダクトマネージャー', 'コンサルタント']
     },
     'prompt-engineering': {
       id: 'prompt-engineering',
@@ -611,7 +621,12 @@ const useGameStore = create<GameStore>((set, get) => ({
       requiredSkills: ['ai-basics'],
       icon: '💬',
       position: { x: 30, y: 35 },
-      category: 'ai'
+      category: 'ai',
+      benefits: ['高精度な出力生成', '作業時間の短縮', '初心者への指導力'],
+      realWorldApplication: 'AIを使ったコンテンツ作成やコーディング',
+      timeToMaster: '2-3週間',
+      difficulty: 'intermediate',
+      relatedCareers: ['プロンプトエンジニア', 'AIトレーナー', 'テクニカルライター']
     },
     'ai-automation': {
       id: 'ai-automation',
@@ -623,7 +638,12 @@ const useGameStore = create<GameStore>((set, get) => ({
       requiredSkills: ['prompt-engineering'],
       icon: '⚡',
       position: { x: 20, y: 50 },
-      category: 'ai'
+      category: 'ai',
+      benefits: ['業務効率の大幅改善', 'コスト削減', 'スケーラビリティ'],
+      realWorldApplication: '反復タスクの完全自動化',
+      timeToMaster: '1ヶ月',
+      difficulty: 'advanced',
+      relatedCareers: ['自動化エンジニア', 'RPA開発者', 'プロセス改善コンサルタント']
     },
     'nocode-basics': {
       id: 'nocode-basics',
@@ -635,7 +655,12 @@ const useGameStore = create<GameStore>((set, get) => ({
       requiredSkills: [],
       icon: '🔧',
       position: { x: 70, y: 35 },
-      category: 'dx'
+      category: 'dx',
+      benefits: ['プログラミング不要で開発', '高速プロトタイプ', '低コスト運用'],
+      realWorldApplication: 'ウェブアプリや自動化フローの構築',
+      timeToMaster: '2週間',
+      difficulty: 'beginner',
+      relatedCareers: ['ノーコード開発者', 'プロダクトマネージャー', '起業家']
     },
     'app-development': {
       id: 'app-development',
@@ -647,7 +672,12 @@ const useGameStore = create<GameStore>((set, get) => ({
       requiredSkills: ['nocode-basics'],
       icon: '📱',
       position: { x: 80, y: 50 },
-      category: 'dx'
+      category: 'dx',
+      benefits: ['完全なアプリ開発スキル', 'MVP作成能力', 'ビジネス立ち上げ'],
+      realWorldApplication: 'SaaSプロダクトのMVP開発',
+      timeToMaster: '1.5ヶ月',
+      difficulty: 'intermediate',
+      relatedCareers: ['アプリ開発者', 'スタートアップ创業者', 'フリーランサー']
     },
     'business-model': {
       id: 'business-model',
@@ -659,7 +689,12 @@ const useGameStore = create<GameStore>((set, get) => ({
       requiredSkills: [],
       icon: '💼',
       position: { x: 50, y: 50 },
-      category: 'business'
+      category: 'business',
+      benefits: ['収益モデル設計', '価格戦略', '市場分析'],
+      realWorldApplication: '新規ビジネスの立ち上げと収益化',
+      timeToMaster: '3週間',
+      difficulty: 'intermediate',
+      relatedCareers: ['経営コンサルタント', '起業家', 'プロダクトマネージャー']
     },
     'digital-marketing': {
       id: 'digital-marketing',
@@ -671,7 +706,12 @@ const useGameStore = create<GameStore>((set, get) => ({
       requiredSkills: [],
       icon: '📈',
       position: { x: 30, y: 65 },
-      category: 'marketing'
+      category: 'marketing',
+      benefits: ['顧客獲得コスト削減', 'ROI向上', 'ブランド構築'],
+      realWorldApplication: 'オンラインビジネスの集客と成長',
+      timeToMaster: '1ヶ月',
+      difficulty: 'intermediate',
+      relatedCareers: ['デジタルマーケター', 'グロースハッカー', 'CMO']
     },
     'sales-automation': {
       id: 'sales-automation',
@@ -683,8 +723,31 @@ const useGameStore = create<GameStore>((set, get) => ({
       requiredSkills: ['ai-automation', 'digital-marketing'],
       icon: '🎯',
       position: { x: 50, y: 80 },
-      category: 'business'
+      category: 'business',
+      benefits: ['営業効率の最大化', 'リード獲得の自動化', '成約率向上'],
+      realWorldApplication: 'B2B/B2C営業の完全自動化',
+      timeToMaster: '1.5ヶ月',
+      difficulty: 'advanced',
+      relatedCareers: ['セールスエンジニア', 'ビジネスデベロッパー', 'CRO']
     }
+  },
+  achievements: {},
+  quests: [],
+  analytics: {
+    totalSkillsLearned: 0,
+    favoriteCategory: 'ai',
+    timePerCategory: { ai: 0, dx: 0, business: 0, marketing: 0 },
+    skillMasteryRate: 0,
+    learningEfficiency: 0,
+    recommendedNextSkills: []
+  },
+  uiState: {
+    currentView: 'tree',
+    selectedSkill: null,
+    showTutorial: true,
+    soundEnabled: true,
+    animationsEnabled: true,
+    compactMode: false
   },
   addExp: (amount) => set((state) => {
     let newExp = state.playerStats.exp + amount
@@ -750,7 +813,56 @@ const useGameStore = create<GameStore>((set, get) => ({
         unlockedSkills: []
       }
     }
-  })
+  }),
+  unlockAchievement: (achievementId) => set((state) => ({
+    achievements: {
+      ...state.achievements,
+      [achievementId]: {
+        ...state.achievements[achievementId],
+        unlocked: true,
+        unlockedAt: new Date()
+      }
+    },
+    playerStats: {
+      ...state.playerStats,
+      achievements: [...state.playerStats.achievements, achievementId]
+    }
+  })),
+  completeQuest: (questId) => set((state) => ({
+    quests: state.quests.map(q => 
+      q.id === questId ? { ...q, completed: true } : q
+    ),
+    playerStats: {
+      ...state.playerStats,
+      questsCompleted: state.playerStats.questsCompleted + 1
+    }
+  })),
+  generateNewQuests: () => set((state) => ({
+    quests: [] // Simplified for now
+  })),
+  updateAnalytics: () => set((state) => {
+    const totalSkills = Object.values(state.skills).length
+    const learnedSkills = Object.values(state.skills).filter(s => s.currentLevel > 0).length
+    return {
+      analytics: {
+        ...state.analytics,
+        totalSkillsLearned: learnedSkills,
+        skillMasteryRate: (Object.values(state.skills).filter(s => s.currentLevel === s.maxLevel).length / totalSkills) * 100
+      }
+    }
+  }),
+  setCurrentView: (view) => set((state) => ({
+    uiState: {
+      ...state.uiState,
+      currentView: view
+    }
+  })),
+  toggleSettings: (setting) => set((state) => ({
+    uiState: {
+      ...state.uiState,
+      [setting]: !state.uiState[setting]
+    }
+  }))
 }))
 
 // Components

@@ -161,7 +161,7 @@ const FloatingNav = styled.nav`
   }
 `
 
-const NavDot = styled.button<{ active: boolean }>`
+const NavDot = styled.button<{ active: boolean; 'data-label'?: string }>`
   width: ${props => props.active ? '40px' : '12px'};
   height: 12px;
   border-radius: 6px;
@@ -177,7 +177,7 @@ const NavDot = styled.button<{ active: boolean }>`
   }
   
   &::after {
-    content: '${props => props['data-label']}';
+    content: '${props => props['data-label'] || ''}';
     position: absolute;
     right: calc(100% + 1rem);
     top: 50%;
@@ -511,7 +511,7 @@ function ScrollSyncedObject({ scrollProgress }: { scrollProgress: number }) {
 
 // テキスト3Dコンポーネント
 function Text3DElement({ scrollProgress }: { scrollProgress: number }) {
-  const textRef = useRef<THREE.Group>(null!)
+  const textRef = useRef<THREE.Mesh>(null!)
   const messages = [
     "DREAM",
     "BUILD",
@@ -609,6 +609,7 @@ function ScrollEnvironment({ scrollProgress }: { scrollProgress: number }) {
           maxDepthThreshold={1.4}
           color="#101010"
           metalness={0.5}
+          mirror={0}
         />
       </Plane>
       
@@ -618,25 +619,16 @@ function ScrollEnvironment({ scrollProgress }: { scrollProgress: number }) {
           position={[0, -5, -10]}
           opacity={0.5}
           speed={0.4}
-          width={10}
-          depth={1.5}
-          segments={20}
         />
         <Cloud
           position={[10, -3, -5]}
           opacity={0.3}
           speed={0.5}
-          width={8}
-          depth={1}
-          segments={15}
         />
         <Cloud
           position={[-10, -4, -8]}
           opacity={0.4}
           speed={0.3}
-          width={12}
-          depth={2}
-          segments={25}
         />
       </group>
       
@@ -684,11 +676,11 @@ function InteractiveElements({ scrollProgress }: { scrollProgress: number }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   
   const skills = [
-    { name: "AI活用", icon: "🤖", position: [-5, 2, 0] },
-    { name: "NoCode", icon: "🔧", position: [5, 2, 0] },
-    { name: "自動化", icon: "⚡", position: [0, 2, 5] },
-    { name: "データ分析", icon: "📊", position: [-3, -2, 3] },
-    { name: "マーケティング", icon: "📈", position: [3, -2, 3] }
+    { name: "AI活用", icon: "🤖", position: [-5, 2, 0] as [number, number, number] },
+    { name: "NoCode", icon: "🔧", position: [5, 2, 0] as [number, number, number] },
+    { name: "自動化", icon: "⚡", position: [0, 2, 5] as [number, number, number] },
+    { name: "データ分析", icon: "📊", position: [-3, -2, 3] as [number, number, number] },
+    { name: "マーケティング", icon: "📈", position: [3, -2, 3] as [number, number, number] }
   ]
   
   return (

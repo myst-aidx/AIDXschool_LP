@@ -380,6 +380,12 @@ const useNeuralStore = create<NeuralState>((set, get) => ({
   synapses: [],
   activeThought: null,
   learningProgress: 0,
+  brainActivity: 0,
+  neuralConnections: 15,
+  thoughtSpeed: 1,
+  modules: [],
+  currentLevel: 1,
+  totalExperience: 0,
   
   activateNeuron: (id) => set((state) => {
     const neuron = state.neurons[id]
@@ -434,9 +440,40 @@ const useNeuralStore = create<NeuralState>((set, get) => ({
     return {
       neurons: resetNeurons,
       activeThought: null,
-      learningProgress: 0
+      learningProgress: 0,
+      brainActivity: 0,
+      neuralConnections: 15,
+      thoughtSpeed: 1,
+      currentLevel: 1,
+      totalExperience: 0
     }
-  })
+  }),
+  
+  unlockModule: (moduleId) => set((state) => ({
+    modules: state.modules.map(m => 
+      m.id === moduleId ? { ...m, unlocked: true } : m
+    )
+  })),
+  
+  completeModule: (moduleId) => set((state) => ({
+    modules: state.modules.map(m => 
+      m.id === moduleId ? { ...m, progress: 100 } : m
+    ),
+    totalExperience: state.totalExperience + 100
+  })),
+  
+  enhanceConnection: (from, to) => set((state) => ({
+    synapses: state.synapses.map(s => 
+      s.from === from && s.to === to 
+        ? { ...s, strength: Math.min(s.strength + 0.1, 1) }
+        : s
+    )
+  })),
+  
+  simulateThinking: () => set((state) => ({
+    brainActivity: Math.min(state.brainActivity + 10, 100),
+    thoughtSpeed: Math.min(state.thoughtSpeed * 1.1, 5)
+  }))
 }))
 
 // Thought Patterns
@@ -446,21 +483,36 @@ const thoughtPatterns: ThoughtPattern[] = [
     name: 'AIマスタリー',
     description: 'AI技術を完全に理解し活用',
     neurons: ['in1', 'h1', 'h2', 'out1'],
-    color: '#3B82F6'
+    color: '#3B82F6',
+    complexity: 3,
+    businessValue: '月収100万円以上',
+    learningPath: ['AI基礎', 'プロンプトエンジニアリング', 'AI自動化'],
+    prerequisites: ['基本的なPC操作'],
+    outcomes: ['AI専門家', 'コンサルタント']
   },
   {
     id: 'business-automation',
     name: 'ビジネス自動化',
     description: '業務プロセスを完全自動化',
     neurons: ['in2', 'h2', 'h3', 'out3'],
-    color: '#10B981'
+    color: '#10B981',
+    complexity: 4,
+    businessValue: '作業時間90%削減',
+    learningPath: ['ノーコード基礎', '自動化設計', 'システム統合'],
+    prerequisites: ['業務理解'],
+    outcomes: ['自動化専門家', '効率化コンサルタント']
   },
   {
     id: 'saas-creation',
     name: 'SaaS構築',
     description: 'ノーコードでSaaSを開発',
     neurons: ['in2', 'in3', 'h3', 'h4', 'out2'],
-    color: '#8B5CF6'
+    color: '#8B5CF6',
+    complexity: 5,
+    businessValue: '継続収入の獲得',
+    learningPath: ['ノーコード開発', 'UI/UX設計', 'ビジネスモデル'],
+    prerequisites: ['基本的なビジネス知識'],
+    outcomes: ['SaaS起業家', 'プロダクトオーナー']
   }
 ]
 
@@ -730,7 +782,7 @@ function FloatingInsights() {
 }
 
 // Main Component
-export default function LP8_Neuromorphic() {
+function LP8_Neuromorphic() {
   const { neurons, reset } = useNeuralStore()
   const containerRef = useRef<HTMLDivElement>(null)
   
@@ -832,8 +884,8 @@ export default function LP8_Neuromorphic() {
   )
 }
 // Enhanced component exports
-export const MemoizedNeuroMorphicLP = React.memo(NeuroMorphicLP)
-export default NeuroMorphicLP
+export const MemoizedNeuroMorphicLP = React.memo(LP8_Neuromorphic)
+export default LP8_Neuromorphic
 // 成功事例ニューラルネットワーク表示
 function SuccessNeuralNetwork() {
   const [activeCase, setActiveCase] = useState(0)
@@ -1173,10 +1225,10 @@ function BrainTrainingGame() {
 
 // AIコーチング体験
 function AICoachingExperience() {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Array<{ id: number; type: 'ai' | 'user'; text: string }>>([
     { 
       id: 1, 
-      type: 'ai' as const, 
+      type: 'ai', 
       text: 'こんにちは！私はAIDXschoolのニューラルAIコーチです。あなたの起業家思考パターンを分析し、最適な学習プランを提案します。' 
     }
   ])

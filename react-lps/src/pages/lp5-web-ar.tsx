@@ -510,10 +510,10 @@ function InteractiveBusinessModel() {
   })
   
   const businessNodes = [
-    { id: 0, label: "AI自動化", position: [0, 2, 0], color: colors.primary },
-    { id: 1, label: "NoCode開発", position: [2, 0, 0], color: colors.secondary },
-    { id: 2, label: "マーケティング", position: [0, -2, 0], color: colors.accent },
-    { id: 3, label: "収益化", position: [-2, 0, 0], color: colors.purple }
+    { id: 0, label: "AI自動化", position: [0, 2, 0] as [number, number, number], color: colors.primary },
+    { id: 1, label: "NoCode開発", position: [2, 0, 0] as [number, number, number], color: colors.secondary },
+    { id: 2, label: "マーケティング", position: [0, -2, 0] as [number, number, number], color: colors.accent },
+    { id: 3, label: "収益化", position: [-2, 0, 0] as [number, number, number], color: colors.purple }
   ]
   
   return (
@@ -632,6 +632,7 @@ function ARScene({ mode, userData }: {
         floor={2}
         segments={100}
         position={[0, -2, -10]}
+        receiveShadow
       >
         <meshStandardMaterial color="#0f1419" transparent opacity={0.8} />
       </Backdrop>
