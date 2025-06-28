@@ -1293,7 +1293,9 @@ export default function TextMorphing() {
         {features.map((feature, index) => (
           <FeatureCard
             key={index}
-            ref={el => featureRefs.current[index] = el}
+            ref={(el) => {
+              if (el) featureRefs.current[index] = el
+            }}
             whileHover={{ scale: 1.02 }}
           >
             <FeatureTitle>
@@ -1330,7 +1332,9 @@ export default function TextMorphing() {
           {services.map((service, index) => (
             <ServiceCard
               key={index}
-              ref={el => serviceRefs.current[index] = el}
+              ref={(el) => {
+                if (el) serviceRefs.current[index] = el
+              }}
               whileHover={{ y: -10 }}
             >
               <span className="icon">{service.icon}</span>
@@ -1434,7 +1438,9 @@ export default function TextMorphing() {
           {timeline.map((item, index) => (
             <TimelineItem
               key={index}
-              ref={el => timelineRefs.current[index] = el}
+              ref={(el) => {
+                if (el) timelineRefs.current[index] = el
+              }}
               align={item.align}
               initial={{ opacity: 0, x: item.align === 'left' ? -100 : 100 }}
               whileInView={{ opacity: 1, x: 0 }}
