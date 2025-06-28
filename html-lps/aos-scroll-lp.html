@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - スクロールで解き放つ起業の可能性 | AOS</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --success: #4facfe;
+            --warning: #43e97b;
+            --dark: #2d3748;
+            --light: #f7fafc;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* スクロールインジケーター */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background: var(--gradient-1);
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+        
+        /* ヒーローセクション */
+        .hero {
+            min-height: 100vh;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" patternUnits="userSpaceOnUse" width="100" height="100"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="50" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .hero-content {
+            text-align: center;
+            color: white;
+            z-index: 10;
+            max-width: 900px;
+            padding: 20px;
+        }
+        
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero-cta {
+            display: inline-block;
+            padding: 18px 50px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .hero-cta:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            text-align: center;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+        
+        /* セクション共通スタイル */
+        .section {
+            padding: 100px 20px;
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            font-weight: 900;
+        }
+        
+        .section-subtitle {
+            font-size: 1.3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            opacity: 0.8;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 特徴セクション */
+        .features-section {
+            background: white;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-2);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .feature-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .feature-description {
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        /* 統計セクション */
+        .stats-section {
+            background: var(--gradient-3);
+            color: white;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        /* タイムラインセクション */
+        .timeline-section {
+            background: #f8f9fa;
+        }
+        
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--gradient-1);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 100px;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 0 30px;
+            position: relative;
+        }
+        
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 30px;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: -20px;
+            border-left-color: white;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: -20px;
+            border-right-color: white;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 4px solid var(--primary);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        
+        .timeline-date {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .timeline-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .timeline-description {
+            color: #666;
+        }
+        
+        /* プロセスセクション */
+        .process-section {
+            background: white;
+        }
+        
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .process-step {
+            text-align: center;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(67, 233, 123, 0.3);
+        }
+        
+        .step-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .step-description {
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        /* ギャラリーセクション */
+        .gallery-section {
+            background: var(--gradient-2);
+            color: white;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .gallery-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        
+        .gallery-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .gallery-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .gallery-description {
+            opacity: 0.8;
+        }
+        
+        /* CTAセクション */
+        .cta-section {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+        }
+        
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: var(--gradient-4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta-description {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 60px;
+            background: var(--gradient-4);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(67, 233, 123, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(67, 233, 123, 0.4);
+        }
+        
+        /* フッター */
+        .footer {
+            background: #1a202c;
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                flex-direction: column !important;
+            }
+            
+            .timeline-content {
+                margin-left: 50px;
+                margin-right: 0;
+            }
+            
+            .timeline-content::before {
+                left: -20px !important;
+                right: auto !important;
+                border-right-color: white !important;
+                border-left-color: transparent !important;
+            }
+            
+            .timeline-dot {
+                left: 20px;
+                transform: translateX(-50%);
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+        
+        /* AOS カスタムアニメーション */
+        [data-aos="slide-up-stagger"] {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        [data-aos="slide-up-stagger"].aos-animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        [data-aos="zoom-in-rotate"] {
+            opacity: 0;
+            transform: scale(0.8) rotate(-10deg);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        [data-aos="zoom-in-rotate"].aos-animate {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+        
+        [data-aos="slide-diagonal"] {
+            opacity: 0;
+            transform: translate(-50px, 50px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        
+        [data-aos="slide-diagonal"].aos-animate {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+    </style>
+</head>
+<body>
+    <!-- スクロールプログレス -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title" data-aos="fade-up" data-aos-duration="1000">
+                スクロールで解き放つ<br>起業の可能性
+            </h1>
+            <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000">
+                AOSアニメーションのように、一歩ずつ確実に成長する起業ストーリー
+            </p>
+            <a href="#features" class="hero-cta" data-aos="zoom-in" data-aos-delay="600" data-aos-duration="800">
+                スクロールして体験開始
+            </a>
+        </div>
+        <div class="scroll-indicator" data-aos="fade-in" data-aos-delay="1000">
+            <div style="font-size: 2rem;">↓</div>
+            <div>スクロールしてみよう</div>
+        </div>
+    </section>
+    
+    <!-- 特徴セクション -->
+    <section class="section features-section" id="features">
+        <h2 class="section-title" data-aos="fade-down" data-aos-duration="800">
+            AOSが示す成功の法則
+        </h2>
+        <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+            スクロールトリガーアニメーションのように、タイミングを見極めて行動する
+        </p>
+        
+        <div class="features-grid">
+            <div class="feature-card" data-aos="fade-right" data-aos-delay="0" data-aos-duration="800">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">適切なタイミング</h3>
+                <p class="feature-description">
+                    AOSがスクロール位置を検知するように、市場のタイミングを見極める。最適な瞬間に行動することで、最大の効果を生み出す。
+                </p>
+            </div>
+            
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+                <div class="feature-icon">✨</div>
+                <h3 class="feature-title">段階的な成長</h3>
+                <p class="feature-description">
+                    一度に全てを見せるのではなく、段階的に価値を提供。ユーザーの関心を徐々に引きつけながら、確実な成長を実現。
+                </p>
+            </div>
+            
+            <div class="feature-card" data-aos="fade-left" data-aos-delay="400" data-aos-duration="800">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">印象的な体験</h3>
+                <p class="feature-description">
+                    美しいアニメーションが記憶に残るように、顧客に忘れられない価値体験を提供。差別化された印象で競合を圧倒。
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 統計セクション -->
+    <section class="section stats-section">
+        <h2 class="section-title" data-aos="zoom-in" data-aos-duration="800">
+            データが証明する成果
+        </h2>
+        
+        <div class="stats-grid">
+            <div class="stat-item" data-aos="slide-up-stagger" data-aos-delay="0">
+                <div class="stat-number" data-aos="flip-up" data-aos-delay="200">97%</div>
+                <div class="stat-label">満足度</div>
+            </div>
+            <div class="stat-item" data-aos="slide-up-stagger" data-aos-delay="100">
+                <div class="stat-number" data-aos="flip-up" data-aos-delay="300">180万</div>
+                <div class="stat-label">平均月収（円）</div>
+            </div>
+            <div class="stat-item" data-aos="slide-up-stagger" data-aos-delay="200">
+                <div class="stat-number" data-aos="flip-up" data-aos-delay="400">4,200</div>
+                <div class="stat-label">受講生数</div>
+            </div>
+            <div class="stat-item" data-aos="slide-up-stagger" data-aos-delay="300">
+                <div class="stat-number" data-aos="flip-up" data-aos-delay="500">24/7</div>
+                <div class="stat-label">サポート</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- タイムラインセクション -->
+    <section class="section timeline-section">
+        <h2 class="section-title" data-aos="fade-up" data-aos-duration="800">
+            成功への道のり
+        </h2>
+        
+        <div class="timeline">
+            <div class="timeline-item" data-aos="fade-right" data-aos-delay="0">
+                <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="200"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">Week 1</div>
+                    <h3 class="timeline-title">基礎学習フェーズ</h3>
+                    <p class="timeline-description">
+                        AI×DXの基本概念を習得。ノーコードツールの使い方をマスターし、初めての自動化を体験。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item" data-aos="fade-left" data-aos-delay="200">
+                <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="400"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">Month 1</div>
+                    <h3 class="timeline-title">実践スタート</h3>
+                    <p class="timeline-description">
+                        実際のプロジェクトに取り組み開始。メンターのサポートを受けながら、初めてのビジネスアイデアを形に。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item" data-aos="fade-right" data-aos-delay="400">
+                <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="600"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">Month 3</div>
+                    <h3 class="timeline-title">収益化達成</h3>
+                    <p class="timeline-description">
+                        初めての売上を記録。顧客からのフィードバックを元に、プロダクトを改善し、成長軌道に乗る。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item" data-aos="fade-left" data-aos-delay="600">
+                <div class="timeline-dot" data-aos="zoom-in" data-aos-delay="800"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">Month 6</div>
+                    <h3 class="timeline-title">事業拡大</h3>
+                    <p class="timeline-description">
+                        安定した収益基盤を構築。チーム拡大や新しい事業領域への展開を検討し、次のステージへ。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- プロセスセクション -->
+    <section class="section process-section">
+        <h2 class="section-title" data-aos="zoom-in-rotate" data-aos-duration="1000">
+            学習プロセス
+        </h2>
+        
+        <div class="process-steps">
+            <div class="process-step" data-aos="slide-diagonal" data-aos-delay="0">
+                <div class="step-number">1</div>
+                <h3 class="step-title">発見</h3>
+                <p class="step-description">
+                    市場ニーズの発見と自分の強みの分析。データ分析ツールを活用して、最適なビジネス機会を特定。
+                </p>
+            </div>
+            
+            <div class="process-step" data-aos="slide-diagonal" data-aos-delay="200">
+                <div class="step-number">2</div>
+                <h3 class="step-title">設計</h3>
+                <p class="step-description">
+                    ビジネスモデルの設計とプロトタイプ作成。ノーコードツールを使用して、素早く形にする。
+                </p>
+            </div>
+            
+            <div class="process-step" data-aos="slide-diagonal" data-aos-delay="400">
+                <div class="step-number">3</div>
+                <h3 class="step-title">実行</h3>
+                <p class="step-description">
+                    実際の市場での検証とフィードバック収集。AIを活用したデータ分析で改善点を特定。
+                </p>
+            </div>
+            
+            <div class="process-step" data-aos="slide-diagonal" data-aos-delay="600">
+                <div class="step-number">4</div>
+                <h3 class="step-title">成長</h3>
+                <p class="step-description">
+                    自動化システムの構築と事業拡大。持続可能な成長モデルの確立と次のステージへの準備。
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ギャラリーセクション -->
+    <section class="section gallery-section">
+        <h2 class="section-title" data-aos="fade-down" data-aos-duration="800">
+            成功事例ギャラリー
+        </h2>
+        
+        <div class="gallery-grid">
+            <div class="gallery-item" data-aos="flip-left" data-aos-delay="0">
+                <div class="gallery-icon">🚀</div>
+                <h3 class="gallery-title">SaaS事業</h3>
+                <p class="gallery-description">
+                    ノーコードで開発したSaaSプロダクトが月間売上500万円を達成
+                </p>
+            </div>
+            
+            <div class="gallery-item" data-aos="flip-up" data-aos-delay="200">
+                <div class="gallery-icon">🤖</div>
+                <h3 class="gallery-title">AI自動化</h3>
+                <p class="gallery-description">
+                    業務自動化システムで従来の作業時間を80%削減、生産性大幅向上
+                </p>
+            </div>
+            
+            <div class="gallery-item" data-aos="flip-right" data-aos-delay="400">
+                <div class="gallery-icon">📱</div>
+                <h3 class="gallery-title">アプリ開発</h3>
+                <p class="gallery-description">
+                    ユーザー数10万人のモバイルアプリを3ヶ月でリリース、AppStoreランキング上位
+                </p>
+            </div>
+            
+            <div class="gallery-item" data-aos="flip-left" data-aos-delay="600">
+                <div class="gallery-icon">🎯</div>
+                <h3 class="gallery-title">マーケティング</h3>
+                <p class="gallery-description">
+                    AIマーケティングツールでコンバージョン率300%改善、ROI大幅向上
+                </p>
+            </div>
+            
+            <div class="gallery-item" data-aos="flip-up" data-aos-delay="800">
+                <div class="gallery-icon">💼</div>
+                <h3 class="gallery-title">コンサル事業</h3>
+                <p class="gallery-description">
+                    DXコンサルティングで企業の売上を平均150%向上、継続率90%
+                </p>
+            </div>
+            
+            <div class="gallery-item" data-aos="flip-right" data-aos-delay="1000">
+                <div class="gallery-icon">🌐</div>
+                <h3 class="gallery-title">ECサイト</h3>
+                <p class="gallery-description">
+                    AIレコメンド機能付きECサイトで年商1億円突破、リピート率60%
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTAセクション -->
+    <section class="section cta-section">
+        <h2 class="cta-title" data-aos="fade-up" data-aos-duration="1000">
+            今すぐスクロールを始めよう
+        </h2>
+        <p class="cta-description" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
+            AOSアニメーションのように、段階的で確実な成長を実現する起業体験を始めましょう
+        </p>
+        <a href="#" class="cta-button" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="800">
+            無料でスクロール体験を開始
+        </a>
+    </section>
+    
+    <!-- フッター -->
+    <footer class="footer" data-aos="fade-up" data-aos-duration="800">
+        <p>&copy; 2024 AIDXschool. All rights reserved. Powered by AOS.</p>
+    </footer>
+    
+    <script>
+        // AOS初期化
+        AOS.init({
+            duration: 800,
+            once: false,
+            mirror: true,
+            anchorPlacement: 'top-bottom',
+            offset: 100,
+            delay: 0,
+            easing: 'ease-out-cubic'
+        });
+        
+        // スクロールプログレス
+        function updateScrollProgress() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+            
+            document.getElementById('scrollProgress').style.width = scrollPercent + '%';
+        }
+        
+        // スクロールイベント
+        let ticking = false;
+        
+        function handleScroll() {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    updateScrollProgress();
+                    
+                    // パララックス効果
+                    const scrolled = window.pageYOffset;
+                    const hero = document.querySelector('.hero');
+                    if (hero) {
+                        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+                    }
+                    
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+        
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        
+        // 初期化
+        updateScrollProgress();
+        
+        // AOSのカスタムイベント
+        document.addEventListener('aos:in', ({ detail }) => {
+            // 要素がビューポートに入った時の処理
+            if (detail.classList.contains('stat-number')) {
+                animateNumber(detail);
+            }
+        });
+        
+        // 数値アニメーション
+        function animateNumber(element) {
+            const target = parseInt(element.textContent.replace(/[^\d]/g, ''));
+            const duration = 2000;
+            const start = performance.now();
+            const suffix = element.textContent.replace(/[\d,]/g, '');
+            
+            function updateNumber(currentTime) {
+                const elapsed = currentTime - start;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(target * easeOut);
+                
+                element.textContent = current.toLocaleString() + suffix;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber);
+                }
+            }
+            
+            requestAnimationFrame(updateNumber);
+        }
+        
+        // スムーズスクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // インタラクティブなマウス効果
+        document.addEventListener('mousemove', (e) => {
+            const heroContent = document.querySelector('.hero-content');
+            if (heroContent) {
+                const rect = heroContent.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                const deltaX = (e.clientX - centerX) / centerX;
+                const deltaY = (e.clientY - centerY) / centerY;
+                
+                heroContent.style.transform = `
+                    perspective(1000px) 
+                    rotateY(${deltaX * 5}deg) 
+                    rotateX(${-deltaY * 5}deg)
+                `;
+            }
+        });
+        
+        // レスポンシブ対応
+        function handleResize() {
+            AOS.refresh();
+        }
+        
+        window.addEventListener('resize', handleResize);
+        
+        // ページ読み込み完了時
+        window.addEventListener('load', () => {
+            AOS.refresh();
+            updateScrollProgress();
+        });
+        
+        // IntersectionObserver for performance
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                } else {
+                    entry.target.classList.remove('in-view');
+                }
+            });
+        }, observerOptions);
+        
+        // 要素を監視
+        document.querySelectorAll('[data-aos]').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

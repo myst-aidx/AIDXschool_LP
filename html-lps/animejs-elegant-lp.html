@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - シンプルで美しい成長曲線 | Anime.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --accent: #4ECDC4;
+            --dark: #2D3748;
+            --light: #F7FAFC;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* ローディングスクリーン */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-dots {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .dot {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+        
+        /* ヒーローセクション */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%);
+            overflow: hidden;
+        }
+        
+        .hero-bg-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+        }
+        
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            max-width: 900px;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            opacity: 0;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: #718096;
+            margin-bottom: 3rem;
+            opacity: 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 18px 40px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);
+        }
+        
+        /* 数値カウンターセクション */
+        .stats-section {
+            padding: 100px 20px;
+            background: white;
+        }
+        
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 40px;
+            background: #F7FAFC;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: #718096;
+        }
+        
+        /* タイムラインセクション */
+        .timeline-section {
+            padding: 100px 20px;
+            background: #F7FAFC;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--dark);
+        }
+        
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #E2E8F0;
+            transform: translateX(-50%);
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            background: var(--primary);
+            transform: translateX(-50%);
+            height: 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 80px;
+            opacity: 0;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            text-align: right;
+            padding-right: 50%;
+            padding-left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            text-align: left;
+            padding-left: 50%;
+            padding-right: 0;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            z-index: 10;
+        }
+        
+        .timeline-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            position: relative;
+        }
+        
+        .timeline-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .timeline-description {
+            color: #718096;
+        }
+        
+        /* スキルバーセクション */
+        .skills-section {
+            padding: 100px 20px;
+            background: white;
+        }
+        
+        .skills-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .skill-item {
+            margin-bottom: 40px;
+            opacity: 0;
+        }
+        
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .skill-name {
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .skill-percentage {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .skill-bar {
+            height: 10px;
+            background: #E2E8F0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 5px;
+            width: 0;
+        }
+        
+        /* モーフィングシェイプセクション */
+        .morph-section {
+            padding: 100px 20px;
+            background: #F7FAFC;
+            text-align: center;
+        }
+        
+        .morph-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .svg-container {
+            width: 300px;
+            height: 300px;
+            margin: 40px auto;
+        }
+        
+        .morph-path {
+            fill: var(--primary);
+            opacity: 0.8;
+        }
+        
+        /* CTAセクション */
+        .cta-section {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            text-align: center;
+            color: white;
+        }
+        
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .cta-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+        
+        .cta-button-white {
+            display: inline-block;
+            padding: 18px 40px;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* パーティクル */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0;
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .timeline-item:nth-child(odd),
+            .timeline-item:nth-child(even) {
+                text-align: left;
+                padding-left: 60px;
+                padding-right: 0;
+            }
+            
+            .timeline-line,
+            .timeline-progress {
+                left: 30px;
+            }
+            
+            .timeline-dot {
+                left: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ローディングスクリーン -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+    
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="hero-bg-shapes">
+            <div class="bg-shape" style="width: 300px; height: 300px; background: var(--primary); top: -150px; left: -150px;"></div>
+            <div class="bg-shape" style="width: 200px; height: 200px; background: var(--secondary); bottom: -100px; right: -100px;"></div>
+            <div class="bg-shape" style="width: 150px; height: 150px; background: var(--accent); top: 50%; right: 10%;"></div>
+        </div>
+        
+        <div class="hero-content">
+            <h1>シンプルで<span class="highlight">美しい</span>成長曲線</h1>
+            <p class="subtitle">Anime.jsが実現する、なめらかで心地よいアニメーション体験</p>
+            <a href="#timeline" class="cta-button">成長ストーリーを見る</a>
+        </div>
+    </section>
+    
+    <!-- 数値カウンター -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number" data-target="98">0</div>
+                <div class="stat-label">成功率（%）</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="3500">0</div>
+                <div class="stat-label">受講生数</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="150">0</div>
+                <div class="stat-label">平均月収（万円）</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="24">0</div>
+                <div class="stat-label">サポート時間</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- タイムライン -->
+    <section class="timeline-section" id="timeline">
+        <h2 class="section-title">あなたの成長タイムライン</h2>
+        
+        <div class="timeline">
+            <div class="timeline-line"></div>
+            <div class="timeline-progress"></div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Day 1: スタート</h3>
+                    <p class="timeline-description">
+                        AIDXschoolへの入学。AI×DXの基礎を学び始める。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Week 2: 基礎習得</h3>
+                    <p class="timeline-description">
+                        ノーコードツールの使い方をマスター。最初の自動化を実現。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Month 1: 実践開始</h3>
+                    <p class="timeline-description">
+                        実際のビジネスプロジェクトに着手。初めての収益を獲得。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 class="timeline-title">Month 3: 事業拡大</h3>
+                    <p class="timeline-description">
+                        月収100万円を突破。チームを組んで事業を拡大。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- スキルバー -->
+    <section class="skills-section">
+        <h2 class="section-title">習得できるスキル</h2>
+        
+        <div class="skills-container">
+            <div class="skill-item">
+                <div class="skill-header">
+                    <span class="skill-name">AI活用スキル</span>
+                    <span class="skill-percentage">95%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-progress" data-width="95"></div>
+                </div>
+            </div>
+            
+            <div class="skill-item">
+                <div class="skill-header">
+                    <span class="skill-name">ノーコード開発</span>
+                    <span class="skill-percentage">90%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-progress" data-width="90"></div>
+                </div>
+            </div>
+            
+            <div class="skill-item">
+                <div class="skill-header">
+                    <span class="skill-name">ビジネスモデル構築</span>
+                    <span class="skill-percentage">85%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-progress" data-width="85"></div>
+                </div>
+            </div>
+            
+            <div class="skill-item">
+                <div class="skill-header">
+                    <span class="skill-name">マーケティング自動化</span>
+                    <span class="skill-percentage">88%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-progress" data-width="88"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- モーフィングシェイプ -->
+    <section class="morph-section">
+        <h2 class="section-title">変化し続ける成長の形</h2>
+        
+        <div class="morph-container">
+            <div class="svg-container">
+                <svg viewBox="0 0 300 300">
+                    <path class="morph-path" d="M150,50 Q200,100 200,150 Q200,200 150,200 Q100,200 100,150 Q100,100 150,50"></path>
+                </svg>
+            </div>
+            <p style="color: #718096; font-size: 1.2rem;">
+                あなたのビジネスも、市場に合わせて柔軟に変化します
+            </p>
+        </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2 class="cta-title">今すぐ始めよう</h2>
+        <p class="cta-subtitle">
+            Anime.jsのようにシンプルで美しい成長を、<br>
+            AIDXschoolで実現してください
+        </p>
+        <a href="#" class="cta-button-white">無料体験を申し込む</a>
+    </section>
+    
+    <script>
+        // ローディングアニメーション
+        anime({
+            targets: '.loading-dots .dot',
+            translateY: [-20, 20],
+            direction: 'alternate',
+            loop: true,
+            delay: anime.stagger(100),
+            easing: 'easeInOutSine',
+            duration: 600
+        });
+        
+        // ページロード完了後
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                // ローディング画面をフェードアウト
+                anime({
+                    targets: '#loadingScreen',
+                    opacity: 0,
+                    duration: 500,
+                    easing: 'easeOutQuad',
+                    complete: function() {
+                        document.getElementById('loadingScreen').style.display = 'none';
+                    }
+                });
+                
+                // ヒーローアニメーション開始
+                startHeroAnimations();
+            }, 1500);
+        });
+        
+        // ヒーローセクションのアニメーション
+        function startHeroAnimations() {
+            // 背景シェイプのアニメーション
+            anime({
+                targets: '.bg-shape',
+                translateX: function() {
+                    return anime.random(-50, 50);
+                },
+                translateY: function() {
+                    return anime.random(-50, 50);
+                },
+                scale: [0, 1],
+                duration: 2000,
+                delay: anime.stagger(200),
+                easing: 'easeOutElastic(1, .5)'
+            });
+            
+            // タイトルアニメーション
+            anime({
+                targets: 'h1',
+                opacity: [0, 1],
+                translateY: [50, 0],
+                duration: 1000,
+                easing: 'easeOutQuad'
+            });
+            
+            // サブタイトルアニメーション
+            anime({
+                targets: '.subtitle',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                duration: 1000,
+                delay: 300,
+                easing: 'easeOutQuad'
+            });
+            
+            // CTAボタンアニメーション
+            anime({
+                targets: '.cta-button',
+                opacity: [0, 1],
+                scale: [0.8, 1],
+                duration: 800,
+                delay: 600,
+                easing: 'easeOutBack'
+            });
+        }
+        
+        // 数値カウンターアニメーション
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+        
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    
+                    statNumbers.forEach(stat => {
+                        const target = parseInt(stat.getAttribute('data-target'));
+                        
+                        anime({
+                            targets: stat,
+                            textContent: [0, target],
+                            duration: 2000,
+                            easing: 'easeInOutQuad',
+                            round: 1,
+                            update: function(anim) {
+                                stat.innerHTML = Math.floor(anim.animations[0].currentValue);
+                            }
+                        });
+                    });
+                    
+                    // プログレスバーアニメーション
+                    anime({
+                        targets: '.stat-item::before',
+                        scaleX: [0, 1],
+                        duration: 1500,
+                        delay: anime.stagger(200),
+                        easing: 'easeOutQuad'
+                    });
+                    
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        statsObserver.observe(document.querySelector('.stats-section'));
+        
+        // タイムラインアニメーション
+        const timelineObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // プログレスラインアニメーション
+                    anime({
+                        targets: '.timeline-progress',
+                        height: ['0%', '100%'],
+                        duration: 2000,
+                        easing: 'easeInOutQuad'
+                    });
+                    
+                    // タイムラインアイテムアニメーション
+                    anime({
+                        targets: '.timeline-item',
+                        opacity: [0, 1],
+                        translateX: function(el, i) {
+                            return i % 2 === 0 ? [-50, 0] : [50, 0];
+                        },
+                        duration: 800,
+                        delay: anime.stagger(300, {start: 500}),
+                        easing: 'easeOutQuad'
+                    });
+                    
+                    // ドットアニメーション
+                    anime({
+                        targets: '.timeline-dot',
+                        scale: [0, 1],
+                        duration: 500,
+                        delay: anime.stagger(300, {start: 500}),
+                        easing: 'easeOutBack'
+                    });
+                    
+                    timelineObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        timelineObserver.observe(document.querySelector('.timeline-section'));
+        
+        // スキルバーアニメーション
+        const skillsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // スキルアイテムフェードイン
+                    anime({
+                        targets: '.skill-item',
+                        opacity: [0, 1],
+                        translateY: [30, 0],
+                        duration: 600,
+                        delay: anime.stagger(100),
+                        easing: 'easeOutQuad'
+                    });
+                    
+                    // プログレスバーアニメーション
+                    const progressBars = entry.target.querySelectorAll('.skill-progress');
+                    progressBars.forEach(bar => {
+                        const width = bar.getAttribute('data-width');
+                        anime({
+                            targets: bar,
+                            width: '0%',
+                            width: width + '%',
+                            duration: 1500,
+                            delay: 500,
+                            easing: 'easeOutQuad'
+                        });
+                    });
+                    
+                    skillsObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        skillsObserver.observe(document.querySelector('.skills-section'));
+        
+        // モーフィングアニメーション
+        const morphTimeline = anime.timeline({
+            loop: true,
+            direction: 'alternate',
+            duration: 2000,
+            easing: 'easeInOutQuad'
+        });
+        
+        morphTimeline
+            .add({
+                targets: '.morph-path',
+                d: 'M150,50 Q250,150 150,250 Q50,150 150,50'
+            })
+            .add({
+                targets: '.morph-path',
+                d: 'M150,100 Q200,150 150,200 Q100,150 150,100'
+            })
+            .add({
+                targets: '.morph-path',
+                d: 'M150,50 L200,150 L150,250 L100,150 Z'
+            });
+        
+        // パーティクル効果
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.width = '10px';
+            particle.style.height = '10px';
+            particle.style.background = anime.random(0, 1) > 0.5 ? 'var(--primary)' : 'var(--secondary)';
+            particle.style.borderRadius = '50%';
+            document.body.appendChild(particle);
+            
+            anime({
+                targets: particle,
+                translateX: anime.random(-100, 100),
+                translateY: anime.random(-100, 100),
+                scale: [1, 0],
+                opacity: [1, 0],
+                duration: anime.random(1000, 2000),
+                easing: 'easeOutQuad',
+                complete: function() {
+                    particle.remove();
+                }
+            });
+        }
+        
+        // マウスムーブでパーティクル生成
+        let particleTimer;
+        document.addEventListener('mousemove', (e) => {
+            clearTimeout(particleTimer);
+            particleTimer = setTimeout(() => {
+                createParticle(e.clientX, e.clientY);
+            }, 100);
+        });
+        
+        // スムーズスクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const targetPosition = target.offsetTop;
+                    anime({
+                        targets: [document.documentElement, document.body],
+                        scrollTop: targetPosition,
+                        duration: 1000,
+                        easing: 'easeInOutQuad'
+                    });
+                }
+            });
+        });
+    </script>
+    
+    <!-- エレガントアニメーション技術比較セクション -->
+    <div id="comparison-section" style="position: fixed; top: 100vh; left: 0; width: 100%; min-height: 100vh; background: linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%); z-index: 1000; overflow-y: auto; transition: transform 0.8s ease;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 80px 20px;">
+            <h2 style="font-size: 3rem; text-align: center; margin-bottom: 60px; background: linear-gradient(45deg, #6C63FF, #FF6584, #4ECDC4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">エレガントアニメーション革命</h2>
+            
+            <!-- 技術比較マトリックス -->
+            <div style="background: white; border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(108, 99, 255, 0.2); box-shadow: 0 10px 40px rgba(108, 99, 255, 0.1);">
+                <h3 style="color: #6C63FF; font-size: 2rem; margin-bottom: 30px; text-align: center;">JavaScriptアニメーションライブラリ比較</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(108, 99, 255, 0.05), rgba(108, 99, 255, 0.1)); border-radius: 15px; padding: 25px; border-left: 4px solid #6C63FF;">
+                        <h4 style="color: #6C63FF; font-size: 1.5rem; margin-bottom: 15px;">Anime.js</h4>
+                        <p style="margin-bottom: 15px;">軽量で直感的なアニメーションライブラリ</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ 軽量（9KB）</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ シンプルなAPI</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ SVG・CSS・DOM対応</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ タイムライン制御</li>
+                        </ul>
+                    </div>
+                    <div style="background: linear-gradient(135deg, rgba(255, 101, 132, 0.05), rgba(255, 101, 132, 0.1)); border-radius: 15px; padding: 25px; border-left: 4px solid #FF6584;">
+                        <h4 style="color: #FF6584; font-size: 1.5rem; margin-bottom: 15px;">GSAP (GreenSock)</h4>
+                        <p style="margin-bottom: 15px;">業界標準の高機能アニメーション</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ 高性能・多機能</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ 豊富なプラグイン</li>
+                            <li style="margin: 8px 0; color: #F59E0B;">△ 有料ライセンス</li>
+                            <li style="margin: 8px 0; color: #EF4444;">✗ 学習コスト高</li>
+                        </ul>
+                    </div>
+                    <div style="background: linear-gradient(135deg, rgba(78, 205, 196, 0.05), rgba(78, 205, 196, 0.1)); border-radius: 15px; padding: 25px; border-left: 4px solid #4ECDC4;">
+                        <h4 style="color: #4ECDC4; font-size: 1.5rem; margin-bottom: 15px;">Framer Motion</h4>
+                        <p style="margin-bottom: 15px;">React専用アニメーションライブラリ</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ React統合</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ 宣言的API</li>
+                            <li style="margin: 8px 0; color: #F59E0B;">△ React限定</li>
+                            <li style="margin: 8px 0; color: #EF4444;">✗ バニラJS不可</li>
+                        </ul>
+                    </div>
+                    <div style="background: linear-gradient(135deg, rgba(107, 114, 128, 0.05), rgba(107, 114, 128, 0.1)); border-radius: 15px; padding: 25px; border-left: 4px solid #6B7280;">
+                        <h4 style="color: #6B7280; font-size: 1.5rem; margin-bottom: 15px;">CSS Animation</h4>
+                        <p style="margin-bottom: 15px;">ブラウザネイティブアニメーション</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ 超軽量</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ ハードウェア加速</li>
+                            <li style="margin: 8px 0; color: #EF4444;">✗ 複雑な制御困難</li>
+                            <li style="margin: 8px 0; color: #EF4444;">✗ JavaScript連携限定的</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- カリキュラム詳細 -->
+            <div style="background: white; border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(255, 101, 132, 0.2); box-shadow: 0 10px 40px rgba(255, 101, 132, 0.1);">
+                <h3 style="color: #FF6584; font-size: 2rem; margin-bottom: 30px; text-align: center;">12週間エレガントアニメーションマスター</h3>
+                
+                <!-- フェーズ1: 基礎習得 -->
+                <div style="margin-bottom: 40px;">
+                    <h4 style="color: #6C63FF; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #6C63FF; padding-bottom: 10px;">フェーズ1: 基礎技術習得 (1-4週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: linear-gradient(135deg, rgba(108, 99, 255, 0.05), rgba(108, 99, 255, 0.1)); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #6C63FF; margin-bottom: 10px;">Week 1-2: Anime.js基礎</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">API基本構文、プロパティアニメーション、イージング関数、DOM操作、SVGアニメーション基礎</p>
+                        </div>
+                        <div style="background: linear-gradient(135deg, rgba(255, 101, 132, 0.05), rgba(255, 101, 132, 0.1)); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FF6584; margin-bottom: 10px;">Week 3: アニメーション原則</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">タイミング・スペーシング、イージング選択、アニメーション12原則、UI/UXベストプラクティス</p>
+                        </div>
+                        <div style="background: linear-gradient(135deg, rgba(78, 205, 196, 0.05), rgba(78, 205, 196, 0.1)); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #4ECDC4; margin-bottom: 10px;">Week 4: タイムライン制御</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">複数要素同期、シーケンシャルアニメーション、完了コールバック、ループ・方向制御</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- フェーズ2: 実践開発 -->
+                <div style="margin-bottom: 40px;">
+                    <h4 style="color: #FF6584; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #FF6584; padding-bottom: 10px;">フェーズ2: 実践開発 (5-8週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: linear-gradient(135deg, rgba(78, 205, 196, 0.05), rgba(78, 205, 196, 0.1)); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #4ECDC4; margin-bottom: 10px;">Week 5-6: インタラクティブUI</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">ボタンエフェクト、ホバーアニメーション、モーダル・ドロワー、フォームバリデーション</p>
+                        </div>
+                        <div style="background: linear-gradient(135deg, rgba(108, 99, 255, 0.05), rgba(108, 99, 255, 0.1)); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #6C63FF; margin-bottom: 10px;">Week 7: スクロール連動</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">Intersection Observer、進捗インジケーター、パララックスエフェクト、スクロールトリガー</p>
+                        </div>
+                        <div style="background: linear-gradient(135deg, rgba(255, 101, 132, 0.05), rgba(255, 101, 132, 0.1)); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FF6584; margin-bottom: 10px;">Week 8: パフォーマンス最適化</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">requestAnimationFrame、GPU加速、メモリ管理、モバイル最適化</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- フェーズ3: ビジネス応用 -->
+                <div>
+                    <h4 style="color: #4ECDC4; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #4ECDC4; padding-bottom: 10px;">フェーズ3: ビジネス応用 (9-12週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: linear-gradient(135deg, rgba(108, 99, 255, 0.05), rgba(108, 99, 255, 0.1)); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #6C63FF; margin-bottom: 10px;">Week 9-10: 商用プロジェクト</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">ランディングページ制作、ブランドサイト、eコマース、プレゼンテーション</p>
+                        </div>
+                        <div style="background: linear-gradient(135deg, rgba(255, 101, 132, 0.05), rgba(255, 101, 132, 0.1)); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FF6584; margin-bottom: 10px;">Week 11: ポートフォリオ制作</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">個人ブランディング、作品集サイト、デモページ、技術記事執筆</p>
+                        </div>
+                        <div style="background: linear-gradient(135deg, rgba(78, 205, 196, 0.05), rgba(78, 205, 196, 0.1)); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #4ECDC4; margin-bottom: 10px;">Week 12: 収益化戦略</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">フリーランス独立、制作会社連携、受講料設定、継続収入モデル</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 成功事例 -->
+            <div style="background: white; border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(78, 205, 196, 0.2); box-shadow: 0 10px 40px rgba(78, 205, 196, 0.1);">
+                <h3 style="color: #4ECDC4; font-size: 2rem; margin-bottom: 30px; text-align: center;">エレガントアニメーションで成功した卒業生</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(108, 99, 255, 0.05), rgba(255, 101, 132, 0.05)); border-radius: 15px; padding: 30px; border: 1px solid rgba(108, 99, 255, 0.2);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #6C63FF, #FF6584); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold; color: white;">竹内</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #6C63FF; font-size: 1.3rem;">UI/UXアニメーションデザイナー</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.7;">元グラフィックデザイナー</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(108, 99, 255, 0.05); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #FF6584; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6; color: #2D3748;">スタートアップ向けWebサイト・アプリUI制作。Anime.jsによるマイクロインタラクションでユーザーエクスペリエンス向上を専門とする。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(78, 205, 196, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #4ECDC4;">¥220万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255, 101, 132, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #FF6584;">40%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7;">エンゲージメント向上</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.8; color: #2D3748;">"Anime.jsの軽量性とシンプルさで、プロジェクトの開発速度が50%向上。クライアントからの継続依頼が絶えません。"</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(255, 101, 132, 0.05), rgba(78, 205, 196, 0.05)); border-radius: 15px; padding: 30px; border: 1px solid rgba(255, 101, 132, 0.2);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #FF6584, #4ECDC4); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold; color: white;">石井</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #FF6584; font-size: 1.3rem;">フロントエンド開発コンサル</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.7;">元システムエンジニア</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255, 101, 132, 0.05); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #4ECDC4; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6; color: #2D3748;">企業向けWebサイトパフォーマンス改善コンサルティング。Anime.jsによる軽量アニメーション実装で読み込み速度と視覚効果を両立。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(78, 205, 196, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #4ECDC4;">¥380万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255, 101, 132, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #FF6584;">65%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7;">読み込み速度改善</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.8; color: #2D3748;">"軽量なAnime.jsで、企業サイトの表示速度を損なうことなく美しいアニメーションを実現。コンバージョン率が平均30%向上しています。"</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(78, 205, 196, 0.05), rgba(108, 99, 255, 0.05)); border-radius: 15px; padding: 30px; border: 1px solid rgba(78, 205, 196, 0.2);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #4ECDC4, #6C63FF); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold; color: white;">橋本</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #4ECDC4; font-size: 1.3rem;">フリーランス制作者</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.7;">元営業職</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(78, 205, 196, 0.05); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #6C63FF; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6; color: #2D3748;">中小企業向けランディングページ制作。Anime.jsを活用したストーリーテリングアニメーションで商品・サービスの魅力を最大化。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(78, 205, 196, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #4ECDC4;">¥180万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255, 101, 132, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #FF6584;">85%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.7;">CVR向上</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.8; color: #2D3748;">"営業経験とAnime.jsのアニメーション技術を組み合わせ、クライアントの売上を大幅改善。リピート率90%を維持しています。"</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 料金プラン -->
+            <div style="background: white; border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(108, 99, 255, 0.2); box-shadow: 0 10px 40px rgba(108, 99, 255, 0.1);">
+                <h3 style="color: #6C63FF; font-size: 2rem; margin-bottom: 30px; text-align: center;">エレガントアニメーションマスタープラン</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(108, 99, 255, 0.05), rgba(255, 101, 132, 0.05)); border-radius: 20px; padding: 35px; border: 2px solid rgba(108, 99, 255, 0.2); position: relative;">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #6C63FF, #FF6584); color: white; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">ベーシック</div>
+                        <h4 style="color: #6C63FF; font-size: 1.8rem; margin: 20px 0; text-align: center;">スタンダード</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #6C63FF;">¥368,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.7;">12週間プログラム</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>Anime.js基礎から応用</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>アニメーション理論</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>UI/UXアニメーション実装</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>週2回のライブ授業</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>基本ポートフォリオ制作</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #6C63FF, #FF6584); color: white; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">詳細を見る</a>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(255, 101, 132, 0.05), rgba(78, 205, 196, 0.05)); border-radius: 20px; padding: 35px; border: 2px solid rgba(255, 101, 132, 0.3); position: relative; transform: scale(1.05);">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #FF6584, #4ECDC4); color: white; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">人気</div>
+                        <h4 style="color: #FF6584; font-size: 1.8rem; margin: 20px 0; text-align: center;">プロフェッショナル</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #FF6584;">¥598,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.7;">12週間 + 実案件サポート</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>スタンダード内容すべて</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>高度なアニメーション技法</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>実案件プロジェクト参加</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>個別メンタリング（月4回）</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>営業・価格設定指導</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>3ヶ月フォローアップ</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #FF6584, #4ECDC4); color: white; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">申し込む</a>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(78, 205, 196, 0.05), rgba(108, 99, 255, 0.05)); border-radius: 20px; padding: 35px; border: 2px solid rgba(78, 205, 196, 0.2); position: relative;">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #4ECDC4, #6C63FF); color: white; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">法人向け</div>
+                        <h4 style="color: #4ECDC4; font-size: 1.8rem; margin: 20px 0; text-align: center;">エンタープライズ</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #4ECDC4;">¥1,180,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.7;">チーム研修 + システム統合</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>全コース内容</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>チーム研修（最大10名）</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>既存システム統合支援</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>カスタムライブラリ開発</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>6ヶ月継続サポート</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>専用技術サポート</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #4ECDC4, #6C63FF); color: white; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">相談する</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 保証制度 -->
+                <div style="background: linear-gradient(135deg, rgba(78, 205, 196, 0.05), rgba(108, 99, 255, 0.05)); border-radius: 15px; padding: 25px; margin-top: 40px; border: 1px solid rgba(78, 205, 196, 0.2);">
+                    <h4 style="color: #4ECDC4; font-size: 1.5rem; margin-bottom: 15px; text-align: center;">✨ エレガント制作保証</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #4ECDC4; margin-bottom: 5px;">30日間</div>
+                            <div style="font-size: 0.9rem; color: #2D3748;">全額返金保証</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #4ECDC4; margin-bottom: 5px;">制作案件</div>
+                            <div style="font-size: 0.9rem; color: #2D3748;">3ヶ月以内保証</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #4ECDC4; margin-bottom: 5px;">技術サポート</div>
+                            <div style="font-size: 0.9rem; color: #2D3748;">無制限対応</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #4ECDC4; margin-bottom: 5px;">追加費用</div>
+                            <div style="font-size: 0.9rem; color: #2D3748;">一切なし</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTAセクション -->
+            <div style="text-align: center; background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(255, 101, 132, 0.1)); border-radius: 20px; padding: 60px 40px; border: 2px solid rgba(108, 99, 255, 0.2);">
+                <h3 style="font-size: 2.5rem; margin-bottom: 20px; background: linear-gradient(45deg, #6C63FF, #FF6584); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">シンプルで美しい成長曲線を描く</h3>
+                <p style="font-size: 1.2rem; margin-bottom: 30px; opacity: 0.8; color: #2D3748;">Anime.jsで創造するエレガントなユーザーエクスペリエンス</p>
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #6C63FF, #FF6584); color: white; padding: 20px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: transform 0.3s ease; box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);">無料相談を予約</a>
+                    <a href="#demo" style="display: inline-block; background: transparent; color: #6C63FF; padding: 20px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; border: 2px solid #6C63FF; transition: all 0.3s ease;">デモを体験</a>
+                </div>
+                <div style="margin-top: 30px; font-size: 0.9rem; opacity: 0.8; color: #2D3748;">
+                    ✨ 限定18名 | 📞 無料相談30分 | 🚀 即日回答
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- フローティングナビゲーション -->
+    <div id="floating-nav" style="position: fixed; right: 30px; bottom: 30px; z-index: 2000; display: flex; flex-direction: column; gap: 15px;">
+        <button onclick="toggleSection()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #6C63FF, #FF6584); border: none; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 10px 25px rgba(108, 99, 255, 0.4); transition: transform 0.3s ease;">
+            <span id="nav-icon" style="font-size: 1.5rem;">📚</span>
+        </button>
+        <a href="#consultation" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #FF6584, #4ECDC4); display: flex; align-items: center; justify-content: center; text-decoration: none; color: white; font-size: 1.5rem; box-shadow: 0 10px 25px rgba(255, 101, 132, 0.4); transition: transform 0.3s ease;">📞</a>
+    </div>
+    
+    <script>
+        let sectionVisible = false;
+        
+        function toggleSection() {
+            const section = document.getElementById('comparison-section');
+            const icon = document.getElementById('nav-icon');
+            
+            if (!sectionVisible) {
+                section.style.transform = 'translateY(-100vh)';
+                icon.textContent = '✨';
+                sectionVisible = true;
+            } else {
+                section.style.transform = 'translateY(0)';
+                icon.textContent = '📚';
+                sectionVisible = false;
+            }
+        }
+        
+        // フローティングボタンホバーエフェクト
+        document.querySelectorAll('#floating-nav button, #floating-nav a').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transform = 'scale(1.1)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

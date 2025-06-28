@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - 光速で成長する起業術 | Velocity.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/2.0.6/velocity.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/2.0.6/velocity.ui.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #00D9FF;
+            --secondary: #FF0080;
+            --accent: #FFE500;
+            --dark: #0A0A0A;
+            --light: #FAFAFA;
+            --gradient-1: linear-gradient(135deg, #00D9FF 0%, #FF0080 100%);
+            --gradient-2: linear-gradient(135deg, #FF0080 0%, #FFE500 100%);
+            --gradient-3: linear-gradient(135deg, #FFE500 0%, #00D9FF 100%);
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* スピードライン背景 */
+        .speed-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .speed-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--primary) 50%, transparent 100%);
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        /* パーティクル背景 */
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 10px var(--accent);
+        }
+        
+        /* コンテンツラッパー */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* ヒーローセクション */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 1000px;
+            transform: translateY(50px);
+            opacity: 0;
+        }
+        
+        h1 {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1;
+            letter-spacing: -3px;
+            position: relative;
+        }
+        
+        .hero-title-line {
+            display: block;
+            overflow: hidden;
+        }
+        
+        .hero-title-word {
+            display: inline-block;
+            transform: translateY(100%);
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateX(-50px);
+            color: var(--primary);
+        }
+        
+        .hero-cta {
+            display: inline-block;
+            padding: 20px 60px;
+            background: var(--gradient-1);
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+            transform: scale(0);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+        
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) skewX(-30deg);
+            transition: left 0.5s ease;
+        }
+        
+        .hero-cta:hover::before {
+            left: 100%;
+        }
+        
+        .hero-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.5);
+        }
+        
+        /* スピードメーター */
+        .speedometer {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 200px;
+            height: 200px;
+            z-index: 100;
+        }
+        
+        .speedometer-circle {
+            width: 100%;
+            height: 100%;
+            border: 3px solid rgba(0, 217, 255, 0.3);
+            border-radius: 50%;
+            position: relative;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        
+        .speedometer-needle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 40%;
+            background: var(--secondary);
+            transform-origin: bottom center;
+            transform: translate(-50%, -100%) rotate(-45deg);
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 20px var(--secondary);
+        }
+        
+        .speedometer-value {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .speedometer-label {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        /* 機能セクション */
+        .features-section {
+            padding: 150px 20px;
+            position: relative;
+            background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 10, 0.9) 50%, var(--dark) 100%);
+        }
+        
+        .section-title {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        
+        .gradient-text {
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* スピードカード */
+        .speed-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .speed-card {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(255, 0, 128, 0.1) 100%);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(-100px) rotateY(-10deg);
+            cursor: pointer;
+        }
+        
+        .speed-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            animation: cardPulse 3s ease infinite;
+        }
+        
+        @keyframes cardPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .speed-card:hover::before {
+            opacity: 1;
+        }
+        
+        .speed-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.3);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 20px var(--primary));
+        }
+        
+        .card-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        
+        .card-description {
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+        
+        /* タイムラインセクション */
+        .timeline-section {
+            padding: 100px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            transform: translateX(-50%);
+            opacity: 0;
+            transform-origin: top;
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 80px;
+            position: relative;
+            opacity: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            padding: 30px;
+            background: rgba(0, 217, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 15px;
+            margin: 0 30px;
+            position: relative;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 30px var(--primary);
+            z-index: 10;
+        }
+        
+        .timeline-time {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .timeline-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        
+        /* アニメーションデモ */
+        .demo-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(255, 0, 128, 0.1) 0%, transparent 70%);
+        }
+        
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .demo-box {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-1);
+            margin: 50px auto;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.5);
+        }
+        
+        .demo-controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .demo-button {
+            padding: 15px 30px;
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--primary);
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            z-index: -1;
+        }
+        
+        .demo-button:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .demo-button:hover {
+            color: var(--dark);
+            transform: scale(1.05);
+        }
+        
+        /* CTA セクション */
+        .cta-section {
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .cta-line {
+            position: absolute;
+            height: 2px;
+            background: var(--gradient-1);
+            opacity: 0;
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .cta-title {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* パフォーマンスメーター */
+        .performance-meter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 100;
+        }
+        
+        .meter-title {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        .meter-bars {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .meter-bar {
+            width: 5px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .meter-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: var(--primary);
+            transition: height 0.3s ease;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .speedometer {
+                display: none;
+            }
+            
+            .performance-meter {
+                display: none;
+            }
+            
+            .timeline-item {
+                flex-direction: column !important;
+            }
+            
+            .timeline-line {
+                left: 20px;
+            }
+            
+            .timeline-dot {
+                left: 20px;
+            }
+            
+            .speed-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- スピードライン背景 -->
+    <div class="speed-lines" id="speedLines"></div>
+    
+    <!-- パーティクル背景 -->
+    <div class="particle-container" id="particleContainer"></div>
+    
+    <!-- スピードメーター -->
+    <div class="speedometer">
+        <div class="speedometer-circle">
+            <div class="speedometer-needle" id="speedNeedle"></div>
+            <div class="speedometer-value" id="speedValue">0</div>
+            <div class="speedometer-label">km/h</div>
+        </div>
+    </div>
+    
+    <!-- パフォーマンスメーター -->
+    <div class="performance-meter">
+        <div class="meter-title">PERFORMANCE</div>
+        <div class="meter-bars" id="performanceBars"></div>
+    </div>
+    
+    <!-- コンテンツ -->
+    <div class="content-wrapper">
+        <!-- ヒーローセクション -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>
+                    <span class="hero-title-line">
+                        <span class="hero-title-word">光速で</span>
+                    </span>
+                    <span class="hero-title-line">
+                        <span class="hero-title-word">成長する</span>
+                    </span>
+                    <span class="hero-title-line">
+                        <span class="hero-title-word">起業術</span>
+                    </span>
+                </h1>
+                <p class="subtitle">Velocity.jsが実現する、超高速ビジネス成長戦略</p>
+                <a href="#features" class="hero-cta">光速モードを起動する</a>
+            </div>
+        </section>
+        
+        <!-- 機能セクション -->
+        <section class="features-section" id="features">
+            <h2 class="section-title">
+                <span class="gradient-text">スピードが全てを変える</span>
+            </h2>
+            
+            <div class="speed-cards">
+                <div class="speed-card">
+                    <div class="card-icon">⚡</div>
+                    <h3 class="card-title">瞬間的な実行力</h3>
+                    <p class="card-description">
+                        Velocity.jsのような高速レンダリング。<br>
+                        アイデアを即座に形にする実行力で、<br>
+                        競合より先に市場を獲得。
+                    </p>
+                </div>
+                
+                <div class="speed-card">
+                    <div class="card-icon">🚀</div>
+                    <h3 class="card-title">加速度的成長</h3>
+                    <p class="card-description">
+                        初速が成功を決める。<br>
+                        最適化されたアニメーションのように、<br>
+                        無駄のない成長曲線を描く。
+                    </p>
+                </div>
+                
+                <div class="speed-card">
+                    <div class="card-icon">💫</div>
+                    <h3 class="card-title">パフォーマンス最適化</h3>
+                    <p class="card-description">
+                        60FPSの滑らかな動作を実現。<br>
+                        ビジネスプロセスも同様に最適化し、<br>
+                        最高のパフォーマンスを発揮。
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- タイムライン -->
+        <section class="timeline-section">
+            <h2 class="section-title">
+                <span class="gradient-text">加速する成功のタイムライン</span>
+            </h2>
+            
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-time">0.1秒</div>
+                        <h3 class="timeline-title">アイデア着想</h3>
+                        <p>瞬間的なひらめきを逃さずキャッチ</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-time">1秒</div>
+                        <h3 class="timeline-title">プロトタイプ作成</h3>
+                        <p>AI×ノーコードで即座に形に</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-time">10秒</div>
+                        <h3 class="timeline-title">市場テスト開始</h3>
+                        <p>高速PDCAサイクルで検証</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-time">60秒</div>
+                        <h3 class="timeline-title">収益化達成</h3>
+                        <p>最速で黒字化を実現</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- アニメーションデモ -->
+        <section class="demo-section">
+            <h2 class="section-title">
+                <span class="gradient-text">Velocity.jsの威力を体験</span>
+            </h2>
+            
+            <div class="demo-container">
+                <div class="demo-box" id="demoBox"></div>
+                
+                <div class="demo-controls">
+                    <button class="demo-button" onclick="runElasticAnimation()">弾性アニメーション</button>
+                    <button class="demo-button" onclick="runSpringAnimation()">スプリング効果</button>
+                    <button class="demo-button" onclick="runSequenceAnimation()">連続アニメーション</button>
+                    <button class="demo-button" onclick="runPhysicsAnimation()">物理演算</button>
+                    <button class="demo-button" onclick="runCrazyAnimation()">超高速モード</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA -->
+        <section class="cta-section">
+            <div class="cta-background" id="ctaBackground"></div>
+            <div class="cta-content">
+                <h2 class="cta-title">今すぐ光速起業を始めよう</h2>
+                <p class="cta-subtitle">
+                    AIDXschoolで、Velocity.jsのような高速実行力を身につけ、<br>
+                    誰よりも早くビジネスを成功させる
+                </p>
+                <a href="#" class="hero-cta">無料で加速体験を開始</a>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // スピードライン生成
+        function createSpeedLines() {
+            const container = document.getElementById('speedLines');
+            for (let i = 0; i < 20; i++) {
+                const line = document.createElement('div');
+                line.className = 'speed-line';
+                line.style.top = Math.random() * 100 + '%';
+                line.style.width = Math.random() * 300 + 100 + 'px';
+                container.appendChild(line);
+            }
+        }
+        createSpeedLines();
+        
+        // パーティクル生成
+        function createParticles() {
+            const container = document.getElementById('particleContainer');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+        
+        // パフォーマンスメーター生成
+        function createPerformanceBars() {
+            const container = document.getElementById('performanceBars');
+            for (let i = 0; i < 10; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'meter-bar';
+                const fill = document.createElement('div');
+                fill.className = 'meter-fill';
+                bar.appendChild(fill);
+                container.appendChild(bar);
+            }
+        }
+        createPerformanceBars();
+        
+        // ページロードアニメーション
+        $(document).ready(function() {
+            // ヒーローアニメーション
+            $('.hero-content').velocity({
+                opacity: 1,
+                translateY: 0
+            }, {
+                duration: 1000,
+                easing: 'easeOutExpo'
+            });
+            
+            // タイトルワードアニメーション
+            $('.hero-title-word').each(function(index) {
+                $(this).velocity({
+                    translateY: 0
+                }, {
+                    duration: 800,
+                    delay: index * 200,
+                    easing: 'easeOutBack'
+                });
+            });
+            
+            // サブタイトルアニメーション
+            $('.subtitle').velocity({
+                opacity: 1,
+                translateX: 0
+            }, {
+                duration: 1000,
+                delay: 600,
+                easing: 'easeOutQuart'
+            });
+            
+            // CTAボタンアニメーション
+            $('.hero-cta').velocity({
+                scale: 1
+            }, {
+                duration: 600,
+                delay: 1000,
+                easing: [0.175, 0.885, 0.32, 1.275]
+            });
+            
+            // スピードラインアニメーション
+            function animateSpeedLines() {
+                $('.speed-line').each(function(index) {
+                    const duration = Math.random() * 2000 + 1000;
+                    const delay = Math.random() * 2000;
+                    
+                    $(this).velocity({
+                        translateX: '200%',
+                        opacity: [0, 0.6, 0]
+                    }, {
+                        duration: duration,
+                        delay: delay,
+                        loop: true,
+                        easing: 'linear'
+                    });
+                });
+            }
+            animateSpeedLines();
+            
+            // パーティクルアニメーション
+            function animateParticles() {
+                $('.particle').each(function(index) {
+                    const startX = Math.random() * window.innerWidth;
+                    const startY = Math.random() * window.innerHeight;
+                    const endX = startX + (Math.random() - 0.5) * 300;
+                    const endY = startY + (Math.random() - 0.5) * 300;
+                    
+                    $(this).css({
+                        left: startX,
+                        top: startY
+                    }).velocity({
+                        left: endX,
+                        top: endY,
+                        opacity: [0, 1, 0]
+                    }, {
+                        duration: Math.random() * 3000 + 2000,
+                        loop: true,
+                        easing: 'easeInOutQuad'
+                    });
+                });
+            }
+            animateParticles();
+            
+            // スピードメーターアニメーション
+            let currentSpeed = 0;
+            setInterval(() => {
+                const targetSpeed = Math.random() * 300;
+                const rotation = -45 + (targetSpeed / 300) * 270;
+                
+                $('#speedNeedle').velocity({
+                    rotateZ: rotation + 'deg'
+                }, {
+                    duration: 300,
+                    easing: 'spring'
+                });
+                
+                // 数値アニメーション
+                $({ val: currentSpeed }).velocity({
+                    val: targetSpeed
+                }, {
+                    duration: 300,
+                    progress: function(elements, complete, remaining, start, tweenValue) {
+                        $('#speedValue').text(Math.floor(tweenValue));
+                    }
+                });
+                
+                currentSpeed = targetSpeed;
+            }, 2000);
+            
+            // パフォーマンスメーターアニメーション
+            function animatePerformanceBars() {
+                $('.meter-fill').each(function(index) {
+                    const height = Math.random() * 100 + '%';
+                    const delay = index * 50;
+                    
+                    $(this).velocity({
+                        height: height
+                    }, {
+                        duration: 500,
+                        delay: delay,
+                        easing: 'easeOutQuart',
+                        loop: true,
+                        complete: function() {
+                            $(this).velocity({
+                                height: Math.random() * 100 + '%'
+                            }, {
+                                duration: 500,
+                                easing: 'easeInOutQuad'
+                            });
+                        }
+                    });
+                });
+            }
+            animatePerformanceBars();
+        });
+        
+        // スクロールアニメーション
+        $(window).scroll(function() {
+            const scrollTop = $(window).scrollTop();
+            const windowHeight = $(window).height();
+            
+            // セクションタイトルアニメーション
+            $('.section-title').each(function() {
+                const offset = $(this).offset().top;
+                if (scrollTop + windowHeight > offset + 100) {
+                    $(this).velocity({
+                        opacity: 1,
+                        translateY: 0
+                    }, {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    });
+                }
+            });
+            
+            // スピードカードアニメーション
+            $('.speed-card').each(function(index) {
+                const offset = $(this).offset().top;
+                if (scrollTop + windowHeight > offset + 100) {
+                    $(this).velocity({
+                        opacity: 1,
+                        translateX: 0,
+                        rotateY: 0
+                    }, {
+                        duration: 800,
+                        delay: index * 200,
+                        easing: 'easeOutQuart'
+                    });
+                }
+            });
+            
+            // タイムラインアニメーション
+            if ($('.timeline-line').length && scrollTop + windowHeight > $('.timeline-line').offset().top) {
+                $('.timeline-line').velocity({
+                    opacity: 1,
+                    scaleY: 1
+                }, {
+                    duration: 1500,
+                    easing: 'easeOutQuart'
+                });
+                
+                $('.timeline-item').each(function(index) {
+                    const offset = $(this).offset().top;
+                    if (scrollTop + windowHeight > offset + 50) {
+                        $(this).velocity({
+                            opacity: 1,
+                            translateX: 0
+                        }, {
+                            duration: 800,
+                            delay: index * 300,
+                            easing: 'easeOutBack'
+                        });
+                        
+                        // ドットアニメーション
+                        $(this).find('.timeline-dot').velocity({
+                            scale: [1, 0]
+                        }, {
+                            duration: 600,
+                            delay: index * 300 + 400,
+                            easing: 'easeOutBack'
+                        });
+                    }
+                });
+            }
+        });
+        
+        // デモアニメーション関数
+        function runElasticAnimation() {
+            $('#demoBox').velocity({
+                translateX: 300,
+                rotateZ: 360
+            }, {
+                duration: 1000,
+                easing: 'easeOutElastic'
+            }).velocity({
+                translateX: 0,
+                rotateZ: 0
+            }, {
+                duration: 1000,
+                easing: 'easeOutElastic'
+            });
+        }
+        
+        function runSpringAnimation() {
+            $('#demoBox').velocity({
+                scale: 2,
+                rotateZ: 180
+            }, {
+                duration: 800,
+                easing: 'spring'
+            }).velocity({
+                scale: 1,
+                rotateZ: 0
+            }, {
+                duration: 800,
+                easing: 'spring'
+            });
+        }
+        
+        function runSequenceAnimation() {
+            $('#demoBox')
+                .velocity({ translateY: -100 }, { duration: 300 })
+                .velocity({ translateX: 200 }, { duration: 300 })
+                .velocity({ translateY: 0 }, { duration: 300 })
+                .velocity({ translateX: -200 }, { duration: 300 })
+                .velocity({ translateX: 0 }, { duration: 300 });
+        }
+        
+        function runPhysicsAnimation() {
+            $('#demoBox').velocity({
+                translateY: -200
+            }, {
+                duration: 500,
+                easing: 'easeOutQuad'
+            }).velocity({
+                translateY: 0
+            }, {
+                duration: 500,
+                easing: 'easeInQuad',
+                loop: 3
+            });
+        }
+        
+        function runCrazyAnimation() {
+            $('#demoBox').velocity({
+                rotateZ: 720,
+                scale: [0.5, 2],
+                translateX: [300, -300],
+                translateY: [-100, 100]
+            }, {
+                duration: 2000,
+                easing: 'easeInOutBack'
+            }).velocity('reverse', {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            });
+        }
+        
+        // CTA背景アニメーション
+        function createCTALines() {
+            const container = document.getElementById('ctaBackground');
+            
+            setInterval(() => {
+                const line = document.createElement('div');
+                line.className = 'cta-line';
+                line.style.left = Math.random() * 100 + '%';
+                line.style.top = Math.random() * 100 + '%';
+                line.style.width = Math.random() * 200 + 100 + 'px';
+                line.style.transform = `rotate(${Math.random() * 360}deg)`;
+                container.appendChild(line);
+                
+                $(line).velocity({
+                    opacity: [0, 0.5, 0],
+                    scale: [2, 1]
+                }, {
+                    duration: 3000,
+                    easing: 'easeOutQuad',
+                    complete: function() {
+                        line.remove();
+                    }
+                });
+            }, 500);
+        }
+        createCTALines();
+    </script>
+</body>
+</html>

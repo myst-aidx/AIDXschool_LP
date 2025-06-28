@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - 奥行きで感じる起業の層 | Parallax.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366F1;
+            --secondary: #8B5CF6;
+            --accent: #EC4899;
+            --dark: #0F172A;
+            --light: #F8FAFC;
+            --gradient-1: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            --gradient-2: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            --gradient-3: linear-gradient(135deg, #EC4899 0%, #F97316 100%);
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        /* パララックスコンテナ */
+        .parallax-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            will-change: transform;
+        }
+        
+        /* 背景レイヤー（最も奥） */
+        .bg-layer {
+            background: linear-gradient(45deg, var(--dark) 0%, #1E293B 50%, #334155 100%);
+            z-index: 1;
+        }
+        
+        /* 星空レイヤー */
+        .stars-layer {
+            z-index: 2;
+            opacity: 0.8;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        /* 雲レイヤー */
+        .clouds-layer {
+            z-index: 3;
+            opacity: 0.6;
+        }
+        
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            backdrop-filter: blur(2px);
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        /* 幾何学模様レイヤー */
+        .geometry-layer {
+            z-index: 4;
+            opacity: 0.4;
+        }
+        
+        .geometry-shape {
+            position: absolute;
+            border: 2px solid var(--primary);
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* パーティクルレイヤー */
+        .particles-layer {
+            z-index: 5;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: rise 6s linear infinite;
+        }
+        
+        @keyframes rise {
+            from {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            to {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        /* コンテンツレイヤー（最前面） */
+        .content-layer {
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            pointer-events: auto;
+        }
+        
+        /* ヒーローコンテンツ */
+        .hero-content {
+            text-align: center;
+            max-width: 1000px;
+            padding: 40px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            transform: translateZ(0);
+        }
+        
+        h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            color: var(--light);
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .hero-cta {
+            display: inline-block;
+            padding: 20px 50px;
+            background: var(--gradient-2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+        }
+        
+        .hero-cta:hover::before {
+            transform: scale(1);
+        }
+        
+        .hero-cta:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5);
+        }
+        
+        /* スクロールレベルセクション */
+        .level-section {
+            min-height: 100vh;
+            padding: 100px 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .level-1 {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+        }
+        
+        .level-2 {
+            background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+        }
+        
+        .level-3 {
+            background: linear-gradient(135deg, #334155 0%, #475569 100%);
+        }
+        
+        .level-4 {
+            background: linear-gradient(135deg, #475569 0%, #64748B 100%);
+        }
+        
+        .level-content {
+            max-width: 1200px;
+            text-align: center;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 0.8s ease;
+        }
+        
+        .level-content.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .level-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .level-description {
+            font-size: 1.3rem;
+            margin-bottom: 4rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+        
+        /* デプスカード */
+        .depth-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 4rem;
+        }
+        
+        .depth-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transform: translateZ(0);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .depth-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            transition: all 0.5s ease;
+            animation: cardGlow 4s ease infinite;
+        }
+        
+        @keyframes cardGlow {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+        
+        .depth-card:hover {
+            transform: translateY(-10px) translateZ(10px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+        }
+        
+        .depth-card:hover::before {
+            top: -150%;
+            left: -150%;
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 20px var(--accent));
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        
+        .card-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        /* パララックス背景要素 */
+        .parallax-bg-element {
+            position: absolute;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .floating-shape {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-1);
+            border-radius: 20px;
+            animation: floatShape 8s ease-in-out infinite;
+        }
+        
+        @keyframes floatShape {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+        }
+        
+        /* インジケーター */
+        .depth-indicator {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .indicator-dot.active {
+            background: var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+            transform: scale(1.5);
+        }
+        
+        /* フローティングCTA */
+        .floating-cta {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            opacity: 0;
+            transform: translateX(-50%) translateY(100px);
+            transition: all 0.5s ease;
+        }
+        
+        .floating-cta.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .floating-button {
+            padding: 15px 40px;
+            background: var(--gradient-3);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .floating-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(236, 72, 153, 0.6);
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .depth-indicator {
+                display: none;
+            }
+            
+            .parallax-container {
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .parallax-layer {
+                position: relative;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .depth-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .level-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヒーローパララックスセクション -->
+    <div class="parallax-container" id="heroSection">
+        <!-- 背景レイヤー -->
+        <div class="parallax-layer bg-layer" data-depth="0.1"></div>
+        
+        <!-- 星空レイヤー -->
+        <div class="parallax-layer stars-layer" data-depth="0.2" id="starsLayer"></div>
+        
+        <!-- 雲レイヤー -->
+        <div class="parallax-layer clouds-layer" data-depth="0.4" id="cloudsLayer"></div>
+        
+        <!-- 幾何学模様レイヤー -->
+        <div class="parallax-layer geometry-layer" data-depth="0.6" id="geometryLayer"></div>
+        
+        <!-- パーティクルレイヤー -->
+        <div class="parallax-layer particles-layer" data-depth="0.8" id="particlesLayer"></div>
+        
+        <!-- コンテンツレイヤー -->
+        <div class="parallax-layer content-layer" data-depth="1.0">
+            <div class="hero-content">
+                <h1>奥行きで感じる<br>起業の層</h1>
+                <p class="subtitle">
+                    Parallax.jsが創る多層的なビジネス体験。<br>
+                    表面だけでは見えない、深い価値を発見しよう。
+                </p>
+                <a href="#level-1" class="hero-cta">深層への扉を開く</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- レベル1: 表層の理解 -->
+    <section class="level-section level-1" id="level-1">
+        <div class="parallax-bg-element floating-shape" style="top: 10%; left: 80%;"></div>
+        <div class="level-content">
+            <h2 class="level-title">第1層：表層の理解</h2>
+            <p class="level-description">
+                まずは見える部分から。基本的なビジネススキルと市場理解。<br>
+                多くの人がここで満足してしまうが、これは始まりに過ぎない。
+            </p>
+            <div class="depth-cards">
+                <div class="depth-card">
+                    <div class="card-icon">👁️</div>
+                    <h3 class="card-title">市場観察</h3>
+                    <p class="card-description">
+                        表面的なトレンドと顧客ニーズを把握。見える部分の分析から始める。
+                    </p>
+                </div>
+                <div class="depth-card">
+                    <div class="card-icon">📊</div>
+                    <h3 class="card-title">基礎分析</h3>
+                    <p class="card-description">
+                        数字で見える範囲のデータ分析。売上、コスト、利益の基本構造。
+                    </p>
+                </div>
+                <div class="depth-card">
+                    <div class="card-icon">🎯</div>
+                    <h3 class="card-title">ターゲット設定</h3>
+                    <p class="card-description">
+                        明確に定義可能な顧客セグメントの特定と基本的なアプローチ。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- レベル2: 構造の把握 -->
+    <section class="level-section level-2" id="level-2">
+        <div class="parallax-bg-element floating-shape" style="top: 20%; left: 10%; animation-delay: 2s;"></div>
+        <div class="level-content">
+            <h2 class="level-title">第2層：構造の把握</h2>
+            <p class="level-description">
+                ビジネスの骨格を理解する段階。システムとプロセスの設計。<br>
+                持続可能な成長のための基盤構築がここで決まる。
+            </p>
+            <div class="depth-cards">
+                <div class="depth-card">
+                    <div class="card-icon">🏗️</div>
+                    <h3 class="card-title">システム設計</h3>
+                    <p class="card-description">
+                        業務プロセスとワークフローの最適化。効率的な仕組みの構築。
+                    </p>
+                </div>
+                <div class="depth-card">
+                    <div class="card-icon">🔄</div>
+                    <h3 class="card-title">自動化戦略</h3>
+                    <p class="card-description">
+                        AI×ノーコードによる業務自動化。人的リソースの最適配置。
+                    </p>
+                </div>
+                <div class="depth-card">
+                    <div class="card-icon">⚖️</div>
+                    <h3 class="card-title">スケール設計</h3>
+                    <p class="card-description">
+                        成長に対応できる柔軟な組織構造と事業モデルの設計。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- レベル3: 本質の洞察 -->
+    <section class="level-section level-3" id="level-3">
+        <div class="parallax-bg-element floating-shape" style="top: 30%; left: 70%; animation-delay: 4s;"></div>
+        <div class="level-content">
+            <h2 class="level-title">第3層：本質の洞察</h2>
+            <p class="level-description">
+                数字では測れない価値の創造。顧客の深層ニーズと市場の本質。<br>
+                競合とは全く異なる次元での価値提供を実現する。
+            </p>
+            <div class="depth-cards">
+                <div class="depth-card">
+                    <div class="card-icon">🧠</div>
+                    <h3 class="card-title">深層心理分析</h3>
+                    <p class="card-description">
+                        顧客の潜在的欲求と行動パターンの深い理解。真のニーズ発見。
+                    </p>
+                </div>
+                <div class="depth-card">
+                    <div class="card-icon">💎</div>
+                    <h3 class="card-title">独自価値創造</h3>
+                    <p class="card-description">
+                        市場に存在しない新しい価値の創造。競合不在の領域開拓。
+                    </p>
+                </div>
+                <div class="depth-card">
+                    <div class="card-icon">🌟</div>
+                    <h3 class="card-title">体験設計</h3>
+                    <p class="card-description">
+                        忘れられない顧客体験の設計。感情に響く価値提供。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- レベル4: 無限の可能性 -->
+    <section class="level-section level-4" id="level-4">
+        <div class="parallax-bg-element floating-shape" style="top: 40%; left: 30%; animation-delay: 6s;"></div>
+        <div class="level-content">
+            <h2 class="level-title">第4層：無限の可能性</h2>
+            <p class="level-description">
+                既存の枠組みを超越した革新的思考。<br>
+                業界そのものを変革する力を手に入れる最深層。
+            </p>
+            <div class="depth-cards">
+                <div class="depth-card">
+                    <div class="card-icon">🚀</div>
+                    <h3 class="card-title">パラダイムシフト</h3>
+                    <p class="card-description">
+                        業界の常識を覆す革新的アプローチ。新しいスタンダードの創造。
+                    </p>
+                </div>
+                <div class="depth-card">
+                    <div class="card-icon">🌐</div>
+                    <h3 class="card-title">エコシステム構築</h3>
+                    <p class="card-description">
+                        単独企業を超えた価値創造ネットワークの構築と運営。
+                    </p>
+                </div>
+                <div class="depth-card">
+                    <div class="card-icon">♾️</div>
+                    <h3 class="card-title">無限成長モデル</h3>
+                    <p class="card-description">
+                        自己増殖する成長メカニズムの設計。持続的革新の仕組み。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- デプスインジケーター -->
+    <div class="depth-indicator">
+        <div class="indicator-dot active" data-target="heroSection"></div>
+        <div class="indicator-dot" data-target="level-1"></div>
+        <div class="indicator-dot" data-target="level-2"></div>
+        <div class="indicator-dot" data-target="level-3"></div>
+        <div class="indicator-dot" data-target="level-4"></div>
+    </div>
+    
+    <!-- フローティングCTA -->
+    <div class="floating-cta" id="floatingCTA">
+        <a href="#" class="floating-button">深層学習を開始</a>
+    </div>
+    
+    <script>
+        // パララックス背景要素の生成
+        function createBackgroundElements() {
+            // 星の生成
+            const starsLayer = document.getElementById('starsLayer');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsLayer.appendChild(star);
+            }
+            
+            // 雲の生成
+            const cloudsLayer = document.getElementById('cloudsLayer');
+            for (let i = 0; i < 5; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud';
+                cloud.style.left = Math.random() * 100 + '%';
+                cloud.style.top = Math.random() * 100 + '%';
+                cloud.style.width = Math.random() * 200 + 100 + 'px';
+                cloud.style.height = Math.random() * 60 + 30 + 'px';
+                cloud.style.animationDelay = Math.random() * 8 + 's';
+                cloudsLayer.appendChild(cloud);
+            }
+            
+            // 幾何学模様の生成
+            const geometryLayer = document.getElementById('geometryLayer');
+            for (let i = 0; i < 8; i++) {
+                const shape = document.createElement('div');
+                shape.className = 'geometry-shape';
+                shape.style.left = Math.random() * 100 + '%';
+                shape.style.top = Math.random() * 100 + '%';
+                
+                const size = Math.random() * 100 + 50;
+                shape.style.width = size + 'px';
+                shape.style.height = size + 'px';
+                
+                if (Math.random() > 0.5) {
+                    shape.style.borderRadius = '50%';
+                } else {
+                    shape.style.borderRadius = '0';
+                }
+                
+                shape.style.animationDuration = Math.random() * 15 + 10 + 's';
+                shape.style.animationDelay = Math.random() * 5 + 's';
+                geometryLayer.appendChild(shape);
+            }
+            
+            // パーティクルの生成
+            const particlesLayer = document.getElementById('particlesLayer');
+            function createParticle() {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.bottom = '-10px';
+                particle.style.width = Math.random() * 6 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDuration = Math.random() * 4 + 4 + 's';
+                particlesLayer.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 8000);
+            }
+            
+            // パーティクルを定期生成
+            setInterval(createParticle, 500);
+        }
+        
+        // パララックス効果の初期化
+        function initParallax() {
+            const heroSection = document.getElementById('heroSection');
+            const parallaxLayers = heroSection.querySelectorAll('.parallax-layer');
+            
+            function updateParallax() {
+                const scrolled = window.pageYOffset;
+                const heroHeight = heroSection.offsetHeight;
+                const scrollProgress = Math.min(scrolled / heroHeight, 1);
+                
+                parallaxLayers.forEach(layer => {
+                    const depth = parseFloat(layer.dataset.depth) || 0;
+                    const movement = scrollProgress * depth * 100;
+                    layer.style.transform = `translate3d(0, ${movement}px, 0)`;
+                });
+            }
+            
+            window.addEventListener('scroll', updateParallax, { passive: true });
+        }
+        
+        // スクロールアニメーション
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.3
+            });
+            
+            document.querySelectorAll('.level-content').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        
+        // デプスインジケーター
+        function initDepthIndicator() {
+            const indicators = document.querySelectorAll('.indicator-dot');
+            const sections = ['heroSection', 'level-1', 'level-2', 'level-3', 'level-4'];
+            
+            // クリックイベント
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    const targetId = indicator.dataset.target;
+                    const targetElement = document.getElementById(targetId);
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            // スクロール連動
+            function updateIndicator() {
+                const scrollPosition = window.pageYOffset + window.innerHeight / 2;
+                
+                sections.forEach((sectionId, index) => {
+                    const section = document.getElementById(sectionId);
+                    const sectionTop = section.offsetTop;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                        indicators.forEach(dot => dot.classList.remove('active'));
+                        indicators[index].classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateIndicator, { passive: true });
+        }
+        
+        // フローティングCTA
+        function initFloatingCTA() {
+            const floatingCTA = document.getElementById('floatingCTA');
+            const heroSection = document.getElementById('heroSection');
+            
+            function updateFloatingCTA() {
+                const scrolled = window.pageYOffset;
+                const heroHeight = heroSection.offsetHeight;
+                
+                if (scrolled > heroHeight * 0.8) {
+                    floatingCTA.classList.add('visible');
+                } else {
+                    floatingCTA.classList.remove('visible');
+                }
+            }
+            
+            window.addEventListener('scroll', updateFloatingCTA, { passive: true });
+        }
+        
+        // カードホバーエフェクト
+        function initCardEffects() {
+            const cards = document.querySelectorAll('.depth-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-15px) translateZ(20px) rotateX(5deg)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0) translateZ(0) rotateX(0deg)';
+                });
+            });
+        }
+        
+        // マウス追従エフェクト
+        function initMouseEffects() {
+            const heroContent = document.querySelector('.hero-content');
+            
+            document.addEventListener('mousemove', (e) => {
+                if (window.innerWidth > 768) {
+                    const mouseX = e.clientX / window.innerWidth;
+                    const mouseY = e.clientY / window.innerHeight;
+                    
+                    const rotateX = (mouseY - 0.5) * 10;
+                    const rotateY = (mouseX - 0.5) * -10;
+                    
+                    heroContent.style.transform = `
+                        perspective(1000px) 
+                        rotateX(${rotateX}deg) 
+                        rotateY(${rotateY}deg)
+                        translateZ(20px)
+                    `;
+                }
+            });
+        }
+        
+        // スムーズスクロール
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+        
+        // パフォーマンス最適化
+        function initPerformanceOptimizations() {
+            // Intersection Observer for expensive animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const element = entry.target;
+                    if (entry.isIntersecting) {
+                        element.style.animationPlayState = 'running';
+                    } else {
+                        element.style.animationPlayState = 'paused';
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.floating-shape, .geometry-shape, .cloud').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Throttle scroll events
+            let ticking = false;
+            function requestTick(fn) {
+                if (!ticking) {
+                    requestAnimationFrame(fn);
+                    ticking = true;
+                }
+            }
+            
+            const originalScrollHandler = window.onscroll;
+            window.onscroll = function(e) {
+                requestTick(() => {
+                    if (originalScrollHandler) originalScrollHandler(e);
+                    ticking = false;
+                });
+            };
+        }
+        
+        // レスポンシブ対応
+        function initResponsive() {
+            function handleResize() {
+                const isMobile = window.innerWidth <= 768;
+                const parallaxLayers = document.querySelectorAll('.parallax-layer');
+                
+                if (isMobile) {
+                    // モバイルではパララックス無効化
+                    parallaxLayers.forEach(layer => {
+                        layer.style.transform = 'none';
+                    });
+                } else {
+                    // デスクトップではパララックス有効化
+                    initParallax();
+                }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            handleResize(); // 初期実行
+        }
+        
+        // 初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            createBackgroundElements();
+            initParallax();
+            initScrollAnimations();
+            initDepthIndicator();
+            initFloatingCTA();
+            initCardEffects();
+            initMouseEffects();
+            initSmoothScroll();
+            initPerformanceOptimizations();
+            initResponsive();
+        });
+        
+        // ページ読み込み完了後の追加アニメーション
+        window.addEventListener('load', () => {
+            // ヒーローコンテンツのエントランスアニメーション
+            const heroContent = document.querySelector('.hero-content');
+            heroContent.style.animation = 'none';
+            heroContent.style.transform = 'translateY(50px) scale(0.9)';
+            heroContent.style.opacity = '0';
+            
+            setTimeout(() => {
+                heroContent.style.transition = 'all 1.5s cubic-bezier(0.23, 1, 0.32, 1)';
+                heroContent.style.transform = 'translateY(0) scale(1)';
+                heroContent.style.opacity = '1';
+            }, 300);
+        });
+    </script>
+</body>
+</html>

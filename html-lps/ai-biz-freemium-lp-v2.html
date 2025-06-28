@@ -1,0 +1,3241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>月27時間の単純作業を3時間に | AI×ノーコード自動化</title>
+    <meta name="description" content="AI×ノーコードで業務を自動化。動画8本＋テンプレ3本を無料配布中。LINE登録で今すぐ始める。">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./assets/icons.css">
+    <link rel="stylesheet" href="./assets/animations.css">
+    <link rel="stylesheet" href="./assets/loader.css">
+    
+    <!-- Google Tag Manager -->
+    <!-- Floating CTA for Mobile -->
+    <div class="floating-cta" id="floatingCTA" style="display: none;">
+        <a href="https://lin.ee/sampleID123" class="cta-button" onclick="trackCTA()">
+            <span>無料で始める</span>
+            <span class="icon icon-play icon-play-animated"></span>
+        </a>
+    </div>
+    
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5XXXXX');</script>
+    
+    <!-- Twitter Pixel -->
+    <script>
+    !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+    },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='//static.ads-twitter.com/uwt.js',
+    a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+    twq('init','tw-xxxxx-xxxxx');
+    twq('track','PageView');
+    </script>
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Course",
+        "name": "AI×ノーコード業務自動化講座",
+        "description": "プログラミング不要で業務を自動化。動画8本とテンプレート3本を無料配布",
+        "provider": {
+            "@type": "Organization",
+            "name": "AI×ノーコード自動化"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "JPY"
+        },
+        "courseMode": "online",
+        "duration": "PT3H"
+    }
+    </script>
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="月27時間の単純作業を3時間に | AI×ノーコード自動化">
+    <meta property="og:description" content="AI×ノーコードで業務を自動化。動画8本＋テンプレ3本を無料配布中。LINE登録で今すぐ始める。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com/ai-automation">
+    <meta property="og:image" content="https://example.com/assets/ogp-image.jpg">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="月27時間の単純作業を3時間に | AI×ノーコード自動化">
+    <meta name="twitter:description" content="AI×ノーコードで業務を自動化。動画8本＋テンプレ3本を無料配布中。">
+    <meta name="twitter:image" content="https://example.com/assets/twitter-card.jpg">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-blue: #4EB5FF;
+            --primary-green: #38C172;
+            --accent-red: #FF6B6B;
+            --accent-yellow: #FFD93D;
+            --text-dark: #1a202c;
+            --text-gray: #4a5568;
+            --bg-light: #f7fafc;
+            --bg-gradient: linear-gradient(135deg, rgba(78,181,255,0.08) 0%, rgba(56,193,114,0.08) 100%);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+            --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 390px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: scale(0.5) rotateX(90deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotateX(0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: var(--bg-gradient);
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(78,181,255,0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            width: 100%;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .hero h1 {
+            font-size: 28px;
+            font-weight: 900;
+            line-height: 1.3;
+            margin-bottom: 24px;
+        }
+        
+        .time-before {
+            display: inline-block;
+            color: var(--accent-red);
+            font-size: 40px;
+            font-weight: 900;
+            position: relative;
+            animation: countUp 0.6s ease-out 0.3s both;
+        }
+        
+        .time-before::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-red);
+            transform: scaleX(0);
+            animation: slideIn 0.4s ease-out 0.9s forwards;
+        }
+        
+        .time-after {
+            display: inline-block;
+            color: var(--primary-green);
+            font-size: 40px;
+            font-weight: 900;
+            position: relative;
+            animation: countUp 0.6s ease-out 0.6s both;
+        }
+        
+        .time-after::after {
+            content: '✨';
+            position: absolute;
+            right: -30px;
+            top: -10px;
+            font-size: 24px;
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        .hero .subtitle {
+            font-size: 18px;
+            color: var(--text-gray);
+            margin-bottom: 32px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+        
+        .hero .subtitle .highlight {
+            color: var(--primary-blue);
+            font-weight: 700;
+        }
+        
+        /* CTA Button */
+        .cta-wrapper {
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary-green) 0%, #2ECC71 100%);
+            color: white;
+            padding: 20px 48px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 8px 24px rgba(56,193,114,0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(56,193,114,0.5);
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .cta-button:active {
+            transform: translateY(-1px) scale(1);
+        }
+        
+        .cta-pulse {
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        /* Problem Section */
+        .problem {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .section-title {
+            font-size: 26px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 48px;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-green));
+            border-radius: 2px;
+        }
+        
+        .problem-grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        
+        .problem-card {
+            background: var(--bg-light);
+            padding: 32px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .problem-card:nth-child(1) { animation-delay: 0.1s; }
+        .problem-card:nth-child(2) { animation-delay: 0.2s; }
+        .problem-card:nth-child(3) { animation-delay: 0.3s; }
+        .problem-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        .problem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .problem-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .problem-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .problem-card p {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+        
+        /* Solution Section */
+        .solution {
+            padding: 80px 0;
+            background: var(--bg-gradient);
+        }
+        
+        .solution-content {
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+        }
+        
+        .solution-visual {
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .solution-circle {
+            width: 280px;
+            height: 280px;
+            position: relative;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .solution-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: var(--shadow-xl);
+            z-index: 2;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .solution-item {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+            padding: 8px;
+            line-height: 1.2;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(var(--angle)) translateX(140px) rotate(calc(-1 * var(--angle)));
+            transition: all 0.3s ease;
+        }
+        
+        .solution-item:hover {
+            transform: translate(-50%, -50%) rotate(var(--angle)) translateX(140px) rotate(calc(-1 * var(--angle))) scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .solution-points {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .solution-point {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .solution-point:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(5px);
+        }
+        
+        .solution-check {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary-green), #2ECC71);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .solution-point h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .solution-point p {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+        
+        /* Workflow Section */
+        .workflow {
+            padding: 80px 0;
+            background: white;
+            position: relative;
+        }
+        
+        .workflow-container {
+            position: relative;
+            padding: 40px 0;
+        }
+        
+        .workflow-path {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-green));
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .workflow-items {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .workflow-item {
+            flex: 1;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .workflow-item:nth-child(1) { animation-delay: 0.1s; }
+        .workflow-item:nth-child(2) { animation-delay: 0.2s; }
+        .workflow-item:nth-child(3) { animation-delay: 0.3s; }
+        .workflow-item:nth-child(4) { animation-delay: 0.4s; }
+        
+        .workflow-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            position: relative;
+        }
+        
+        .workflow-icon {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .workflow-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .workflow-icon svg {
+            width: 40px;
+            height: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .workflow-item:hover .workflow-icon {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .workflow-item:hover .workflow-icon::before {
+            opacity: 1;
+        }
+        
+        .workflow-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-gray);
+        }
+        
+        /* Use Cases Section */
+        .use-cases {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+        
+        .use-case-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .use-case-tab {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid transparent;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .use-case-tab.active {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .use-case-tab:not(.active):hover {
+            border-color: var(--primary-blue);
+        }
+        
+        .use-case-content {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .use-case-panel {
+            display: none;
+        }
+        
+        .use-case-panel.active {
+            display: block;
+            animation: fadeInUp 0.4s ease-out;
+        }
+        
+        .use-case-panel h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        
+        .use-case-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .use-case-step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--bg-light);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .use-case-step:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .use-case-arrow {
+            text-align: center;
+            color: var(--primary-green);
+            font-size: 20px;
+        }
+        
+        .use-case-result {
+            background: linear-gradient(135deg, rgba(78,181,255,0.1), rgba(56,193,114,0.1));
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .result-number {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary-green);
+            margin-bottom: 8px;
+        }
+        
+        /* Gift Section */
+        .gift {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .gift-content {
+            background: linear-gradient(135deg, rgba(255,217,61,0.1), rgba(255,107,107,0.1));
+            border-radius: 24px;
+            padding: 40px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gift-badge {
+            display: inline-block;
+            background: var(--accent-red);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .gift-items {
+            display: grid;
+            gap: 24px;
+            margin: 32px 0;
+        }
+        
+        .gift-item {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+        
+        .gift-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .gift-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+        
+        .gift-item h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .gift-item p {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+        
+        .gift-list {
+            text-align: left;
+            list-style: none;
+            margin-top: 12px;
+        }
+        
+        .gift-list li {
+            font-size: 13px;
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .gift-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary-green);
+            font-weight: 700;
+        }
+        
+        /* Steps Section */
+        .steps {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+        
+        .steps-timeline {
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        .steps-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary-blue), var(--primary-green));
+            transform: translateX(-50%);
+        }
+        
+        .step {
+            position: relative;
+            margin-bottom: 48px;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .step:nth-child(1) { animation-delay: 0.1s; }
+        .step:nth-child(2) { animation-delay: 0.2s; }
+        .step:nth-child(3) { animation-delay: 0.3s; }
+        
+        .step-circle {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 3px solid var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            z-index: 2;
+        }
+        
+        .step-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 60px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+        
+        .step-content:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .step-content h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .step-content p {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+        
+        .step-time {
+            display: inline-block;
+            background: var(--bg-light);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-top: 8px;
+        }
+        
+        /* Comparison Section */
+        .comparison {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .comparison-table {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .comparison-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            background: var(--bg-light);
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .comparison-header > div {
+            padding: 20px 16px;
+            font-size: 14px;
+        }
+        
+        .comparison-header .highlight {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            color: white;
+        }
+        
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border-top: 1px solid #E2E8F0;
+            text-align: center;
+        }
+        
+        .comparison-row > div {
+            padding: 16px 12px;
+            font-size: 14px;
+        }
+        
+        .comparison-row .feature {
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .check {
+            color: var(--primary-green);
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .cross {
+            color: #CBD5E0;
+            font-size: 20px;
+        }
+        
+        /* Proof Section */
+        .proof {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+        
+        .graph-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .graph-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(78,181,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .graph-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .graph-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .graph-subtitle {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+        
+        .bar-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 240px;
+            padding: 0 20px;
+            position: relative;
+        }
+        
+        .bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            position: relative;
+        }
+        
+        .bar {
+            width: 80px;
+            border-radius: 12px 12px 0 0;
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        
+        .bar-before {
+            height: 200px;
+            background: linear-gradient(180deg, var(--accent-red) 0%, #ff5252 100%);
+            animation: slideIn 0.8s ease-out 0.5s both;
+            transform-origin: bottom;
+        }
+        
+        .bar-after {
+            height: 30px;
+            background: linear-gradient(180deg, var(--primary-green) 0%, #2ECC71 100%);
+            animation: slideIn 0.8s ease-out 0.8s both;
+            transform-origin: bottom;
+        }
+        
+        .bar:hover {
+            transform: scaleY(1.05);
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            font-weight: 900;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 1s forwards;
+        }
+        
+        .bar-label {
+            margin-top: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-gray);
+        }
+        
+        /* Reviews */
+        .reviews-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .review-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .review-card:nth-child(1) { animation-delay: 0.1s; }
+        .review-card:nth-child(2) { animation-delay: 0.2s; }
+        .review-card:nth-child(3) { animation-delay: 0.3s; }
+        
+        .review-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-green));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .review-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .review-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .review-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .review-info {
+            flex: 1;
+        }
+        
+        .review-name {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .review-role {
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+        
+        .review-text {
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        
+        .review-highlight {
+            color: var(--primary-green);
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .review-highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: rgba(56,193,114,0.2);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .review-card:hover .review-highlight::after {
+            transform: scaleX(1);
+        }
+        
+        /* Urgency Section */
+        .urgency {
+            padding: 60px 0;
+            background: linear-gradient(135deg, rgba(255,107,107,0.1), rgba(255,217,61,0.1));
+        }
+        
+        .urgency-content {
+            text-align: center;
+        }
+        
+        .urgency-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .urgency-timer {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 32px 0;
+        }
+        
+        .timer-block {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: var(--shadow-md);
+            min-width: 60px;
+        }
+        
+        .timer-number {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--accent-red);
+            line-height: 1;
+        }
+        
+        .timer-label {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+        
+        .urgency-note {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin: 24px 0;
+        }
+        
+        .urgency-spots {
+            display: inline-block;
+            background: var(--accent-red);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        /* FAQ Section */
+        .faq {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .faq-list {
+            max-width: 100%;
+        }
+        
+        .faq-item {
+            background: var(--bg-light);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .faq-question {
+            padding: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .faq-question::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary-blue), var(--primary-green));
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .faq-question::before {
+            transform: scaleY(1);
+        }
+        
+        .faq-toggle {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .faq-item.active .faq-toggle {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            color: white;
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            padding: 0 24px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 0 24px 24px;
+            max-height: 300px;
+            opacity: 1;
+        }
+        
+        .faq-answer p {
+            line-height: 1.7;
+            color: var(--text-gray);
+        }
+        
+        /* Trust Section */
+        .trust {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .trust-subtitle {
+            text-align: center;
+            color: var(--text-gray);
+            margin-bottom: 48px;
+        }
+        
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        
+        .logo-item {
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .logo-item:nth-child(1) { animation-delay: 0.1s; }
+        .logo-item:nth-child(2) { animation-delay: 0.2s; }
+        .logo-item:nth-child(3) { animation-delay: 0.3s; }
+        .logo-item:nth-child(4) { animation-delay: 0.4s; }
+        
+        .logo-placeholder {
+            background: var(--bg-light);
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 24px;
+            font-weight: 600;
+            color: var(--text-gray);
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-placeholder:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+        
+        .logo-caption {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .media-mentions {
+            background: var(--bg-gradient);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+        }
+        
+        .media-mentions h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        
+        .media-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .media-item {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .media-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Features Deep Dive */
+        .features-deep {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+        
+        .feature-cards {
+            display: grid;
+            gap: 32px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-green));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+        
+        .feature-list li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+        
+        .feature-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary-green);
+            font-weight: 700;
+        }
+        
+        .feature-result {
+            background: var(--bg-gradient);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 700;
+        }
+        
+        .result-icon {
+            font-size: 24px;
+        }
+        
+        /* Case Study Section */
+        .case-study {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .case-study-content {
+            background: var(--bg-light);
+            border-radius: 24px;
+            padding: 40px 24px;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .case-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .case-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .case-info h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .case-info p {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+        
+        .case-timeline {
+            margin-bottom: 32px;
+        }
+        
+        .timeline-item {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .timeline-date {
+            display: inline-block;
+            background: var(--primary-blue);
+            color: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .timeline-content h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .timeline-content p {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+        
+        .timeline-arrow {
+            text-align: center;
+            font-size: 24px;
+            color: var(--primary-green);
+            margin: 8px 0;
+        }
+        
+        .case-quote {
+            background: white;
+            border-left: 4px solid var(--primary-green);
+            border-radius: 8px;
+            padding: 24px;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .case-quote::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 48px;
+            color: var(--primary-green);
+            opacity: 0.3;
+        }
+        
+        /* Bonus Section */
+        .bonus {
+            padding: 80px 0;
+            background: linear-gradient(135deg, rgba(255,217,61,0.05), rgba(255,107,107,0.05));
+        }
+        
+        .bonus-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-yellow), #FFB74D);
+            color: #8B6914;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            margin: 0 auto 32px;
+            display: block;
+            width: fit-content;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .bonus-items {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .bonus-item {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bonus-item::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,217,61,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .bonus-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .bonus-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+        
+        .bonus-item h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .bonus-item p {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+        
+        .bonus-total {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .bonus-price {
+            color: var(--accent-red);
+            font-size: 28px;
+            text-decoration: line-through;
+            margin: 0 8px;
+        }
+        
+        .bonus-free {
+            color: var(--primary-green);
+            font-size: 32px;
+        }
+        
+        /* Mistakes Section */
+        .mistakes {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .mistakes-grid {
+            display: grid;
+            gap: 24px;
+        }
+        
+        .mistake-card {
+            background: var(--bg-light);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+        
+        .mistake-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+        
+        .mistake-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .mistake-icon {
+            font-size: 24px;
+        }
+        
+        .mistake-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .mistake-problem {
+            color: var(--text-gray);
+            margin-bottom: 16px;
+            padding-left: 36px;
+            font-size: 14px;
+        }
+        
+        .mistake-solution {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .solution-icon {
+            color: var(--primary-green);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .mistake-solution p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* Guarantee Section */
+        .guarantee {
+            padding: 80px 0;
+            background: var(--bg-gradient);
+        }
+        
+        .guarantee-items {
+            display: grid;
+            gap: 24px;
+        }
+        
+        .guarantee-item {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .guarantee-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(78,181,255,0.05), rgba(56,193,114,0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .guarantee-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .guarantee-item:hover::before {
+            opacity: 1;
+        }
+        
+        .guarantee-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .guarantee-item h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .guarantee-item p {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+        
+        /* Author Section */
+        .author {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+        
+        .author-content {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 24px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+        
+        .author-avatar {
+            margin-bottom: 24px;
+        }
+        
+        .avatar-placeholder {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 24px;
+            margin: 0 auto;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .author-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .author-tagline {
+            color: var(--text-gray);
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .author-bio {
+            text-align: left;
+            margin-bottom: 32px;
+        }
+        
+        .author-bio p {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+        }
+        
+        .author-achievements {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 32px;
+        }
+        
+        .achievement {
+            text-align: center;
+        }
+        
+        .achievement-number {
+            display: block;
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary-blue);
+            margin-bottom: 4px;
+        }
+        
+        .achievement-label {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234EB5FF' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+        
+        .final-cta-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .final-cta h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .final-cta p {
+            font-size: 18px;
+            color: var(--text-gray);
+            margin-bottom: 32px;
+        }
+        
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: float 2s ease-in-out infinite;
+        }
+        
+        .scroll-indicator svg {
+            width: 32px;
+            height: 32px;
+            opacity: 0.5;
+        }
+        
+        /* Responsive */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 720px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .time-before,
+            .time-after {
+                font-size: 48px;
+            }
+            
+            .problem-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .workflow-items {
+                justify-content: space-around;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            
+            .gift-items {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .reviews-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .reviews-grid .review-card:nth-child(3) {
+                grid-column: 1 / -1;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            
+            .logo-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .feature-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .bonus-items {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .bonus-items .bonus-item:nth-child(3) {
+                grid-column: 1 / -1;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            
+            .guarantee-items {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .author-content {
+                text-align: left;
+            }
+            
+            .author-content {
+                display: flex;
+                gap: 40px;
+                align-items: center;
+                padding: 48px;
+            }
+            
+            .author-avatar {
+                margin-bottom: 0;
+            }
+            
+            .author-info {
+                flex: 1;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 960px;
+            }
+            
+            .reviews-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .reviews-grid .review-card:nth-child(3) {
+                grid-column: auto;
+                max-width: none;
+            }
+            
+            .solution-content {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .feature-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .bonus-items {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .bonus-items .bonus-item:nth-child(3) {
+                grid-column: auto;
+                max-width: none;
+            }
+            
+            .mistakes-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        /* Loading animation */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        
+        .page-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader-content {
+            text-align: center;
+        }
+        
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--bg-light);
+            border-top-color: var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-container">
+            <div class="loader-circle"></div>
+            <div class="loader-circle-progress"></div>
+            <div class="loader-content">
+                <div class="loader-logo"></div>
+                <p class="loader-text">準備中...</p>
+            </div>
+            <div class="loader-dots">
+                <span class="loader-dot"></span>
+                <span class="loader-dot"></span>
+                <span class="loader-dot"></span>
+            </div>
+        </div>
+        <div class="loader-progress">
+            <div class="loader-progress-bar"></div>
+        </div>
+    </div>
+    
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5XXXXX"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>
+                    月<span class="time-before">27時間</span>の単純作業、<br>
+                    AI×ノーコードで<br>
+                    "たった<span class="time-after">3時間</span>"に。
+                </h1>
+                <p class="subtitle">
+                    今すぐ<span class="highlight">動画8本＋自動化テンプレ3本</span>を無料配布。
+                </p>
+                <div class="cta-wrapper">
+                    <a href="https://lin.ee/sampleID123" class="cta-button" onclick="trackCTA()">
+                        <span>3分で始める</span>
+                        <span class="icon icon-play icon-play-animated"></span>
+                        <span>LINE登録</span>
+                    </a>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Problem Section -->
+    <section class="problem">
+        <div class="container">
+            <h2 class="section-title">こんな悩みありませんか？</h2>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">😫</div>
+                    <h3>毎日の繰り返し作業</h3>
+                    <p>メール確認、データ入力、請求書作成...同じ作業の繰り返しで疲弊していませんか？</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">⏰</div>
+                    <h3>時間が足りない</h3>
+                    <p>本当にやりたい仕事があるのに、雑務に追われて手が回らない毎日...</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">💸</div>
+                    <h3>外注は高すぎる</h3>
+                    <p>アシスタントを雇いたいけど、月20万円以上のコストは厳しい...</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🤯</div>
+                    <h3>プログラミングは無理</h3>
+                    <p>自動化には興味があるけど、プログラミングなんて難しそうで手が出せない...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Solution Section -->
+    <section class="solution">
+        <div class="container">
+            <h2 class="section-title">AI×ノーコードが全て解決します</h2>
+            <div class="solution-content">
+                <div class="solution-visual">
+                    <div class="solution-circle">
+                        <div class="solution-center">AI×<br>ノーコード</div>
+                        <div class="solution-item" style="--angle: 0deg;">
+                            <span>Gmail<br>自動返信</span>
+                        </div>
+                        <div class="solution-item" style="--angle: 72deg;">
+                            <span>請求書<br>自動作成</span>
+                        </div>
+                        <div class="solution-item" style="--angle: 144deg;">
+                            <span>SNS<br>自動投稿</span>
+                        </div>
+                        <div class="solution-item" style="--angle: 216deg;">
+                            <span>データ<br>自動集計</span>
+                        </div>
+                        <div class="solution-item" style="--angle: 288deg;">
+                            <span>タスク<br>自動管理</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="solution-points">
+                    <div class="solution-point">
+                        <div class="solution-check">✓</div>
+                        <div>
+                            <h3>プログラミング不要</h3>
+                            <p>ドラッグ&ドロップだけで自動化を構築</p>
+                        </div>
+                    </div>
+                    <div class="solution-point">
+                        <div class="solution-check">✓</div>
+                        <div>
+                            <h3>24時間365日稼働</h3>
+                            <p>一度設定すれば、寝ている間も自動で処理</p>
+                        </div>
+                    </div>
+                    <div class="solution-point">
+                        <div class="solution-check">✓</div>
+                        <div>
+                            <h3>月額1,000円〜</h3>
+                            <p>人を雇うより99%安い運用コスト</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Workflow Section -->
+    <section class="workflow">
+        <div class="container">
+            <h2 class="section-title">誰でも真似できるノーコード自動化</h2>
+            <div class="workflow-container">
+                <div class="workflow-path"></div>
+                <div class="workflow-items">
+                    <div class="workflow-item">
+                        <div class="workflow-icon-wrapper">
+                            <div class="workflow-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#EA4335" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="workflow-label">Gmail</div>
+                    </div>
+                    <div class="workflow-item">
+                        <div class="workflow-icon-wrapper">
+                            <div class="workflow-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#0F9D58" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="workflow-label">スプレッドシート</div>
+                    </div>
+                    <div class="workflow-item">
+                        <div class="workflow-icon-wrapper">
+                            <div class="workflow-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#10A37F" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="workflow-label">ChatGPT</div>
+                    </div>
+                    <div class="workflow-item">
+                        <div class="workflow-icon-wrapper">
+                            <div class="workflow-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#4A154B" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="workflow-label">Slack</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Use Cases Section -->
+    <section class="use-cases">
+        <div class="container">
+            <h2 class="section-title">実際の自動化事例</h2>
+            <div class="use-case-tabs">
+                <button class="use-case-tab active" data-tab="ec">EC運営</button>
+                <button class="use-case-tab" data-tab="freelance">フリーランス</button>
+                <button class="use-case-tab" data-tab="sidebiz">副業</button>
+            </div>
+            <div class="use-case-content">
+                <div class="use-case-panel active" id="ec">
+                    <h3>EC運営の自動化例</h3>
+                    <div class="use-case-flow">
+                        <div class="use-case-step">
+                            <div class="step-number">1</div>
+                            <p>注文メールを自動取得</p>
+                        </div>
+                        <div class="use-case-arrow">↓</div>
+                        <div class="use-case-step">
+                            <div class="step-number">2</div>
+                            <p>在庫数を自動で確認・更新</p>
+                        </div>
+                        <div class="use-case-arrow">↓</div>
+                        <div class="use-case-step">
+                            <div class="step-number">3</div>
+                            <p>請求書を自動作成・送信</p>
+                        </div>
+                        <div class="use-case-arrow">↓</div>
+                        <div class="use-case-step">
+                            <div class="step-number">4</div>
+                            <p>顧客リストに自動追加</p>
+                        </div>
+                    </div>
+                    <div class="use-case-result">
+                        <div class="result-number">3時間 → 15分</div>
+                        <p>1日の受注処理時間</p>
+                    </div>
+                </div>
+                
+                <div class="use-case-panel" id="freelance">
+                    <h3>フリーランスの自動化例</h3>
+                    <div class="use-case-flow">
+                        <div class="use-case-step">
+                            <div class="step-number">1</div>
+                            <p>案件問い合わせを自動振り分け</p>
+                        </div>
+                        <div class="use-case-arrow">↓</div>
+                        <div class="use-case-step">
+                            <div class="step-number">2</div>
+                            <p>見積もりテンプレートで自動返信</p>
+                        </div>
+                        <div class="use-case-arrow">↓</div>
+                        <div class="use-case-step">
+                            <div class="step-number">3</div>
+                            <p>タスクをNotionに自動登録</p>
+                        </div>
+                        <div class="use-case-arrow">↓</div>
+                        <div class="use-case-step">
+                            <div class="step-number">4</div>
+                            <p>進捗状況を自動でクライアント報告</p>
+                        </div>
+                    </div>
+                    <div class="use-case-result">
+                        <div class="result-number">15時間 → 1時間</div>
+                        <p>週間の管理業務時間</p>
+                    </div>
+                </div>
+                
+                <div class="use-case-panel" id="sidebiz">
+                    <h3>副業の自動化例</h3>
+                    <div class="use-case-flow">
+                        <div class="use-case-step">
+                            <div class="step-number">1</div>
+                            <p>SNS投稿を事前に自動予約</p>
+                        </div>
+                        <div class="use-case-arrow">↓</div>
+                        <div class="use-case-step">
+                            <div class="step-number">2</div>
+                            <p>コメント・DMを自動で初期対応</p>
+                        </div>
+                        <div class="use-case-arrow">↓</div>
+                        <div class="use-case-step">
+                            <div class="step-number">3</div>
+                            <p>売上データを自動集計</p>
+                        </div>
+                        <div class="use-case-arrow">↓</div>
+                        <div class="use-case-step">
+                            <div class="step-number">4</div>
+                            <p>月次レポートを自動作成</p>
+                        </div>
+                    </div>
+                    <div class="use-case-result">
+                        <div class="result-number">20時間 → 2時間</div>
+                        <p>月間の運用時間</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Gift Section -->
+    <section class="gift">
+        <div class="container">
+            <h2 class="section-title">今だけ無料でプレゼント</h2>
+            <div class="gift-content">
+                <div class="gift-badge">期間限定</div>
+                <div class="gift-items">
+                    <div class="gift-item">
+                        <div class="gift-icon">🎥</div>
+                        <h3>動画講座 8本</h3>
+                        <p>各5〜10分でサクッと学べる</p>
+                        <ul class="gift-list">
+                            <li>基礎編：ノーコードツールの選び方</li>
+                            <li>Gmail自動化：返信テンプレート設定</li>
+                            <li>スプレッドシート連携：データ自動集計</li>
+                            <li>ChatGPT活用：AI文章生成の極意</li>
+                            <li>Slack連携：チーム業務の自動化</li>
+                            <li>請求書自動化：経理業務を90%削減</li>
+                            <li>SNS自動投稿：マーケティング効率化</li>
+                            <li>応用編：複数ツールの連携テクニック</li>
+                        </ul>
+                    </div>
+                    <div class="gift-item">
+                        <div class="gift-icon">📄</div>
+                        <h3>自動化テンプレート 3本</h3>
+                        <p>すぐに使える実用テンプレート</p>
+                        <ul class="gift-list">
+                            <li>Make用：受注〜請求書発行の完全自動化</li>
+                            <li>Zapier用：SNS投稿＆分析レポート作成</li>
+                            <li>汎用：メール自動振り分け＆返信システム</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Steps Section -->
+    <section class="steps">
+        <div class="container">
+            <h2 class="section-title">たった3ステップで始められます</h2>
+            <div class="steps-timeline">
+                <div class="steps-line"></div>
+                <div class="step">
+                    <div class="step-circle">1</div>
+                    <div class="step-content">
+                        <h3>LINE登録</h3>
+                        <p>下のボタンから友だち追加するだけ。個人情報の入力は一切不要です。</p>
+                        <span class="step-time">所要時間：30秒</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-circle">2</div>
+                    <div class="step-content">
+                        <h3>動画＆テンプレを受け取る</h3>
+                        <p>登録後すぐに、動画リンクとテンプレートファイルが届きます。</p>
+                        <span class="step-time">即時配信</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-circle">3</div>
+                    <div class="step-content">
+                        <h3>真似して設定</h3>
+                        <p>動画を見ながら、そのまま真似するだけ。最短10分で自動化が完成！</p>
+                        <span class="step-time">所要時間：10分〜</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Comparison Section -->
+    <section class="comparison">
+        <div class="container">
+            <h2 class="section-title">他の方法との比較</h2>
+            <div class="comparison-table">
+                <div class="comparison-header">
+                    <div></div>
+                    <div class="highlight">AI×ノーコード</div>
+                    <div>外注・人材採用</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="feature">初期費用</div>
+                    <div><span class="check">✓</span> 0円</div>
+                    <div><span class="cross">×</span> 10万円〜</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="feature">月額コスト</div>
+                    <div><span class="check">✓</span> 1,000円〜</div>
+                    <div><span class="cross">×</span> 20万円〜</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="feature">導入スピード</div>
+                    <div><span class="check">✓</span> 即日</div>
+                    <div><span class="cross">×</span> 1〜3ヶ月</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="feature">24時間稼働</div>
+                    <div><span class="check">✓</span> 可能</div>
+                    <div><span class="cross">×</span> 不可</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="feature">エラー率</div>
+                    <div><span class="check">✓</span> 0.1%以下</div>
+                    <div><span class="cross">×</span> 人的ミスあり</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="feature">スケール性</div>
+                    <div><span class="check">✓</span> 無限</div>
+                    <div><span class="cross">×</span> 限定的</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Proof Section -->
+    <section class="proof">
+        <div class="container">
+            <h2 class="section-title">実際の成果をご覧ください</h2>
+            
+            <div class="graph-card">
+                <div class="graph-header">
+                    <h3 class="graph-title">1ヶ月の作業時間の変化</h3>
+                    <p class="graph-subtitle">導入前後の実測データ</p>
+                </div>
+                <div class="bar-chart">
+                    <div class="bar-wrapper">
+                        <div class="bar bar-before">
+                            <span class="bar-value" style="color: var(--accent-red)">27時間</span>
+                        </div>
+                        <p class="bar-label">導入前</p>
+                    </div>
+                    <div class="bar-wrapper">
+                        <div class="bar bar-after">
+                            <span class="bar-value" style="color: var(--primary-green)">3時間</span>
+                        </div>
+                        <p class="bar-label">導入後</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">A</div>
+                        <div class="review-info">
+                            <div class="review-name">Aさん</div>
+                            <div class="review-role">EC運営・30代</div>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        受注管理と在庫確認で毎日3時間かかっていましたが、<span class="review-highlight">自動化で30分に短縮</span>できました。テンプレートをそのまま使えたので、設定も簡単でした！
+                    </p>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">B</div>
+                        <div class="review-info">
+                            <div class="review-name">Bさん</div>
+                            <div class="review-role">副業会社員・40代</div>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        平日の夜しか時間がない中、請求書作成や顧客対応で時間を取られていました。<span class="review-highlight">月20時間が2時間に</span>なって、本業に集中できるようになりました。
+                    </p>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">C</div>
+                        <div class="review-info">
+                            <div class="review-name">Cさん</div>
+                            <div class="review-role">フリーランス・20代</div>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        クライアントとのやり取りやタスク管理が自動化できて驚きました。<span class="review-highlight">週15時間の削減</span>で、クリエイティブな仕事に専念できています。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Urgency Section -->
+    <section class="urgency">
+        <div class="container">
+            <div class="urgency-content">
+                <h2 class="urgency-title">無料配布は期間限定です</h2>
+                <div class="urgency-timer">
+                    <div class="timer-block">
+                        <div class="timer-number" id="days">7</div>
+                        <div class="timer-label">日</div>
+                    </div>
+                    <div class="timer-block">
+                        <div class="timer-number" id="hours">23</div>
+                        <div class="timer-label">時間</div>
+                    </div>
+                    <div class="timer-block">
+                        <div class="timer-number" id="minutes">59</div>
+                        <div class="timer-label">分</div>
+                    </div>
+                </div>
+                <p class="urgency-note">※予告なく終了する場合があります</p>
+                <div class="urgency-spots">残り 87名</div>
+                <div class="cta-wrapper">
+                    <a href="https://lin.ee/sampleID123" class="cta-button" onclick="trackCTA()">
+                        <span>今すぐ無料で受け取る</span>
+                        <span class="icon icon-play icon-play-animated"></span>
+                        <span>LINE登録</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Trust Section -->
+    <section class="trust">
+        <div class="container">
+            <h2 class="section-title">導入企業・メディア掲載</h2>
+            <p class="trust-subtitle">多くの企業様・メディア様にご紹介いただいています</p>
+            
+            <div class="trust-logos">
+                <div class="logo-grid">
+                    <div class="logo-item">
+                        <div class="logo-placeholder">IT企業A社</div>
+                        <p class="logo-caption">導入3ヶ月で業務時間40%削減</p>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-placeholder">EC企業B社</div>
+                        <p class="logo-caption">受注処理を完全自動化</p>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-placeholder">コンサルC社</div>
+                        <p class="logo-caption">レポート作成時間90%削減</p>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-placeholder">不動産D社</div>
+                        <p class="logo-caption">顧客対応を24時間体制に</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="media-mentions">
+                <h3>メディア掲載実績</h3>
+                <div class="media-list">
+                    <div class="media-item">「業務自動化の新常識」として紹介</div>
+                    <div class="media-item">「ノーコード革命の最前線」特集掲載</div>
+                    <div class="media-item">「中小企業のDX成功事例」として取材</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Deep Dive -->
+    <section class="features-deep">
+        <div class="container">
+            <h2 class="section-title">具体的に何ができるようになるのか</h2>
+            
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <div class="feature-icon">📧</div>
+                    <h3>メール業務の完全自動化</h3>
+                    <ul class="feature-list">
+                        <li>問い合わせメールの自動振り分け</li>
+                        <li>テンプレートによる自動返信</li>
+                        <li>重要メールの自動通知</li>
+                        <li>添付ファイルの自動保存</li>
+                    </ul>
+                    <div class="feature-result">
+                        <span class="result-icon">⏱</span>
+                        <span>1日2時間 → 5分に短縮</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>データ処理の自動化</h3>
+                    <ul class="feature-list">
+                        <li>売上データの自動集計</li>
+                        <li>在庫管理の自動更新</li>
+                        <li>レポートの自動作成</li>
+                        <li>KPIダッシュボードの自動更新</li>
+                    </ul>
+                    <div class="feature-result">
+                        <span class="result-icon">⏱</span>
+                        <span>週10時間 → 30分に短縮</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>顧客対応の自動化</h3>
+                    <ul class="feature-list">
+                        <li>ChatGPTによる自動応答</li>
+                        <li>FAQ自動案内システム</li>
+                        <li>予約・キャンセルの自動処理</li>
+                        <li>フォローアップメールの自動送信</li>
+                    </ul>
+                    <div class="feature-result">
+                        <span class="result-icon">⏱</span>
+                        <span>1日3時間 → 15分に短縮</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>SNS運用の自動化</h3>
+                    <ul class="feature-list">
+                        <li>投稿の自動スケジューリング</li>
+                        <li>複数SNSへの同時投稿</li>
+                        <li>エンゲージメント分析の自動化</li>
+                        <li>コメント・DMの自動返信</li>
+                    </ul>
+                    <div class="feature-result">
+                        <span class="result-icon">⏱</span>
+                        <span>毎日1時間 → 週30分に短縮</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Study Section -->
+    <section class="case-study">
+        <div class="container">
+            <h2 class="section-title">成功事例：月商100万円を自動化で達成</h2>
+            
+            <div class="case-study-content">
+                <div class="case-profile">
+                    <div class="case-avatar">T</div>
+                    <div class="case-info">
+                        <h3>田中さん（仮名）</h3>
+                        <p>ハンドメイド作家 / 30代女性</p>
+                    </div>
+                </div>
+                
+                <div class="case-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">導入前</div>
+                        <div class="timeline-content">
+                            <h4>月商20万円で頭打ち</h4>
+                            <p>受注処理、在庫管理、顧客対応に1日5時間。制作時間が取れず売上が伸びない...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-arrow">↓</div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">1ヶ月後</div>
+                        <div class="timeline-content">
+                            <h4>基本的な自動化を導入</h4>
+                            <p>受注メールの自動処理、在庫の自動更新、請求書の自動発行を実現。作業時間が3時間に短縮。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-arrow">↓</div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">3ヶ月後</div>
+                        <div class="timeline-content">
+                            <h4>月商100万円突破！</h4>
+                            <p>作業時間は30分に。空いた時間で新商品開発とSNS発信に注力。売上が5倍に成長！</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="case-quote">
+                    <p>"最初は半信半疑でしたが、動画通りに設定したら本当に自動化できました。今では制作に集中できて、お客様にも喜ばれています。もっと早く始めればよかった！"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bonus Section -->
+    <section class="bonus">
+        <div class="container">
+            <h2 class="section-title">今だけの追加特典</h2>
+            <div class="bonus-badge">先着100名限定</div>
+            
+            <div class="bonus-items">
+                <div class="bonus-item">
+                    <div class="bonus-icon">🎁</div>
+                    <h3>特典1：業種別テンプレート集</h3>
+                    <p>EC、コンサル、不動産など10業種の具体的な自動化テンプレートを追加プレゼント（通常9,800円相当）</p>
+                </div>
+                
+                <div class="bonus-item">
+                    <div class="bonus-icon">🎁</div>
+                    <h3>特典2：ChatGPTプロンプト集</h3>
+                    <p>自動化に使える厳選プロンプト50個。コピペするだけで高品質な自動返信が可能に（通常4,980円相当）</p>
+                </div>
+                
+                <div class="bonus-item">
+                    <div class="bonus-icon">🎁</div>
+                    <h3>特典3：個別相談券（1回分）</h3>
+                    <p>あなたの業務に合わせた自動化プランを専門家が無料でアドバイス（通常15,000円相当）</p>
+                </div>
+            </div>
+            
+            <div class="bonus-total">
+                <p>合計<span class="bonus-price">29,780円相当</span>の特典を<span class="bonus-free">無料</span>でプレゼント！</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mistakes Section -->
+    <section class="mistakes">
+        <div class="container">
+            <h2 class="section-title">自動化でよくある失敗を避ける方法</h2>
+            
+            <div class="mistakes-grid">
+                <div class="mistake-card">
+                    <div class="mistake-header">
+                        <span class="mistake-icon">❌</span>
+                        <h3>失敗例1：いきなり複雑な自動化</h3>
+                    </div>
+                    <p class="mistake-problem">最初から10個のツールを連携させようとして挫折...</p>
+                    <div class="mistake-solution">
+                        <span class="solution-icon">✅</span>
+                        <p>まずは1つの単純作業から。動画では「メール→スプレッドシート」の簡単な自動化から始めます。</p>
+                    </div>
+                </div>
+                
+                <div class="mistake-card">
+                    <div class="mistake-header">
+                        <span class="mistake-icon">❌</span>
+                        <h3>失敗例2：エラー対処がわからない</h3>
+                    </div>
+                    <p class="mistake-problem">設定中にエラーが出て、解決方法がわからず放置...</p>
+                    <div class="mistake-solution">
+                        <span class="solution-icon">✅</span>
+                        <p>よくあるエラー10パターンと解決法を動画で解説。コミュニティでの質問も可能です。</p>
+                    </div>
+                </div>
+                
+                <div class="mistake-card">
+                    <div class="mistake-header">
+                        <span class="mistake-icon">❌</span>
+                        <h3>失敗例3：メンテナンスを忘れる</h3>
+                    </div>
+                    <p class="mistake-problem">一度設定して放置。気づいたら動かなくなっていた...</p>
+                    <div class="mistake-solution">
+                        <span class="solution-icon">✅</span>
+                        <p>月1回5分のメンテナンス方法を伝授。自動エラー通知の設定方法も含まれています。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guarantee Section -->
+    <section class="guarantee">
+        <div class="container">
+            <h2 class="section-title">安心の3つの約束</h2>
+            
+            <div class="guarantee-items">
+                <div class="guarantee-item">
+                    <div class="guarantee-icon">🛡️</div>
+                    <h3>完全無料保証</h3>
+                    <p>動画・テンプレート・特典すべて無料。後から請求することは一切ありません。</p>
+                </div>
+                
+                <div class="guarantee-item">
+                    <div class="guarantee-icon">🔒</div>
+                    <h3>個人情報保護</h3>
+                    <p>LINEアカウント以外の個人情報は不要。迷惑メールや営業電話の心配はありません。</p>
+                </div>
+                
+                <div class="guarantee-item">
+                    <div class="guarantee-icon">🚪</div>
+                    <h3>いつでも解除可能</h3>
+                    <p>LINE登録はワンタップでブロック可能。しつこい勧誘は一切行いません。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">よくある質問</h2>
+            
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Q. 自動化って難しくない？</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>ご安心ください！配布する動画では、画面を見ながら真似するだけで設定できるよう、ステップバイステップで解説しています。プログラミング知識は一切不要です。実際に導入された方の90%以上が「思ったより簡単だった」と回答しています。</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Q. ノーコードって何？</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>コードを書かずに、ドラッグ＆ドロップやクリック操作だけでシステムを作る方法です。Make（旧Integromat）やZapierなどのツールを使って、誰でも業務自動化ができます。ExcelやPowerPointが使える方なら、必ず使いこなせます。</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Q. スマホだけでできる？</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>基本的な自動化の多くはスマホでも設定可能です。ただし、より複雑な自動化や細かい設定をする場合は、PCの方が作業しやすいためPCを推奨しています。まずはスマホで始めて、慣れてきたらPCで本格的に取り組むのがおすすめです。</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Q. 本当に無料？後から請求される？</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>動画8本とテンプレート3本は完全無料です。後から請求することは一切ありません。ただし、ノーコードツール自体（Make、Zapierなど）には無料プランと有料プランがあり、より高度な自動化をする場合は有料プラン（月1,000円程度〜）の利用をおすすめしています。</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Q. どんな業種でも使える？</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>はい、業種を問わず活用できます。EC、フリーランス、コンサル、不動産、医療、教育など、あらゆる業界で導入実績があります。特に、メール対応、データ入力、請求書作成、SNS運用などの定型業務がある方には大きな効果が期待できます。</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Q. サポートはある？</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>LINE登録後、専用のコミュニティへご案内します。そこでは他の実践者の事例共有や、困ったときの質問対応などを行っています。また、より本格的に学びたい方向けの有料講座もご用意していますが、まずは無料の動画とテンプレートで十分な成果を実感いただけます。</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Q. どのくらいの期間で成果が出る？</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>最も簡単な自動化（メール自動返信など）は設定したその日から効果を実感できます。本格的な業務自動化でも、1週間あれば基本的な仕組みは構築可能です。実際に月20時間以上の削減を達成した方の平均導入期間は2週間程度です。</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Q. AIやChatGPTの知識は必要？</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>いいえ、特別な知識は不要です。ChatGPTは普通の会話ができれば使えます。動画では「コピペで使えるプロンプト（指示文）」も提供するので、AIの仕組みを理解していなくても問題ありません。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Author Section -->
+    <section class="author">
+        <div class="container">
+            <h2 class="section-title">講師プロフィール</h2>
+            
+            <div class="author-content">
+                <div class="author-avatar">
+                    <div class="avatar-placeholder">講師</div>
+                </div>
+                <div class="author-info">
+                    <h3>AI自動化エキスパート</h3>
+                    <p class="author-tagline">「誰でもできる業務自動化」を広める専門家</p>
+                    
+                    <div class="author-bio">
+                        <p>大手IT企業で10年間、業務効率化コンサルタントとして活動。延べ500社以上の業務自動化を支援。</p>
+                        <p>「プログラミングができない人こそ自動化の恩恵を受けるべき」という信念のもと、ノーコードツールを使った自動化手法を体系化。</p>
+                        <p>現在は中小企業や個人事業主向けに、実践的な自動化ノウハウを伝える活動を行っている。</p>
+                    </div>
+                    
+                    <div class="author-achievements">
+                        <div class="achievement">
+                            <span class="achievement-number" data-value="500">0</span>
+                            <span class="achievement-label">導入支援実績</span>
+                        </div>
+                        <div class="achievement">
+                            <span class="achievement-number" data-value="10000">0</span>
+                            <span class="achievement-label">削減時間総計</span>
+                        </div>
+                        <div class="achievement">
+                            <span class="achievement-number" data-value="98">0</span>
+                            <span class="achievement-label">満足度</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Final Message Section -->
+    <section class="final-message">
+        <div class="container">
+            <div class="message-card">
+                <h2>最後に...あなたの時間は貴重です</h2>
+                <p>毎日の繰り返し作業に追われて、本当にやりたいことができない。</p>
+                <p>そんな状況を変えるチャンスは、今この瞬間にあります。</p>
+                <p class="message-highlight">AI×ノーコードは、もう特別な人だけのものではありません。</p>
+                <p>今なら無料で始められます。リスクは一切ありません。</p>
+                <p>ぜひ、最初の一歩を踏み出してください。</p>
+                <div class="message-signature">
+                    <p>あなたの成功を心から応援しています。</p>
+                    <p class="signature-name">- AI自動化エキスパート</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="final-cta-content">
+            <div class="container">
+                <h2>今すぐ始めて、時間を取り戻そう</h2>
+                <p>動画8本＋テンプレ3本を無料でお渡しします</p>
+                <div class="cta-wrapper">
+                    <a href="https://lin.ee/sampleID123" class="cta-button" onclick="trackCTA()">
+                        <span>3分で始める</span>
+                        <span class="icon icon-play icon-play-animated"></span>
+                        <span>LINE登録</span>
+                    </a>
+                </div>
+                <p class="cta-note">※登録は30秒で完了します</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">AI×ノーコード自動化</div>
+                <div class="footer-links">
+                    <a href="./privacy-policy.html">プライバシーポリシー</a>
+                    <a href="./terms.html">特定商取引法に基づく表記</a>
+                    <a href="./company.html">運営者情報</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2024 AI×ノーコード自動化. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Page loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('pageLoader').classList.add('hidden');
+            }, 500);
+        });
+        
+        // Use case tabs
+        const tabs = document.querySelectorAll('.use-case-tab');
+        const panels = document.querySelectorAll('.use-case-panel');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetId = tab.getAttribute('data-tab');
+                
+                tabs.forEach(t => t.classList.remove('active'));
+                panels.forEach(p => p.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+        
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const wasActive = item.classList.contains('active');
+                
+                // Close all items
+                document.querySelectorAll('.faq-item').forEach(faqItem => {
+                    faqItem.classList.remove('active');
+                });
+                
+                // Toggle current item
+                if (!wasActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+        
+        // Countdown timer
+        function updateTimer() {
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 7);
+            endDate.setHours(23, 59, 59, 999);
+            
+            const now = new Date();
+            const timeLeft = endDate - now;
+            
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        }
+        
+        updateTimer();
+        setInterval(updateTimer, 60000); // Update every minute
+        
+        // Track CTA clicks
+        function trackCTA() {
+            // GTM tracking
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'cta_click', {
+                    'event_category': 'engagement',
+                    'event_label': 'LINE Registration',
+                    'button_text': '3分で始める ▶ LINE登録',
+                    'timestamp': new Date().toISOString()
+                });
+            }
+            
+            // Twitter Pixel tracking
+            if (typeof twq !== 'undefined') {
+                twq('track', 'SignUp', {
+                    'content_name': 'LINE Registration',
+                    'content_category': 'CTA Button'
+                });
+            }
+            
+            // DataLayer push for GTM
+            if (typeof dataLayer !== 'undefined') {
+                dataLayer.push({
+                    'event': 'line_link',
+                    'url': 'https://lin.ee/sampleID123',
+                    'target_line_id': 'sampleID123'
+                });
+            }
+        }
+        
+        // Scroll tracking
+        let scrollMilestones = {
+            25: false,
+            50: false,
+            75: false,
+            100: false
+        };
+        
+        function trackScroll() {
+            const scrollPercentage = Math.round((window.scrollY + window.innerHeight) / document.body.scrollHeight * 100);
+            
+            Object.keys(scrollMilestones).forEach(milestone => {
+                if (scrollPercentage >= milestone && !scrollMilestones[milestone]) {
+                    scrollMilestones[milestone] = true;
+                    
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', `scroll_${milestone}`, {
+                            'event_category': 'engagement',
+                            'scroll_depth': milestone
+                        });
+                    }
+                    
+                    if (typeof dataLayer !== 'undefined') {
+                        dataLayer.push({
+                            'event': `scroll_${milestone}`,
+                            'scroll_depth': milestone
+                        });
+                    }
+                }
+            });
+        }
+        
+        // Throttle scroll events
+        let scrollTimer;
+        window.addEventListener('scroll', () => {
+            if (scrollTimer) clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(trackScroll, 100);
+        });
+        
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe animated elements
+        document.querySelectorAll('.problem-card, .workflow-item, .review-card, .bar, .step, .solution-item, .logo-item, .feature-card, .timeline-item, .bonus-item, .mistake-card, .guarantee-item').forEach(el => {
+            if (el.style.animationPlayState !== undefined) {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            }
+        });
+        
+        // Smooth scroll for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Floating CTA logic
+        const floatingCTA = document.getElementById('floatingCTA');
+        let lastScrollPosition = 0;
+        
+        function handleFloatingCTA() {
+            if (window.innerWidth <= 767) {
+                const currentScroll = window.scrollY;
+                const scrollPercentage = (currentScroll + window.innerHeight) / document.body.scrollHeight * 100;
+                
+                // Show after scrolling 20% and hide near bottom (90%)
+                if (scrollPercentage > 20 && scrollPercentage < 90) {
+                    floatingCTA.style.display = 'block';
+                } else {
+                    floatingCTA.style.display = 'none';
+                }
+                
+                lastScrollPosition = currentScroll;
+            } else {
+                floatingCTA.style.display = 'none';
+            }
+        }
+        
+        window.addEventListener('scroll', handleFloatingCTA);
+        window.addEventListener('resize', handleFloatingCTA);
+        
+        // Performance monitoring
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const perfData = window.performance.timing;
+                    const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+                    const domReadyTime = perfData.domContentLoadedEventEnd - perfData.navigationStart;
+                    
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'timing_complete', {
+                            'name': 'load',
+                            'value': pageLoadTime,
+                            'event_category': 'performance'
+                        });
+                    }
+                    
+                    console.log(`Page Load Time: ${pageLoadTime}ms`);
+                    console.log(`DOM Ready Time: ${domReadyTime}ms`);
+                }, 0);
+            });
+        }
+    </script>
+    
+    <!-- Custom JavaScript -->
+    <script src="./assets/animations.js"></script>
+</body>
+</html>

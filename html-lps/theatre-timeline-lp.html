@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - タイムラインで描く起業ストーリー | Theatre.js</title>
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/@theatre/core@0.7.0/dist/index.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        /* UI オーバーレイ */
+        .ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        /* ストーリーテキスト */
+        .story-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: auto;
+            transition: all 0.5s ease;
+        }
+        
+        .story-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #4EB5FF 0%, #38C172 50%, #FFD93D 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 5s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(30deg); }
+        }
+        
+        .story-subtitle {
+            font-size: 1.5rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+        
+        /* プレイボタン */
+        .play-button {
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #4EB5FF 0%, #38C172 100%);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(78, 181, 255, 0.3);
+            transition: all 0.3s ease;
+            pointer-events: auto;
+        }
+        
+        .play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(78, 181, 255, 0.5);
+        }
+        
+        .play-button.playing {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* タイムライン */
+        .timeline-container {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 800px;
+            pointer-events: auto;
+        }
+        
+        .timeline-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4EB5FF 0%, #38C172 100%);
+            transition: width 0.1s linear;
+        }
+        
+        .chapter-markers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .chapter-marker {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+        }
+        
+        .chapter-marker.active {
+            color: #4EB5FF;
+            font-weight: bold;
+        }
+        
+        .chapter-marker:hover {
+            color: #38C172;
+        }
+        
+        /* チャプターコンテンツ */
+        .chapter-content {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            max-width: 800px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        
+        .chapter-content.active {
+            opacity: 1;
+        }
+        
+        .chapter-number {
+            font-size: 1rem;
+            color: #FFD93D;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .chapter-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .chapter-description {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+        
+        /* スキップボタン */
+        .skip-button {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            pointer-events: auto;
+            opacity: 0;
+        }
+        
+        .skip-button.visible {
+            opacity: 1;
+        }
+        
+        .skip-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* CTA セクション */
+        .cta-section {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        
+        .cta-section.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #FFD93D 0%, #4EB5FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .cta-primary {
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #4EB5FF 0%, #38C172 100%);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(78, 181, 255, 0.4);
+        }
+        
+        .cta-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(78, 181, 255, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="ui-overlay">
+        <!-- イントロ -->
+        <div class="story-container" id="intro">
+            <h1 class="story-title">あなたの起業ストーリーが始まる</h1>
+            <p class="story-subtitle">映画のようなタイムラインで描く、成功への道のり</p>
+            <button class="play-button" id="playButton">ストーリーを再生</button>
+        </div>
+        
+        <!-- チャプターコンテンツ -->
+        <div class="chapter-content" id="chapter-0">
+            <div class="chapter-number">CHAPTER 01</div>
+            <h2 class="chapter-title">序章: 挑戦への決意</h2>
+            <p class="chapter-description">
+                「このままでいいのか？」<br>
+                毎日の繰り返しに疑問を感じたあなたは、<br>
+                新しい人生の扉を開く決意をした。
+            </p>
+        </div>
+        
+        <div class="chapter-content" id="chapter-1">
+            <div class="chapter-number">CHAPTER 02</div>
+            <h2 class="chapter-title">発見: AI×DXとの出会い</h2>
+            <p class="chapter-description">
+                AIDXschoolで出会った最新技術。<br>
+                AIとDXの組み合わせが、<br>
+                あなたのアイデアに命を吹き込む。
+            </p>
+        </div>
+        
+        <div class="chapter-content" id="chapter-2">
+            <div class="chapter-number">CHAPTER 03</div>
+            <h2 class="chapter-title">成長: 実践的な学習</h2>
+            <p class="chapter-description">
+                仲間と共に学ぶ日々。<br>
+                失敗を恐れず、挑戦を続けることで、<br>
+                確実にスキルが身についていく。
+            </p>
+        </div>
+        
+        <div class="chapter-content" id="chapter-3">
+            <div class="chapter-number">CHAPTER 04</div>
+            <h2 class="chapter-title">変革: ビジネス立ち上げ</h2>
+            <p class="chapter-description">
+                学んだ技術を活かして、<br>
+                ついに自分のビジネスをスタート。<br>
+                初めての売上が、大きな自信に。
+            </p>
+        </div>
+        
+        <div class="chapter-content" id="chapter-4">
+            <div class="chapter-number">CHAPTER 05</div>
+            <h2 class="chapter-title">成功: 理想の未来へ</h2>
+            <p class="chapter-description">
+                月収100万円を突破。<br>
+                時間と場所に縛られない自由な働き方。<br>
+                次はあなたの番です。
+            </p>
+        </div>
+        
+        <!-- CTA -->
+        <div class="cta-section" id="ctaSection">
+            <h2 class="cta-title">あなたの物語を始めませんか？</h2>
+            <p style="font-size: 1.3rem; opacity: 0.9; margin-bottom: 30px;">
+                今なら無料体験で、起業への第一歩を踏み出せます
+            </p>
+            <div class="cta-buttons">
+                <a href="#" class="cta-primary">無料体験に申し込む</a>
+            </div>
+        </div>
+        
+        <!-- スキップボタン -->
+        <button class="skip-button" id="skipButton">スキップ →</button>
+        
+        <!-- タイムライン -->
+        <div class="timeline-container">
+            <div class="timeline-bar">
+                <div class="timeline-progress" id="timelineProgress"></div>
+            </div>
+            <div class="chapter-markers">
+                <div class="chapter-marker" data-chapter="0">序章</div>
+                <div class="chapter-marker" data-chapter="1">発見</div>
+                <div class="chapter-marker" data-chapter="2">成長</div>
+                <div class="chapter-marker" data-chapter="3">変革</div>
+                <div class="chapter-marker" data-chapter="4">成功</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Theatre.js プロジェクト初期化
+        const theatreProject = core.getProject('Startup Journey');
+        const theatreSheet = theatreProject.sheet('Main Timeline');
+        
+        // Three.js シーンセットアップ
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        
+        // 環境マップ
+        const cubeTextureLoader = new THREE.CubeTextureLoader();
+        scene.background = new THREE.Color(0x050505);
+        
+        // ライト
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(10, 10, 5);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        scene.add(directionalLight);
+        
+        // Theatre.js オブジェクトを作成
+        const mainObjectProps = theatreSheet.object('MainObject', {
+            position: {
+                x: 0, y: 0, z: 0
+            },
+            rotation: {
+                x: 0, y: 0, z: 0
+            },
+            scale: {
+                x: 1, y: 1, z: 1
+            },
+            color: {
+                r: 0.31, g: 0.71, b: 1.0
+            },
+            metalness: 0.7,
+            roughness: 0.2
+        });
+        
+        const cameraProps = theatreSheet.object('Camera', {
+            position: {
+                x: 0, y: 0, z: 10
+            },
+            lookAt: {
+                x: 0, y: 0, z: 0
+            },
+            fov: 75
+        });
+        
+        const lightProps = theatreSheet.object('DirectionalLight', {
+            position: {
+                x: 10, y: 10, z: 5
+            },
+            intensity: 1,
+            color: {
+                r: 1, g: 1, b: 1
+            }
+        });
+        
+        // メインオブジェクト - 変形するジオメトリ
+        const mainGeometry = new THREE.IcosahedronGeometry(2, 2);
+        const mainMaterial = new THREE.MeshStandardMaterial({
+            color: 0x4EB5FF,
+            metalness: 0.7,
+            roughness: 0.2,
+            envMapIntensity: 1
+        });
+        const mainObject = new THREE.Mesh(mainGeometry, mainMaterial);
+        mainObject.castShadow = true;
+        mainObject.receiveShadow = true;
+        scene.add(mainObject);
+        
+        // セカンダリオブジェクト群
+        const secondaryObjects = [];
+        for (let i = 0; i < 8; i++) {
+            const geo = new THREE.OctahedronGeometry(0.5, 0);
+            const mat = new THREE.MeshStandardMaterial({
+                color: 0x38C172,
+                metalness: 0.8,
+                roughness: 0.1
+            });
+            const obj = new THREE.Mesh(geo, mat);
+            obj.castShadow = true;
+            scene.add(obj);
+            secondaryObjects.push(obj);
+            
+            // 各オブジェクトにTheatre.jsプロパティを設定
+            obj.theatreProps = theatreSheet.object(`SecondaryObject${i}`, {
+                position: {
+                    x: (Math.random() - 0.5) * 10,
+                    y: (Math.random() - 0.5) * 10,
+                    z: (Math.random() - 0.5) * 10
+                },
+                rotation: {
+                    x: 0, y: 0, z: 0
+                },
+                scale: {
+                    x: 1, y: 1, z: 1
+                }
+            });
+        }
+        
+        // パーティクルシステム
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        const posArray = new Float32Array(particlesCount * 3);
+        const colorArray = new Float32Array(particlesCount * 3);
+        
+        for(let i = 0; i < particlesCount * 3; i += 3) {
+            posArray[i] = (Math.random() - 0.5) * 40;
+            posArray[i + 1] = (Math.random() - 0.5) * 40;
+            posArray[i + 2] = (Math.random() - 0.5) * 40;
+            
+            colorArray[i] = Math.random();
+            colorArray[i + 1] = Math.random();
+            colorArray[i + 2] = Math.random();
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+        
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.1,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particles);
+        
+        const particlesProps = theatreSheet.object('Particles', {
+            rotation: {
+                x: 0, y: 0, z: 0
+            },
+            opacity: 0.8
+        });
+        
+        // タイムライン設定
+        let isPlaying = false;
+        let currentChapter = -1;
+        const totalDuration = 30; // 30秒
+        const chapterDuration = totalDuration / 5; // 6秒ずつ
+        
+        // UI要素
+        const playButton = document.getElementById('playButton');
+        const skipButton = document.getElementById('skipButton');
+        const timelineProgress = document.getElementById('timelineProgress');
+        const intro = document.getElementById('intro');
+        const ctaSection = document.getElementById('ctaSection');
+        const chapterMarkers = document.querySelectorAll('.chapter-marker');
+        
+        // チャプターコンテンツ
+        const chapters = [
+            document.getElementById('chapter-0'),
+            document.getElementById('chapter-1'),
+            document.getElementById('chapter-2'),
+            document.getElementById('chapter-3'),
+            document.getElementById('chapter-4')
+        ];
+        
+        // Theatre.js キーフレームの設定
+        function setupKeyframes() {
+            // チャプター0: 序章 (0-6秒)
+            mainObjectProps.position.x.set(0, 0);
+            mainObjectProps.position.y.set(0, 0);
+            mainObjectProps.scale.x.set(1, 0);
+            mainObjectProps.scale.y.set(1, 0);
+            mainObjectProps.scale.z.set(1, 0);
+            cameraProps.position.z.set(10, 0);
+            
+            // チャプター1: 発見 (6-12秒)
+            mainObjectProps.position.y.set(2, 6);
+            mainObjectProps.rotation.y.set(Math.PI, 6);
+            mainObjectProps.color.r.set(0.22, 6);
+            mainObjectProps.color.g.set(0.76, 6);
+            mainObjectProps.color.b.set(0.45, 6);
+            cameraProps.position.z.set(8, 6);
+            
+            // チャプター2: 成長 (12-18秒)
+            mainObjectProps.scale.x.set(1.5, 12);
+            mainObjectProps.scale.y.set(1.5, 12);
+            mainObjectProps.scale.z.set(1.5, 12);
+            mainObjectProps.position.x.set(-3, 12);
+            mainObjectProps.rotation.x.set(Math.PI / 2, 12);
+            mainObjectProps.color.r.set(1, 12);
+            mainObjectProps.color.g.set(0.85, 12);
+            mainObjectProps.color.b.set(0.23, 12);
+            cameraProps.position.x.set(2, 12);
+            
+            // チャプター3: 変革 (18-24秒)
+            mainObjectProps.position.x.set(3, 18);
+            mainObjectProps.position.y.set(-2, 18);
+            mainObjectProps.scale.x.set(2, 18);
+            mainObjectProps.scale.y.set(2, 18);
+            mainObjectProps.scale.z.set(2, 18);
+            mainObjectProps.rotation.z.set(Math.PI, 18);
+            mainObjectProps.color.r.set(1, 18);
+            mainObjectProps.color.g.set(0.42, 18);
+            mainObjectProps.color.b.set(0.42, 18);
+            cameraProps.position.x.set(-2, 18);
+            cameraProps.position.z.set(6, 18);
+            
+            // チャプター4: 成功 (24-30秒)
+            mainObjectProps.position.x.set(0, 24);
+            mainObjectProps.position.y.set(0, 24);
+            mainObjectProps.scale.x.set(3, 24);
+            mainObjectProps.scale.y.set(3, 24);
+            mainObjectProps.scale.z.set(3, 24);
+            mainObjectProps.rotation.y.set(Math.PI * 2, 24);
+            mainObjectProps.color.r.set(0.61, 24);
+            mainObjectProps.color.g.set(0.35, 24);
+            mainObjectProps.color.b.set(0.71, 24);
+            cameraProps.position.x.set(0, 24);
+            cameraProps.position.z.set(4, 24);
+            
+            // セカンダリオブジェクトのキーフレーム
+            secondaryObjects.forEach((obj, index) => {
+                const angle = (index / secondaryObjects.length) * Math.PI * 2;
+                const radius = 5;
+                
+                // 初期位置
+                obj.theatreProps.position.x.set(Math.cos(angle) * radius, 0);
+                obj.theatreProps.position.z.set(Math.sin(angle) * radius, 0);
+                obj.theatreProps.scale.x.set(0, 0);
+                obj.theatreProps.scale.y.set(0, 0);
+                obj.theatreProps.scale.z.set(0, 0);
+                
+                // 成長フェーズで出現
+                obj.theatreProps.scale.x.set(1, 12 + index * 0.5);
+                obj.theatreProps.scale.y.set(1, 12 + index * 0.5);
+                obj.theatreProps.scale.z.set(1, 12 + index * 0.5);
+                
+                // 変革フェーズで動き出す
+                obj.theatreProps.position.y.set(Math.sin(angle) * 3, 18 + index * 0.3);
+                obj.theatreProps.rotation.y.set(Math.PI * 2, 24 + index * 0.2);
+            });
+            
+            // パーティクルのキーフレーム
+            particlesProps.opacity.set(0, 0);
+            particlesProps.opacity.set(1, 6);
+            particlesProps.rotation.y.set(Math.PI * 4, 30);
+        }
+        
+        setupKeyframes();
+        
+        // 再生開始
+        playButton.addEventListener('click', () => {
+            isPlaying = true;
+            playButton.classList.add('playing');
+            skipButton.classList.add('visible');
+            intro.style.opacity = '0';
+            theatreSheet.sequence.play({ range: [0, totalDuration] });
+        });
+        
+        // スキップ
+        skipButton.addEventListener('click', () => {
+            theatreSheet.sequence.position = totalDuration;
+            endTimeline();
+        });
+        
+        // チャプタージャンプ
+        chapterMarkers.forEach((marker, index) => {
+            marker.addEventListener('click', () => {
+                if (!isPlaying) return;
+                const targetTime = index * chapterDuration;
+                theatreSheet.sequence.position = targetTime;
+                updateChapter(targetTime);
+            });
+        });
+        
+        // チャプター更新
+        function updateChapter(time = null) {
+            const currentTime = time !== null ? time : theatreSheet.sequence.position;
+            const newChapter = Math.floor(currentTime / chapterDuration);
+            
+            if (newChapter !== currentChapter && newChapter < 5) {
+                // 前のチャプターを非表示
+                if (currentChapter >= 0) {
+                    chapters[currentChapter].classList.remove('active');
+                    chapterMarkers[currentChapter].classList.remove('active');
+                }
+                
+                // 新しいチャプターを表示
+                currentChapter = newChapter;
+                if (currentChapter >= 0 && currentChapter < 5) {
+                    chapters[currentChapter].classList.add('active');
+                    chapterMarkers[currentChapter].classList.add('active');
+                }
+            }
+            
+            // プログレスバー更新
+            const progress = currentTime / totalDuration;
+            timelineProgress.style.width = `${progress * 100}%`;
+        }
+        
+        // タイムライン終了
+        function endTimeline() {
+            isPlaying = false;
+            skipButton.classList.remove('visible');
+            if (currentChapter >= 0) {
+                chapters[currentChapter].classList.remove('active');
+                chapterMarkers[currentChapter].classList.remove('active');
+            }
+            ctaSection.classList.add('active');
+        }
+        
+        // Theatre.js の値を監視してThree.jsオブジェクトを更新
+        theatreSheet.sequence.onPlayStateChange((state) => {
+            if (state === 'playing') {
+                isPlaying = true;
+            } else if (state === 'paused') {
+                isPlaying = false;
+                if (theatreSheet.sequence.position >= totalDuration - 0.1) {
+                    endTimeline();
+                }
+            }
+        });
+        
+        // アニメーションループ
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Theatre.jsの値をThree.jsオブジェクトに適用
+            const mainProps = mainObjectProps.value;
+            mainObject.position.set(mainProps.position.x, mainProps.position.y, mainProps.position.z);
+            mainObject.rotation.set(mainProps.rotation.x, mainProps.rotation.y, mainProps.rotation.z);
+            mainObject.scale.set(mainProps.scale.x, mainProps.scale.y, mainProps.scale.z);
+            mainMaterial.color.setRGB(mainProps.color.r, mainProps.color.g, mainProps.color.b);
+            mainMaterial.metalness = mainProps.metalness;
+            mainMaterial.roughness = mainProps.roughness;
+            
+            // カメラの更新
+            const camProps = cameraProps.value;
+            camera.position.set(camProps.position.x, camProps.position.y, camProps.position.z);
+            camera.lookAt(camProps.lookAt.x, camProps.lookAt.y, camProps.lookAt.z);
+            camera.fov = camProps.fov;
+            camera.updateProjectionMatrix();
+            
+            // ライトの更新
+            const lightPropsValue = lightProps.value;
+            directionalLight.position.set(lightPropsValue.position.x, lightPropsValue.position.y, lightPropsValue.position.z);
+            directionalLight.intensity = lightPropsValue.intensity;
+            directionalLight.color.setRGB(lightPropsValue.color.r, lightPropsValue.color.g, lightPropsValue.color.b);
+            
+            // セカンダリオブジェクトの更新
+            secondaryObjects.forEach(obj => {
+                const props = obj.theatreProps.value;
+                obj.position.set(props.position.x, props.position.y, props.position.z);
+                obj.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z);
+                obj.scale.set(props.scale.x, props.scale.y, props.scale.z);
+            });
+            
+            // パーティクルの更新
+            const particlesPropsValue = particlesProps.value;
+            particles.rotation.set(particlesPropsValue.rotation.x, particlesPropsValue.rotation.y, particlesPropsValue.rotation.z);
+            particlesMaterial.opacity = particlesPropsValue.opacity;
+            
+            // 現在の時間でチャプターを更新
+            if (isPlaying) {
+                updateChapter();
+            }
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // ウィンドウリサイズ対応
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        console.log('Theatre.js Timeline LP initialized with cinematic storytelling');
+    </script>
+    
+    <!-- タイムライン制作技術比較セクション -->
+    <div id="comparison-section" style="position: fixed; top: 100vh; left: 0; width: 100%; min-height: 100vh; background: linear-gradient(135deg, #1e1e2e 0%, #313244 100%); z-index: 1000; overflow-y: auto; transition: transform 0.8s ease;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 80px 20px;">
+            <h2 style="font-size: 3rem; text-align: center; margin-bottom: 60px; background: linear-gradient(45deg, #89b4fa, #cba6f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">タイムライン制作技術の革新</h2>
+            
+            <!-- 技術比較マトリックス -->
+            <div style="background: rgba(30, 30, 46, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(137, 180, 250, 0.3);">
+                <h3 style="color: #89b4fa; font-size: 2rem; margin-bottom: 30px; text-align: center;">制作技術スタック比較</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                    <div style="background: rgba(203, 166, 247, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #cba6f7;">
+                        <h4 style="color: #cba6f7; font-size: 1.5rem; margin-bottom: 15px;">Theatre.js + Three.js</h4>
+                        <p style="margin-bottom: 15px;">完全なタイムライン制御とビジュアルエディタ</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #a6e3a1;">✓ リアルタイムプレビュー</li>
+                            <li style="margin: 8px 0; color: #a6e3a1;">✓ キーフレームアニメーション</li>
+                            <li style="margin: 8px 0; color: #a6e3a1;">✓ 複雑なイージング制御</li>
+                            <li style="margin: 8px 0; color: #a6e3a1;">✓ JSON出力対応</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(250, 179, 135, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #fab387;">
+                        <h4 style="color: #fab387; font-size: 1.5rem; margin-bottom: 15px;">After Effects + Lottie</h4>
+                        <p style="margin-bottom: 15px;">デザイナー向けモーション制作</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #f9e2af;">△ デザインツール依存</li>
+                            <li style="margin: 8px 0; color: #a6e3a1;">✓ 高品質アニメーション</li>
+                            <li style="margin: 8px 0; color: #f38ba8;">✗ リアルタイム編集不可</li>
+                            <li style="margin: 8px 0; color: #a6e3a1;">✓ SVGベクター対応</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(137, 180, 250, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #89b4fa;">
+                        <h4 style="color: #89b4fa; font-size: 1.5rem; margin-bottom: 15px;">Framer Motion</h4>
+                        <p style="margin-bottom: 15px;">React向けアニメーションライブラリ</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #a6e3a1;">✓ 宣言的API</li>
+                            <li style="margin: 8px 0; color: #f9e2af;">△ React限定</li>
+                            <li style="margin: 8px 0; color: #f38ba8;">✗ 複雑なタイムライン制御</li>
+                            <li style="margin: 8px 0; color: #a6e3a1;">✓ ジェスチャー対応</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(166, 227, 161, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #a6e3a1;">
+                        <h4 style="color: #a6e3a1; font-size: 1.5rem; margin-bottom: 15px;">GSAP Timeline</h4>
+                        <p style="margin-bottom: 15px;">プロ向けアニメーションエンジン</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #a6e3a1;">✓ 高性能・軽量</li>
+                            <li style="margin: 8px 0; color: #a6e3a1;">✓ ブラウザ互換性</li>
+                            <li style="margin: 8px 0; color: #f38ba8;">✗ ビジュアルエディタなし</li>
+                            <li style="margin: 8px 0; color: #f9e2af;">△ 学習コスト高</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- カリキュラム詳細 -->
+            <div style="background: rgba(30, 30, 46, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(203, 166, 247, 0.3);">
+                <h3 style="color: #cba6f7; font-size: 2rem; margin-bottom: 30px; text-align: center;">16週間マスタープログラム</h3>
+                
+                <!-- フェーズ1: 基礎習得 -->
+                <div style="margin-bottom: 40px;">
+                    <h4 style="color: #89b4fa; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #89b4fa; padding-bottom: 10px;">フェーズ1: 基礎技術習得 (1-6週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(137, 180, 250, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #89b4fa; margin-bottom: 10px;">Week 1-2: Three.js基礎</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">3Dシーン構築、カメラ操作、ライティング設定、マテリアル・テクスチャ基礎、WebGLレンダラー理解</p>
+                        </div>
+                        <div style="background: rgba(203, 166, 247, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #cba6f7; margin-bottom: 10px;">Week 3-4: Theatre.js導入</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">スタジオエディタ操作、プロジェクト・シート作成、プロパティ定義、キーフレーム編集基礎</p>
+                        </div>
+                        <div style="background: rgba(166, 227, 161, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #a6e3a1; margin-bottom: 10px;">Week 5-6: アニメーション理論</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">イージング関数、タイミング原則、セカンダリアニメーション、物理ベースモーション</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- フェーズ2: 実践開発 -->
+                <div style="margin-bottom: 40px;">
+                    <h4 style="color: #cba6f7; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #cba6f7; padding-bottom: 10px;">フェーズ2: 実践開発 (7-12週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(250, 179, 135, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #fab387; margin-bottom: 10px;">Week 7-8: インタラクティブ制御</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">ユーザー入力連携、マウス・タッチ操作、スクロール同期、リアルタイム制御API実装</p>
+                        </div>
+                        <div style="background: rgba(249, 226, 175, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #f9e2af; margin-bottom: 10px;">Week 9-10: 複雑なシーケンス</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">マルチレイヤーアニメーション、シーン遷移、オーディオシンク、パフォーマンス最適化</p>
+                        </div>
+                        <div style="background: rgba(243, 139, 168, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #f38ba8; margin-bottom: 10px;">Week 11-12: データ連携</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">API連携アニメーション、リアルタイムデータ可視化、ダイナミックコンテンツ制御</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- フェーズ3: ビジネス応用 -->
+                <div>
+                    <h4 style="color: #a6e3a1; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #a6e3a1; padding-bottom: 10px;">フェーズ3: ビジネス応用 (13-16週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(137, 180, 250, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #89b4fa; margin-bottom: 10px;">Week 13-14: 商用プロジェクト</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">ブランディング映像制作、プロダクト紹介アニメーション、企業サイト実装案件</p>
+                        </div>
+                        <div style="background: rgba(203, 166, 247, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #cba6f7; margin-bottom: 10px;">Week 15: ポートフォリオ制作</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">個人ブランド構築、作品集サイト制作、技術デモンストレーション、営業資料作成</p>
+                        </div>
+                        <div style="background: rgba(166, 227, 161, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #a6e3a1; margin-bottom: 10px;">Week 16: 収益化戦略</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">クライアント獲得法、価格設定戦略、継続収入モデル構築、フリーランス独立準備</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 成功事例 -->
+            <div style="background: rgba(30, 30, 46, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(166, 227, 161, 0.3);">
+                <h3 style="color: #a6e3a1; font-size: 2rem; margin-bottom: 30px; text-align: center;">タイムライン制作で成功した卒業生</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(137, 180, 250, 0.1), rgba(203, 166, 247, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(137, 180, 250, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #89b4fa, #cba6f7); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">田中</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #89b4fa; font-size: 1.3rem;">映像制作フリーランス</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元グラフィックデザイナー</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(30, 30, 46, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #cba6f7; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">企業ブランディング映像とプロダクト紹介アニメーション制作。Theatre.jsを活用した3Dタイムライン演出で差別化を図る。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(166, 227, 161, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #a6e3a1;">¥180万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(249, 226, 175, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #f9e2af;">95%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">継続率</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"Theatre.jsのビジュアルエディタのおかげで、クライアントとのイメージ共有が革命的に改善されました。修正依頼が90%減少し、制作効率が大幅向上。"</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(250, 179, 135, 0.1), rgba(243, 139, 168, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(250, 179, 135, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #fab387, #f38ba8); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">佐藤</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #fab387; font-size: 1.3rem;">インタラクティブメディア企業</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元ウェブディベロッパー</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(30, 30, 46, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #f38ba8; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">美術館・博物館向けのインタラクティブ展示システム開発。Theatre.jsでストーリーテリング型体験を提供。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(166, 227, 161, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #a6e3a1;">¥320万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(249, 226, 175, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #f9e2af;">12件</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">導入実績</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"複雑なタイムライン制御が必要な展示システムで、Theatre.jsは他の追随を許さない。来館者の滞在時間が平均40%延長されています。"</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(203, 166, 247, 0.1), rgba(166, 227, 161, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(203, 166, 247, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #cba6f7, #a6e3a1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">山田</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #cba6f7; font-size: 1.3rem;">eラーニングプラットフォーム</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元教育関係者</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(30, 30, 46, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #a6e3a1; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">子供向けプログラミング教育プラットフォーム。Theatre.jsでアニメーション教材を制作し、理解度向上を実現。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(166, 227, 161, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #a6e3a1;">¥450万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(249, 226, 175, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #f9e2af;">8,500人</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">受講生数</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"アニメーション教材の制作時間が70%短縮。子供たちの集中力と理解度が劇的に向上し、継続率も大幅アップしました。"</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 料金プラン -->
+            <div style="background: rgba(30, 30, 46, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(249, 226, 175, 0.3);">
+                <h3 style="color: #f9e2af; font-size: 2rem; margin-bottom: 30px; text-align: center;">タイムライン制作マスタープラン</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(137, 180, 250, 0.15), rgba(203, 166, 247, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(137, 180, 250, 0.3); position: relative;">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #89b4fa, #cba6f7); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">基礎コース</div>
+                        <h4 style="color: #89b4fa; font-size: 1.8rem; margin: 20px 0; text-align: center;">ベーシック</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #89b4fa;">¥498,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">16週間プログラム</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>Theatre.js + Three.js基礎</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>タイムライン制作実習</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>基本的なアニメーション技法</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>週2回のライブ授業</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>基本ポートフォリオ制作</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #89b4fa, #cba6f7); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">詳細を見る</a>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(250, 179, 135, 0.15), rgba(243, 139, 168, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(250, 179, 135, 0.5); position: relative; transform: scale(1.05);">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #fab387, #f38ba8); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">推奨</div>
+                        <h4 style="color: #fab387; font-size: 1.8rem; margin: 20px 0; text-align: center;">プロフェッショナル</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #fab387;">¥798,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">16週間プログラム + フォローアップ</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>ベーシック内容すべて</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>高度なインタラクション制御</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>実案件制作サポート</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>個別メンタリング（月4回）</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>クライアント獲得支援</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>3ヶ月フォローアップ</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #fab387, #f38ba8); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">申し込む</a>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(166, 227, 161, 0.15), rgba(249, 226, 175, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(166, 227, 161, 0.3); position: relative;">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #a6e3a1, #f9e2af); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">法人向け</div>
+                        <h4 style="color: #a6e3a1; font-size: 1.8rem; margin: 20px 0; text-align: center;">エンタープライズ</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #a6e3a1;">¥1,500,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">チーム研修 + 技術導入支援</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>全コース内容</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>チーム研修（最大10名）</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>カスタム開発支援</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>技術導入コンサルティング</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>6ヶ月継続サポート</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #a6e3a1; margin-right: 10px;">✓</span>専用Slackチャンネル</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #a6e3a1, #f9e2af); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">相談する</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 保証制度 -->
+                <div style="background: rgba(166, 227, 161, 0.1); border-radius: 15px; padding: 25px; margin-top: 40px; border: 1px solid rgba(166, 227, 161, 0.3);">
+                    <h4 style="color: #a6e3a1; font-size: 1.5rem; margin-bottom: 15px; text-align: center;">📞 完全サポート保証</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #a6e3a1; margin-bottom: 5px;">30日間</div>
+                            <div style="font-size: 0.9rem;">全額返金保証</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #a6e3a1; margin-bottom: 5px;">案件獲得</div>
+                            <div style="font-size: 0.9rem;">3ヶ月以内保証</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #a6e3a1; margin-bottom: 5px;">無制限</div>
+                            <div style="font-size: 0.9rem;">質問・相談対応</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #a6e3a1; margin-bottom: 5px;">追加費用</div>
+                            <div style="font-size: 0.9rem;">一切なし</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTAセクション -->
+            <div style="text-align: center; background: linear-gradient(135deg, rgba(137, 180, 250, 0.2), rgba(203, 166, 247, 0.2)); border-radius: 20px; padding: 60px 40px; border: 2px solid rgba(137, 180, 250, 0.3);">
+                <h3 style="font-size: 2.5rem; margin-bottom: 20px; background: linear-gradient(45deg, #89b4fa, #cba6f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">今すぐタイムライン制作の世界へ</h3>
+                <p style="font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9;">Theatre.jsとThree.jsで創造する次世代ビジュアル体験</p>
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #89b4fa, #cba6f7); color: #000; padding: 20px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: transform 0.3s ease; box-shadow: 0 10px 30px rgba(137, 180, 250, 0.3);">無料相談を予約</a>
+                    <a href="#demo" style="display: inline-block; background: transparent; color: #89b4fa; padding: 20px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; border: 2px solid #89b4fa; transition: all 0.3s ease;">デモを見る</a>
+                </div>
+                <div style="margin-top: 30px; font-size: 0.9rem; opacity: 0.8;">
+                    ⏰ 限定20名 | 📞 無料相談30分 | 🎯 即日回答
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- フローティングナビゲーション -->
+    <div id="floating-nav" style="position: fixed; right: 30px; bottom: 30px; z-index: 2000; display: flex; flex-direction: column; gap: 15px;">
+        <button onclick="toggleSection()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #89b4fa, #cba6f7); border: none; color: #000; font-weight: bold; cursor: pointer; box-shadow: 0 10px 25px rgba(137, 180, 250, 0.4); transition: transform 0.3s ease;">
+            <span id="nav-icon" style="font-size: 1.5rem;">📚</span>
+        </button>
+        <a href="#consultation" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #a6e3a1, #f9e2af); display: flex; align-items: center; justify-content: center; text-decoration: none; color: #000; font-size: 1.5rem; box-shadow: 0 10px 25px rgba(166, 227, 161, 0.4); transition: transform 0.3s ease;">📞</a>
+    </div>
+    
+    <script>
+        let sectionVisible = false;
+        
+        function toggleSection() {
+            const section = document.getElementById('comparison-section');
+            const icon = document.getElementById('nav-icon');
+            
+            if (!sectionVisible) {
+                section.style.transform = 'translateY(-100vh)';
+                icon.textContent = '🎬';
+                sectionVisible = true;
+            } else {
+                section.style.transform = 'translateY(0)';
+                icon.textContent = '📚';
+                sectionVisible = false;
+            }
+        }
+        
+        // フローティングボタンホバーエフェクト
+        document.querySelectorAll('#floating-nav button, #floating-nav a').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transform = 'scale(1.1)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

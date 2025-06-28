@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIで月収が3倍になったフリーランスが続出中 | AIDXschool</title>
+    
+    <meta name="description" content="30秒で体験できるAI自動化。レポート作成、SNS投稿、請求書作成を自動化して、好きな仕事だけする人生へ。プログラミング不要、今すぐ無料で始められます。">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --primary-light: #818CF8;
+            --secondary: #10B981;
+            --secondary-light: #34D399;
+            --accent: #F59E0B;
+            --accent-light: #FCD34D;
+            --danger: #EF4444;
+            --dark: #0F172A;
+            --gray-900: #1E293B;
+            --gray-800: #334155;
+            --gray-700: #475569;
+            --gray-600: #64748B;
+            --gray-500: #94A3B8;
+            --gray-400: #CBD5E1;
+            --gray-300: #E2E8F0;
+            --gray-200: #F1F5F9;
+            --gray-100: #F8FAFC;
+            --white: #FFFFFF;
+            
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            --gradient-dark: linear-gradient(135deg, var(--dark) 0%, var(--gray-900) 100%);
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            color: var(--dark);
+            background: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* ヒーローセクション */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-dark);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            text-align: center;
+            color: var(--white);
+        }
+        
+        .live-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 50px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--secondary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+        
+        .live-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .hero-title {
+            font-size: clamp(32px, 6vw, 64px);
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, var(--white), var(--gray-300));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(18px, 3vw, 24px);
+            font-weight: 400;
+            color: var(--gray-400);
+            margin-bottom: 48px;
+        }
+        
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.35);
+        }
+        
+        .hero-cta:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .hero-cta-icon {
+            font-size: 24px;
+        }
+        
+        /* ライブデモセクション */
+        .demo-section {
+            padding: 80px 20px;
+            background: var(--gray-100);
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 900;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: var(--gray-600);
+            margin-bottom: 48px;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .demo-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .demo-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .demo-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .demo-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        
+        .demo-desc {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-bottom: 16px;
+        }
+        
+        .demo-time {
+            display: inline-block;
+            background: var(--gray-100);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* デモプレビューモーダル */
+        .demo-preview {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .demo-preview.active {
+            display: flex;
+        }
+        
+        .demo-content {
+            background: var(--white);
+            border-radius: 24px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .demo-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .demo-close {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--gray-100);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: var(--transition);
+        }
+        
+        .demo-close:hover {
+            background: var(--gray-200);
+        }
+        
+        .demo-body {
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .demo-animation {
+            width: 100%;
+            height: 300px;
+            background: var(--gray-100);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-result {
+            background: var(--gradient-secondary);
+            color: var(--white);
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        
+        .demo-cta {
+            display: inline-block;
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .demo-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* リアルタイム成功事例 */
+        .social-proof {
+            padding: 80px 20px;
+            background: var(--white);
+            position: relative;
+        }
+        
+        .feed-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .feed-item {
+            background: var(--gray-100);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.5s forwards;
+            position: relative;
+        }
+        
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .feed-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .feed-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+        }
+        
+        .feed-info {
+            flex: 1;
+        }
+        
+        .feed-name {
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .feed-time {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        
+        .feed-badge {
+            background: var(--gradient-secondary);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .feed-content {
+            font-size: 16px;
+            color: var(--gray-700);
+            margin-bottom: 12px;
+        }
+        
+        .feed-stats {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .feed-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+        
+        .feed-stat-icon {
+            color: var(--primary);
+        }
+        
+        /* コミュニティセクション */
+        .community {
+            padding: 80px 20px;
+            background: var(--gradient-dark);
+            color: var(--white);
+            text-align: center;
+        }
+        
+        .community .section-title {
+            color: var(--white);
+        }
+        
+        .community .section-subtitle {
+            color: var(--gray-400);
+        }
+        
+        .community-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            max-width: 800px;
+            margin: 48px auto;
+        }
+        
+        .community-stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--primary-light);
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 16px;
+            color: var(--gray-400);
+        }
+        
+        .community-chat {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 600px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .chat-message {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .chat-user {
+            font-weight: 600;
+            color: var(--primary-light);
+            margin-bottom: 4px;
+        }
+        
+        /* 3ヶ月後のあなた */
+        .future-section {
+            padding: 80px 20px;
+            background: var(--gray-100);
+        }
+        
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: var(--gray-300);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 48px;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background: var(--white);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin: 0 24px;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px var(--white), 0 0 0 6px var(--gray-300);
+        }
+        
+        .timeline-month {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        
+        .timeline-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        
+        .timeline-desc {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+        
+        /* 収入シミュレーター */
+        .simulator {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            max-width: 600px;
+            margin: 48px auto;
+        }
+        
+        .simulator-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .slider-container {
+            margin-bottom: 32px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+        
+        .slider {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .simulator-result {
+            text-align: center;
+            padding: 24px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            color: var(--white);
+        }
+        
+        .result-label {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .result-amount {
+            font-size: 36px;
+            font-weight: 900;
+        }
+        
+        /* FOMO セクション */
+        .fomo-section {
+            padding: 80px 20px;
+            background: var(--white);
+            text-align: center;
+        }
+        
+        .countdown-container {
+            background: var(--gradient-accent);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--white);
+        }
+        
+        .countdown-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .countdown-item {
+            text-align: center;
+        }
+        
+        .countdown-number {
+            font-size: 48px;
+            font-weight: 900;
+            line-height: 1;
+        }
+        
+        .countdown-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .spots-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+            font-size: 16px;
+        }
+        
+        .spots-number {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        /* FAQ AIチャット */
+        .faq-section {
+            padding: 80px 20px;
+            background: var(--gray-100);
+        }
+        
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .chat-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .chat-status {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .chat-body {
+            height: 400px;
+            overflow-y: auto;
+            padding: 24px;
+        }
+        
+        .chat-bubble {
+            max-width: 80%;
+            margin-bottom: 16px;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .chat-bubble.user {
+            margin-left: auto;
+        }
+        
+        .chat-bubble-content {
+            background: var(--gray-100);
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+        }
+        
+        .chat-bubble.user .chat-bubble-content {
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+        
+        .chat-input {
+            padding: 16px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 12px;
+        }
+        
+        .chat-input-field {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: 50px;
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+        }
+        
+        .chat-input-field:focus {
+            border-color: var(--primary);
+        }
+        
+        .chat-send {
+            width: 48px;
+            height: 48px;
+            border: none;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: var(--transition);
+        }
+        
+        .chat-send:hover {
+            transform: scale(1.05);
+        }
+        
+        /* 最終CTA */
+        .final-cta {
+            padding: 100px 20px;
+            background: var(--gradient-dark);
+            text-align: center;
+            color: var(--white);
+        }
+        
+        .final-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 900;
+            margin-bottom: 24px;
+        }
+        
+        .final-desc {
+            font-size: 20px;
+            color: var(--gray-400);
+            margin-bottom: 48px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-options {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+        
+        .cta-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            width: 300px;
+            text-align: left;
+            transition: var(--transition);
+        }
+        
+        .cta-option:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-4px);
+        }
+        
+        .cta-option.recommended {
+            border-color: var(--primary);
+            position: relative;
+        }
+        
+        .cta-option.recommended::before {
+            content: 'おすすめ';
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            background: var(--gradient-primary);
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .cta-option-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .cta-option-price {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            color: var(--primary-light);
+        }
+        
+        .cta-option-features {
+            list-style: none;
+            font-size: 14px;
+            color: var(--gray-400);
+        }
+        
+        .cta-option-features li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+        
+        .cta-option-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+        }
+        
+        .guarantee {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 16px 32px;
+            border-radius: 50px;
+            margin-top: 32px;
+            font-size: 16px;
+        }
+        
+        .guarantee-icon {
+            font-size: 24px;
+        }
+        
+        /* フローティングウィジェット */
+        .floating-widget {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+        }
+        
+        .widget-button {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--shadow-xl);
+            transition: var(--transition);
+        }
+        
+        .widget-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .widget-menu {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-xl);
+            padding: 16px;
+            min-width: 200px;
+            display: none;
+        }
+        
+        .widget-menu.active {
+            display: block;
+            animation: slideUp 0.3s;
+        }
+        
+        .widget-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--dark);
+            text-decoration: none;
+        }
+        
+        .widget-item:hover {
+            background: var(--gray-100);
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                flex-direction: column;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-dot {
+                left: 20px;
+            }
+            
+            .timeline-content {
+                margin-left: 60px;
+                margin-right: 0;
+            }
+            
+            .cta-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .countdown {
+                gap: 16px;
+            }
+            
+            .countdown-number {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="live-counter">
+                    <div class="live-dot"></div>
+                    <span class="live-text">現在<span id="liveCount">127</span>人が体験中</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    AIで月収が3倍になった<br>
+                    フリーランスが続出中
+                </h1>
+                
+                <p class="hero-subtitle">
+                    今なら30秒で自動化を体験できる
+                </p>
+                
+                <a href="#demo" class="hero-cta">
+                    <span class="hero-cta-icon">🚀</span>
+                    <span>30秒デモを試す（無料）</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ライブデモセクション -->
+    <section class="demo-section" id="demo">
+        <div class="container">
+            <h2 class="section-title">まだExcelと格闘してるの？</h2>
+            <p class="section-subtitle">AIが3秒でやってくれるよ</p>
+            
+            <div class="demo-grid">
+                <div class="demo-card" onclick="openDemo('sns')">
+                    <div class="demo-icon">📱</div>
+                    <h3 class="demo-title">SNS投稿の自動化</h3>
+                    <p class="demo-desc">複数SNSへの同時投稿、最適な時間に自動投稿</p>
+                    <span class="demo-time">体験時間: 30秒</span>
+                </div>
+                
+                <div class="demo-card" onclick="openDemo('invoice')">
+                    <div class="demo-icon">📄</div>
+                    <h3 class="demo-title">請求書の自動作成</h3>
+                    <p class="demo-desc">クライアント情報から自動で請求書生成</p>
+                    <span class="demo-time">体験時間: 30秒</span>
+                </div>
+                
+                <div class="demo-card" onclick="openDemo('report')">
+                    <div class="demo-icon">📊</div>
+                    <h3 class="demo-title">レポートの自動生成</h3>
+                    <p class="demo-desc">データを入れるだけで見やすいレポート完成</p>
+                    <span class="demo-time">体験時間: 30秒</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- デモプレビューモーダル -->
+    <div class="demo-preview" id="demoPreview">
+        <div class="demo-content">
+            <div class="demo-header">
+                <h3 id="demoTitle">デモタイトル</h3>
+                <button class="demo-close" onclick="closeDemo()">×</button>
+            </div>
+            <div class="demo-body">
+                <div class="demo-animation" id="demoAnimation">
+                    <div style="font-size: 48px;">🤖</div>
+                </div>
+                <div class="demo-result">
+                    これがあなたの業務を自動化した結果です！
+                </div>
+                <a href="#" class="demo-cta">無料で始める</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- リアルタイム成功事例 -->
+    <section class="social-proof">
+        <div class="container">
+            <h2 class="section-title">たった今、成功者が生まれています</h2>
+            <p class="section-subtitle">#自動化デビュー がトレンド入り</p>
+            
+            <div class="feed-container" id="feedContainer">
+                <!-- フィードアイテムがここに動的に追加される -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- コミュニティセクション -->
+    <section class="community">
+        <div class="container">
+            <h2 class="section-title">一人じゃない、仲間がいる</h2>
+            <p class="section-subtitle">今すぐ相談できる先輩メンバーがオンライン</p>
+            
+            <div class="community-stats">
+                <div class="community-stat">
+                    <div class="stat-number" id="memberCount">3,247</div>
+                    <div class="stat-label">アクティブメンバー</div>
+                </div>
+                <div class="community-stat">
+                    <div class="stat-number" id="onlineCount">89</div>
+                    <div class="stat-label">オンライン中</div>
+                </div>
+                <div class="community-stat">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">サポート体制</div>
+                </div>
+            </div>
+            
+            <div class="community-chat">
+                <div class="chat-message">
+                    <div class="chat-user">田中さん（先月スタート）</div>
+                    <div>最初は不安だったけど、3日目で最初の自動化が完成しました！</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-user">鈴木さん（メンター）</div>
+                    <div>質問大歓迎です！みんな最初は初心者でした😊</div>
+                </div>
+                <div class="chat-message">
+                    <div class="chat-user">佐藤さん（2ヶ月目）</div>
+                    <div>今月の売上が先月の2倍になりました...！</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 3ヶ月後のあなた -->
+    <section class="future-section">
+        <div class="container">
+            <h2 class="section-title">あなたの3ヶ月後をシミュレーション</h2>
+            <p class="section-subtitle">多くの先輩が通った成功への道のり</p>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-month">1ヶ月目</div>
+                        <h3 class="timeline-title">基礎マスター</h3>
+                        <p class="timeline-desc">SNS投稿、メール返信、データ入力の自動化完了。毎日2時間の自由時間GET！</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-month">2ヶ月目</div>
+                        <h3 class="timeline-title">応用展開</h3>
+                        <p class="timeline-desc">クライアントワークの半分を自動化。新規案件の受注が可能に。月収1.5倍達成！</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-month">3ヶ月目</div>
+                        <h3 class="timeline-title">完全自動化</h3>
+                        <p class="timeline-desc">ビジネスの8割が自動化。好きな仕事だけに集中。月収3倍＆週4日勤務を実現！</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+            </div>
+            
+            <div class="simulator">
+                <h3 class="simulator-title">あなたの月収シミュレーター</h3>
+                
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>現在の月収</span>
+                        <span id="currentIncome">30万円</span>
+                    </div>
+                    <input type="range" class="slider" id="incomeSlider" min="20" max="100" value="30" step="5">
+                </div>
+                
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>自動化する業務の割合</span>
+                        <span id="automationRate">50%</span>
+                    </div>
+                    <input type="range" class="slider" id="automationSlider" min="30" max="90" value="50" step="10">
+                </div>
+                
+                <div class="simulator-result">
+                    <div class="result-label">3ヶ月後の予想月収</div>
+                    <div class="result-amount" id="futureIncome">¥450,000</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FOMO セクション -->
+    <section class="fomo-section">
+        <div class="container">
+            <h2 class="section-title">今を逃すと、3ヶ月後も同じ毎日</h2>
+            
+            <div class="countdown-container">
+                <h3 class="countdown-title">早期参加特典の締切まで</h3>
+                
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="days">2</div>
+                        <div class="countdown-label">日</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="hours">14</div>
+                        <div class="countdown-label">時間</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="minutes">37</div>
+                        <div class="countdown-label">分</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="seconds">52</div>
+                        <div class="countdown-label">秒</div>
+                    </div>
+                </div>
+                
+                <div class="spots-left">
+                    <span>残り</span>
+                    <span class="spots-number" id="spotsLeft">17</span>
+                    <span>枠（定員50名）</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FAQ AIチャット -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">何でも聞いて！AIが即答します</h2>
+            
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-title">AI サポート</div>
+                    <div class="chat-status">オンライン・平均返答時間3秒</div>
+                </div>
+                
+                <div class="chat-body" id="chatBody">
+                    <div class="chat-bubble">
+                        <div class="chat-bubble-content">
+                            こんにちは！自動化について何でも聞いてください。よくある質問：<br>
+                            ・プログラミング必要？<br>
+                            ・どのくらいで効果出る？<br>
+                            ・費用は？
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" class="chat-input-field" placeholder="質問を入力..." id="chatInput">
+                    <button class="chat-send" onclick="sendMessage()">→</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 最終CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h1 class="final-title">
+                もう、一人で悩む必要はない
+            </h1>
+            
+            <p class="final-desc">
+                3分後には最初の自動化が完成。<br>
+                今日から、好きな仕事だけする人生が始まる。
+            </p>
+            
+            <div class="cta-options">
+                <div class="cta-option">
+                    <h3 class="cta-option-title">フリートライアル</h3>
+                    <div class="cta-option-price">¥0</div>
+                    <ul class="cta-option-features">
+                        <li>7日間無料</li>
+                        <li>基本機能すべて利用可能</li>
+                        <li>チャットサポート</li>
+                        <li>いつでもキャンセルOK</li>
+                    </ul>
+                </div>
+                
+                <div class="cta-option recommended">
+                    <h3 class="cta-option-title">スタータープラン</h3>
+                    <div class="cta-option-price">¥9,800/月</div>
+                    <ul class="cta-option-features">
+                        <li>全機能利用可能</li>
+                        <li>1対1メンターサポート</li>
+                        <li>限定コミュニティ参加</li>
+                        <li>30日間返金保証</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="guarantee">
+                <span class="guarantee-icon">🛡️</span>
+                <span>30日間返金保証・理由は問いません</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- フローティングウィジェット -->
+    <div class="floating-widget">
+        <button class="widget-button" onclick="toggleWidget()">💬</button>
+        <div class="widget-menu" id="widgetMenu">
+            <a href="#demo" class="widget-item">
+                <span>🚀</span>
+                <span>30秒デモ</span>
+            </a>
+            <a href="#" class="widget-item">
+                <span>📞</span>
+                <span>無料相談</span>
+            </a>
+            <a href="#" class="widget-item">
+                <span>💬</span>
+                <span>LINEで質問</span>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // ライブカウンター
+        function updateLiveCount() {
+            const count = document.getElementById('liveCount');
+            const current = parseInt(count.textContent);
+            const change = Math.floor(Math.random() * 5) - 2;
+            const newCount = Math.max(100, current + change);
+            count.textContent = newCount;
+        }
+        setInterval(updateLiveCount, 3000);
+        
+        // デモモーダル
+        function openDemo(type) {
+            const modal = document.getElementById('demoPreview');
+            const title = document.getElementById('demoTitle');
+            const animation = document.getElementById('demoAnimation');
+            
+            const demos = {
+                sns: {
+                    title: 'SNS投稿の自動化デモ',
+                    icon: '📱'
+                },
+                invoice: {
+                    title: '請求書の自動作成デモ',
+                    icon: '📄'
+                },
+                report: {
+                    title: 'レポートの自動生成デモ',
+                    icon: '📊'
+                }
+            };
+            
+            title.textContent = demos[type].title;
+            animation.innerHTML = `<div style="font-size: 48px;">${demos[type].icon}</div>`;
+            modal.classList.add('active');
+            
+            // アニメーション開始
+            setTimeout(() => {
+                animation.innerHTML = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 16px;">処理中...</div>
+                        <div style="width: 200px; height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden;">
+                            <div style="width: 100%; height: 100%; background: var(--gradient-primary); animation: progress 3s ease-out;"></div>
+                        </div>
+                    </div>
+                `;
+            }, 500);
+            
+            setTimeout(() => {
+                animation.innerHTML = `
+                    <div style="font-size: 48px; color: var(--secondary);">✅</div>
+                    <div style="margin-top: 16px; font-size: 18px; font-weight: 600;">完了！</div>
+                `;
+            }, 3500);
+        }
+        
+        function closeDemo() {
+            document.getElementById('demoPreview').classList.remove('active');
+        }
+        
+        // リアルタイムフィード
+        const feedData = [
+            {
+                name: '山田太郎',
+                time: 'たった今',
+                content: '初めて請求書作成を自動化できました！今まで2時間かかってたのが5分に...',
+                badge: '初月で50時間削減'
+            },
+            {
+                name: '佐藤花子',
+                time: '3分前',
+                content: 'SNS投稿の自動化、思ってたより簡単でした。もっと早く始めればよかった',
+                badge: '売上1.8倍達成'
+            },
+            {
+                name: '鈴木一郎',
+                time: '5分前',
+                content: 'レポート作成の自動化で、クライアントからの評価が上がりました！',
+                badge: '新規案件3件獲得'
+            }
+        ];
+        
+        function addFeedItem() {
+            const container = document.getElementById('feedContainer');
+            const item = feedData[Math.floor(Math.random() * feedData.length)];
+            
+            const feedHTML = `
+                <div class="feed-item" style="animation-delay: ${Math.random() * 0.3}s">
+                    <div class="feed-header">
+                        <div class="feed-avatar">${item.name[0]}</div>
+                        <div class="feed-info">
+                            <div class="feed-name">${item.name}さん</div>
+                            <div class="feed-time">${item.time}</div>
+                        </div>
+                        <div class="feed-badge">${item.badge}</div>
+                    </div>
+                    <div class="feed-content">${item.content}</div>
+                    <div class="feed-stats">
+                        <div class="feed-stat">
+                            <span class="feed-stat-icon">👍</span>
+                            <span>${Math.floor(Math.random() * 50) + 20}</span>
+                        </div>
+                        <div class="feed-stat">
+                            <span class="feed-stat-icon">💬</span>
+                            <span>${Math.floor(Math.random() * 20) + 5}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('afterbegin', feedHTML);
+            
+            // 古いアイテムを削除
+            const items = container.querySelectorAll('.feed-item');
+            if (items.length > 3) {
+                items[items.length - 1].remove();
+            }
+        }
+        
+        // 初期フィード
+        for (let i = 0; i < 3; i++) {
+            addFeedItem();
+        }
+        
+        // 定期的に新しいフィードを追加
+        setInterval(addFeedItem, 8000);
+        
+        // コミュニティカウンター
+        function updateCommunityStats() {
+            const memberCount = document.getElementById('memberCount');
+            const onlineCount = document.getElementById('onlineCount');
+            
+            const members = parseInt(memberCount.textContent.replace(',', ''));
+            const online = parseInt(onlineCount.textContent);
+            
+            memberCount.textContent = (members + Math.floor(Math.random() * 3)).toLocaleString();
+            onlineCount.textContent = Math.max(80, online + Math.floor(Math.random() * 5) - 2);
+        }
+        setInterval(updateCommunityStats, 5000);
+        
+        // 収入シミュレーター
+        const incomeSlider = document.getElementById('incomeSlider');
+        const automationSlider = document.getElementById('automationSlider');
+        const currentIncome = document.getElementById('currentIncome');
+        const automationRate = document.getElementById('automationRate');
+        const futureIncome = document.getElementById('futureIncome');
+        
+        function updateSimulator() {
+            const income = parseInt(incomeSlider.value);
+            const automation = parseInt(automationSlider.value);
+            
+            currentIncome.textContent = `${income}万円`;
+            automationRate.textContent = `${automation}%`;
+            
+            // 自動化による収入増加計算
+            const multiplier = 1 + (automation / 100) * 2;
+            const future = Math.floor(income * multiplier);
+            
+            futureIncome.textContent = `¥${(future * 10000).toLocaleString()}`;
+        }
+        
+        incomeSlider.addEventListener('input', updateSimulator);
+        automationSlider.addEventListener('input', updateSimulator);
+        updateSimulator();
+        
+        // カウントダウンタイマー
+        function updateCountdown() {
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 2);
+            endDate.setHours(23, 59, 59);
+            
+            const now = new Date();
+            const diff = endDate - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            
+            // 残り枠数を徐々に減らす
+            const spotsLeft = document.getElementById('spotsLeft');
+            if (Math.random() < 0.01 && parseInt(spotsLeft.textContent) > 5) {
+                spotsLeft.textContent = parseInt(spotsLeft.textContent) - 1;
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+        
+        // AIチャット
+        const chatResponses = {
+            'プログラミング': '全く必要ありません！ドラッグ&ドロップで誰でも自動化を作れます。実際、受講生の8割以上がプログラミング未経験者です。',
+            '効果': '最短2週間で最初の自動化が完成します。平均すると1ヶ月で50時間、3ヶ月で月100時間以上の業務削減を達成しています。',
+            '費用': 'フリープランは完全無料、スタータープランは月額9,800円です。削減できる人件費を考えると、ほとんどの方が初月から黒字になっています。',
+            'サポート': '24時間365日のチャットサポートに加え、週3回のオンライン相談会、1対1のメンターサポートもご用意しています。',
+            '返金': '30日間の完全返金保証があります。理由は一切問いません。'
+        };
+        
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const chatBody = document.getElementById('chatBody');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // ユーザーメッセージを追加
+            chatBody.innerHTML += `
+                <div class="chat-bubble user">
+                    <div class="chat-bubble-content">${message}</div>
+                </div>
+            `;
+            
+            input.value = '';
+            
+            // AIの返答を生成
+            setTimeout(() => {
+                let response = 'ご質問ありがとうございます。';
+                
+                for (const [keyword, answer] of Object.entries(chatResponses)) {
+                    if (message.includes(keyword)) {
+                        response = answer;
+                        break;
+                    }
+                }
+                
+                if (response === 'ご質問ありがとうございます。') {
+                    response += 'より詳しくお答えするため、無料相談をご利用ください。専門スタッフが丁寧にご説明いたします。';
+                }
+                
+                chatBody.innerHTML += `
+                    <div class="chat-bubble">
+                        <div class="chat-bubble-content">${response}</div>
+                    </div>
+                `;
+                
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 1000);
+            
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // フローティングウィジェット
+        function toggleWidget() {
+            const menu = document.getElementById('widgetMenu');
+            menu.classList.toggle('active');
+        }
+        
+        // スムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // プログレスアニメーション用CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes progress {
+                from { width: 0; }
+                to { width: 100%; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

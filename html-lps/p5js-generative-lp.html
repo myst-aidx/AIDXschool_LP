@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - あなたの成長を描くジェネラティブアート | P5.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        /* P5.js キャンバス */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+        }
+        
+        /* コンテンツオーバーレイ */
+        .content-overlay {
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 10, 0.8) 50%, #0a0a0a 100%);
+            min-height: 100vh;
+            padding-top: 60vh;
+        }
+        
+        /* ヒーローセクション */
+        .hero {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 20;
+            transition: opacity 0.5s ease;
+        }
+        
+        .hero.scrolled {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff006e 0%, #8338ec 50%, #3a86ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: hueRotate 5s ease infinite;
+        }
+        
+        @keyframes hueRotate {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(30deg); }
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            color: #3a86ff;
+        }
+        
+        /* インタラクション説明 */
+        .interaction-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            z-index: 30;
+            animation: pulse 2s ease infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        /* コンテンツセクション */
+        .content-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #8338ec 0%, #3a86ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* 成長ステージ */
+        .growth-stages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 100px;
+        }
+        
+        .stage-card {
+            background: rgba(131, 56, 236, 0.1);
+            border: 1px solid rgba(131, 56, 236, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .stage-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(131, 56, 236, 0.3);
+            background: rgba(131, 56, 236, 0.2);
+        }
+        
+        .stage-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stage-title {
+            font-size: 1.8rem;
+            color: #ff006e;
+            margin-bottom: 1rem;
+        }
+        
+        .stage-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        /* データビジュアライゼーション */
+        .data-viz-section {
+            background: rgba(58, 134, 255, 0.05);
+            border-radius: 30px;
+            padding: 60px;
+            margin-bottom: 100px;
+        }
+        
+        .viz-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .viz-text h3 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #3a86ff;
+        }
+        
+        .viz-text p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+        
+        .viz-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff006e 0%, #8338ec 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        /* CTAセクション */
+        .cta-section {
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1) 0%, rgba(131, 56, 236, 0.1) 100%);
+            border-radius: 30px;
+        }
+        
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #ff006e 0%, #3a86ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta-description {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 0, 110, 0.5);
+        }
+        
+        /* 生成パラメータコントロール */
+        .controls {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            z-index: 100;
+        }
+        
+        .control-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #3a86ff;
+        }
+        
+        .control-item {
+            margin-bottom: 15px;
+        }
+        
+        .control-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .control-slider {
+            width: 100%;
+            height: 5px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .control-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #ff006e;
+            cursor: pointer;
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .viz-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                top: auto;
+                bottom: 100px;
+                right: 20px;
+                left: 20px;
+            }
+            
+            .data-viz-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <!-- ヒーローセクション -->
+    <div class="hero" id="hero">
+        <h1>あなたの成長をアートにする</h1>
+        <p class="subtitle">P5.jsが描く、起業家としての進化の軌跡</p>
+    </div>
+    
+    <!-- インタラクションヒント -->
+    <div class="interaction-hint">
+        マウスを動かして、あなただけのアートを生成しよう
+    </div>
+    
+    <!-- コントロールパネル -->
+    <div class="controls">
+        <h3 class="control-title">成長パラメータ</h3>
+        <div class="control-item">
+            <label class="control-label">成長速度</label>
+            <input type="range" class="control-slider" id="growthSpeed" min="1" max="10" value="5">
+        </div>
+        <div class="control-item">
+            <label class="control-label">複雑性</label>
+            <input type="range" class="control-slider" id="complexity" min="1" max="10" value="5">
+        </div>
+        <div class="control-item">
+            <label class="control-label">エネルギー</label>
+            <input type="range" class="control-slider" id="energy" min="1" max="10" value="5">
+        </div>
+    </div>
+    
+    <!-- コンテンツ -->
+    <div class="content-overlay">
+        <section class="content-section">
+            <h2 class="section-title">起業の成長を可視化する</h2>
+            
+            <div class="growth-stages">
+                <div class="stage-card" onclick="changeGrowthStage(1)">
+                    <div class="stage-icon">🌱</div>
+                    <h3 class="stage-title">種まき期</h3>
+                    <p class="stage-description">
+                        アイデアの種を植える段階。<br>
+                        小さな点から始まる、無限の可能性。
+                    </p>
+                </div>
+                
+                <div class="stage-card" onclick="changeGrowthStage(2)">
+                    <div class="stage-icon">🌿</div>
+                    <h3 class="stage-title">成長期</h3>
+                    <p class="stage-description">
+                        スキルと知識が急速に伸びる時期。<br>
+                        複雑な模様が生まれ始める。
+                    </p>
+                </div>
+                
+                <div class="stage-card" onclick="changeGrowthStage(3)">
+                    <div class="stage-icon">🌳</div>
+                    <h3 class="stage-title">開花期</h3>
+                    <p class="stage-description">
+                        ビジネスが形になり、成果が出始める。<br>
+                        美しいパターンが完成する。
+                    </p>
+                </div>
+            </div>
+            
+            <!-- データビジュアライゼーション -->
+            <div class="data-viz-section">
+                <div class="viz-container">
+                    <div class="viz-text">
+                        <h3>リアルタイムで変化する成長データ</h3>
+                        <p>
+                            AIDXschoolでは、あなたの学習データをリアルタイムで可視化。
+                            ジェネラティブアートのように、一人ひとり異なる成長の軌跡を描きます。
+                            プログラミングの知識がなくても、AI×DXツールで独自のビジュアルを作成できます。
+                        </p>
+                    </div>
+                    <div class="viz-stats">
+                        <div class="stat-box">
+                            <div class="stat-number" id="statGrowth">87%</div>
+                            <div class="stat-label">成長率</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="statSkills">24</div>
+                            <div class="stat-label">習得スキル</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="statProjects">12</div>
+                            <div class="stat-label">完成プロジェクト</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="statRevenue">¥2.4M</div>
+                            <div class="stat-label">月間収益</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTA -->
+            <div class="cta-section">
+                <h2 class="cta-title">あなたの成長アートを始めよう</h2>
+                <p class="cta-description">
+                    AIDXschoolで、データとアートが融合した新しい起業の形を体験してください。
+                    今なら無料で、あなたの成長ポテンシャルを可視化できます。
+                </p>
+                <a href="#" class="cta-button">無料診断を受ける</a>
+            </div>
+        </section>
+        
+        <!-- ジェネラティブアート作品ギャラリー -->
+        <section class="gallery-section" style="padding: 100px 20px; background: linear-gradient(180deg, #0a0a0a 0%, #1a0a2e 100%);">
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <h2 class="section-title">受講生の作品ギャラリー</h2>
+                <p style="text-align: center; font-size: 1.2rem; opacity: 0.8; margin-bottom: 60px;">
+                    AIDXschoolの受講生が作成したジェネラティブアート作品
+                </p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                    <div class="gallery-item" style="background: rgba(255, 0, 110, 0.1); border: 1px solid #ff006e; border-radius: 20px; padding: 20px; text-align: center;">
+                        <div style="height: 200px; background: radial-gradient(circle at center, #ff006e 0%, transparent 70%); border-radius: 10px; margin-bottom: 20px; position: relative; overflow: hidden;">
+                            <div style="position: absolute; width: 100%; height: 100%; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px); animation: float 20s linear infinite;"></div>
+                        </div>
+                        <h3 style="color: #ff006e; margin-bottom: 10px;">パーティクルフロー</h3>
+                        <p style="opacity: 0.8; font-size: 0.9rem;">田中さん（受講3ヶ月）</p>
+                        <p style="opacity: 0.6; font-size: 0.8rem;">企業のビジュアルアイデンティティとして採用</p>
+                    </div>
+                    
+                    <div class="gallery-item" style="background: rgba(131, 56, 236, 0.1); border: 1px solid #8338ec; border-radius: 20px; padding: 20px; text-align: center;">
+                        <div style="height: 200px; background: linear-gradient(135deg, #8338ec 0%, #3a86ff 100%); border-radius: 10px; margin-bottom: 20px; position: relative; overflow: hidden;">
+                            <div style="position: absolute; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.2) 1px, transparent 1px); background-size: 20px 20px; animation: float 30s linear infinite;"></div>
+                        </div>
+                        <h3 style="color: #8338ec; margin-bottom: 10px;">データビジュアライゼーション</h3>
+                        <p style="opacity: 0.8; font-size: 0.9rem;">山田さん（受講6ヶ月）</p>
+                        <p style="opacity: 0.6; font-size: 0.8rem;">月収50万円のフリーランスとして独立</p>
+                    </div>
+                    
+                    <div class="gallery-item" style="background: rgba(58, 134, 255, 0.1); border: 1px solid #3a86ff; border-radius: 20px; padding: 20px; text-align: center;">
+                        <div style="height: 200px; background: conic-gradient(from 180deg at 50% 50%, #3a86ff 0deg, #00ff88 120deg, #ff006e 240deg, #3a86ff 360deg); border-radius: 10px; margin-bottom: 20px; position: relative; overflow: hidden;">
+                            <div style="position: absolute; width: 100%; height: 100%; backdrop-filter: blur(20px); animation: float 25s linear infinite;"></div>
+                        </div>
+                        <h3 style="color: #3a86ff; margin-bottom: 10px;">インタラクティブアート</h3>
+                        <p style="opacity: 0.8; font-size: 0.9rem;">佐藤さん（受講9ヶ月）</p>
+                        <p style="opacity: 0.6; font-size: 0.8rem;">アート展示会で作品販売、100万円売上</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 技術スタックセクション -->
+        <section class="tech-stack-section" style="padding: 100px 20px;">
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <h2 class="section-title">習得できる技術スタック</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-top: 60px;">
+                    <div class="tech-card" style="text-align: center;">
+                        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold;">
+                            P5
+                        </div>
+                        <h3 style="color: #ff006e; margin-bottom: 15px;">P5.js Core</h3>
+                        <ul style="list-style: none; padding: 0; text-align: left;">
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ Canvas操作の基礎</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ 図形・色彩・変形</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ アニメーションループ</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ インタラクション実装</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-card" style="text-align: center;">
+                        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #8338ec 0%, #3a86ff 100%); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                            🎨
+                        </div>
+                        <h3 style="color: #8338ec; margin-bottom: 15px;">ジェネラティブ技法</h3>
+                        <ul style="list-style: none; padding: 0; text-align: left;">
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ パーティクルシステム</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ フラクタル生成</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ ノイズアルゴリズム</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ 物理シミュレーション</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-card" style="text-align: center;">
+                        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #3a86ff 0%, #00ff88 100%); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                            📊
+                        </div>
+                        <h3 style="color: #3a86ff; margin-bottom: 15px;">データ可視化</h3>
+                        <ul style="list-style: none; padding: 0; text-align: left;">
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ CSV/JSONデータ連携</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ リアルタイムグラフ</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ APIデータ取得</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ インフォグラフィックス</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tech-card" style="text-align: center;">
+                        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #00ff88 0%, #ff006e 100%); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                            💰
+                        </div>
+                        <h3 style="color: #00ff88; margin-bottom: 15px;">ビジネス応用</h3>
+                        <ul style="list-style: none; padding: 0; text-align: left;">
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ NFTアート制作</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ Webサイト演出</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ プロジェクション</li>
+                            <li style="margin-bottom: 10px; opacity: 0.8;">✓ インスタレーション</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 学習ロードマップ -->
+        <section class="roadmap-section" style="padding: 100px 20px; background: rgba(131, 56, 236, 0.05);">
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <h2 class="section-title">3ヶ月で習得する学習ロードマップ</h2>
+                
+                <div class="roadmap-container" style="position: relative; padding: 60px 0;">
+                    <!-- ロードマップライン -->
+                    <div style="position: absolute; top: 50%; left: 10%; right: 10%; height: 4px; background: linear-gradient(90deg, #ff006e 0%, #8338ec 50%, #3a86ff 100%); z-index: 1;"></div>
+                    
+                    <!-- Month 1 -->
+                    <div style="display: flex; justify-content: space-between; position: relative; z-index: 2;">
+                        <div style="text-align: center; flex: 1;">
+                            <div style="width: 80px; height: 80px; background: #ff006e; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.5rem; color: white; box-shadow: 0 0 20px rgba(255, 0, 110, 0.5);">
+                                1
+                            </div>
+                            <h3 style="color: #ff006e; margin-bottom: 15px;">月目：基礎習得</h3>
+                            <ul style="list-style: none; padding: 0; font-size: 0.9rem; opacity: 0.8;">
+                                <li>P5.js環境構築</li>
+                                <li>基本図形と色彩</li>
+                                <li>アニメーション基礎</li>
+                                <li>マウス・キーボード操作</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="text-align: center; flex: 1;">
+                            <div style="width: 80px; height: 80px; background: #8338ec; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.5rem; color: white; box-shadow: 0 0 20px rgba(131, 56, 236, 0.5);">
+                                2
+                            </div>
+                            <h3 style="color: #8338ec; margin-bottom: 15px;">月目：応用技術</h3>
+                            <ul style="list-style: none; padding: 0; font-size: 0.9rem; opacity: 0.8;">
+                                <li>パーティクルシステム</li>
+                                <li>物理演算の実装</li>
+                                <li>3D空間の扱い</li>
+                                <li>外部データ連携</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="text-align: center; flex: 1;">
+                            <div style="width: 80px; height: 80px; background: #3a86ff; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.5rem; color: white; box-shadow: 0 0 20px rgba(58, 134, 255, 0.5);">
+                                3
+                            </div>
+                            <h3 style="color: #3a86ff; margin-bottom: 15px;">月目：実践・収益化</h3>
+                            <ul style="list-style: none; padding: 0; font-size: 0.9rem; opacity: 0.8;">
+                                <li>商用プロジェクト制作</li>
+                                <li>ポートフォリオ構築</li>
+                                <li>クライアント獲得</li>
+                                <li>収益化戦略実行</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 60px;">
+                    <p style="font-size: 1.3rem; margin-bottom: 30px;">
+                        3ヶ月後のあなたは、<br>
+                        <span style="color: #ff006e; font-size: 1.5rem; font-weight: bold;">月収30万円以上</span>を稼ぐジェネラティブアーティストに！
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 料金プラン -->
+        <section class="pricing-section" style="padding: 100px 20px; background: #0a0a0a;">
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <h2 class="section-title">選べる学習プラン</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; margin-top: 60px;">
+                    <!-- スタータープラン -->
+                    <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 30px; padding: 40px; text-align: center;">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 20px;">スタータープラン</h3>
+                        <div style="font-size: 3rem; font-weight: bold; color: #ff006e; margin-bottom: 30px;">
+                            ¥49,800
+                            <span style="font-size: 1rem; opacity: 0.7;">/月</span>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 40px;">
+                            <li style="margin-bottom: 15px;">✅ オンライン動画講座</li>
+                            <li style="margin-bottom: 15px;">✅ 基礎カリキュラム</li>
+                            <li style="margin-bottom: 15px;">✅ Slackサポート</li>
+                            <li style="margin-bottom: 15px;">✅ 月1回グループセッション</li>
+                        </ul>
+                        <a href="#" style="display: block; padding: 15px 30px; background: rgba(255, 0, 110, 0.2); border: 2px solid #ff006e; color: #ff006e; text-decoration: none; border-radius: 25px; font-weight: bold;">
+                            このプランで始める
+                        </a>
+                    </div>
+                    
+                    <!-- プロプラン -->
+                    <div style="background: linear-gradient(135deg, rgba(131, 56, 236, 0.1) 0%, rgba(58, 134, 255, 0.1) 100%); border: 2px solid #8338ec; border-radius: 30px; padding: 40px; text-align: center; transform: scale(1.05); position: relative;">
+                        <div style="position: absolute; top: -15px; right: 30px; background: #ff006e; color: white; padding: 5px 20px; border-radius: 15px; font-weight: bold;">
+                            人気No.1
+                        </div>
+                        <h3 style="font-size: 1.8rem; margin-bottom: 20px;">プロフェッショナル</h3>
+                        <div style="font-size: 3rem; font-weight: bold; color: #8338ec; margin-bottom: 30px;">
+                            ¥98,000
+                            <span style="font-size: 1rem; opacity: 0.7;">/月</span>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 40px;">
+                            <li style="margin-bottom: 15px;">✅ スタータープランの全特典</li>
+                            <li style="margin-bottom: 15px;">✅ 週1回の個別メンタリング</li>
+                            <li style="margin-bottom: 15px;">✅ 実案件サポート</li>
+                            <li style="margin-bottom: 15px;">✅ 収益化コンサル</li>
+                            <li style="margin-bottom: 15px;">✅ 優先サポート</li>
+                        </ul>
+                        <a href="#" style="display: block; padding: 15px 30px; background: #8338ec; color: white; text-decoration: none; border-radius: 25px; font-weight: bold;">
+                            このプランで始める
+                        </a>
+                    </div>
+                    
+                    <!-- マスタープラン -->
+                    <div style="background: rgba(58, 134, 255, 0.1); border: 2px solid #3a86ff; border-radius: 30px; padding: 40px; text-align: center;">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 20px;">マスタープラン</h3>
+                        <div style="font-size: 3rem; font-weight: bold; color: #3a86ff; margin-bottom: 30px;">
+                            ¥198,000
+                            <span style="font-size: 1rem; opacity: 0.7;">/月</span>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 40px;">
+                            <li style="margin-bottom: 15px;">✅ プロプランの全特典</li>
+                            <li style="margin-bottom: 15px;">✅ 毎日の個別サポート</li>
+                            <li style="margin-bottom: 15px;">✅ 共同プロジェクト参加</li>
+                            <li style="margin-bottom: 15px;">✅ 収益保証制度</li>
+                            <li style="margin-bottom: 15px;">✅ 永久サポート権</li>
+                        </ul>
+                        <a href="#" style="display: block; padding: 15px 30px; background: rgba(58, 134, 255, 0.2); border: 2px solid #3a86ff; color: #3a86ff; text-decoration: none; border-radius: 25px; font-weight: bold;">
+                            このプランで始める
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FAQ -->
+        <section class="faq-section" style="padding: 100px 20px;">
+            <div style="max-width: 900px; margin: 0 auto;">
+                <h2 class="section-title">よくある質問</h2>
+                
+                <div class="faq-item" style="background: rgba(255, 0, 110, 0.05); border-radius: 20px; padding: 30px; margin-bottom: 20px;">
+                    <h3 style="color: #ff006e; margin-bottom: 15px;">
+                        Q: プログラミング初心者でも大丈夫ですか？
+                    </h3>
+                    <p style="opacity: 0.8; line-height: 1.8;">
+                        A: はい、大丈夫です！P5.jsは初心者に優しい言語で、視覚的にすぐ結果が見えるため、プログラミング未経験の方でも楽しく学べます。実際、受講生の60%以上がプログラミング初心者からスタートしています。
+                    </p>
+                </div>
+                
+                <div class="faq-item" style="background: rgba(131, 56, 236, 0.05); border-radius: 20px; padding: 30px; margin-bottom: 20px;">
+                    <h3 style="color: #8338ec; margin-bottom: 15px;">
+                        Q: どんな作品が作れるようになりますか？
+                    </h3>
+                    <p style="opacity: 0.8; line-height: 1.8;">
+                        A: インタラクティブWebサイト、データビジュアライゼーション、NFTアート、プロジェクションマッピング用コンテンツ、企業のビジュアルアイデンティティなど、幅広い作品制作が可能になります。商業的価値の高い作品を作れるようになります。
+                    </p>
+                </div>
+                
+                <div class="faq-item" style="background: rgba(58, 134, 255, 0.05); border-radius: 20px; padding: 30px; margin-bottom: 20px;">
+                    <h3 style="color: #3a86ff; margin-bottom: 15px;">
+                        Q: 本当に3ヶ月で稼げるようになりますか？
+                    </h3>
+                    <p style="opacity: 0.8; line-height: 1.8;">
+                        A: 個人差はありますが、カリキュラムをしっかり学習し、メンタリングを活用した受講生の80%以上が、3ヶ月以内に初案件を獲得しています。プロフェッショナルプラン以上では、実案件獲得までサポートするので、より確実です。
+                    </p>
+                </div>
+                
+                <div class="faq-item" style="background: rgba(0, 255, 136, 0.05); border-radius: 20px; padding: 30px;">
+                    <h3 style="color: #00ff88; margin-bottom: 15px;">
+                        Q: 必要な機材やソフトは？
+                    </h3>
+                    <p style="opacity: 0.8; line-height: 1.8;">
+                        A: PCとインターネット環境があれば始められます。P5.jsは無料で使用でき、ブラウザ上で動作するため、特別なソフトウェアのインストールも不要です。タブレットでも学習可能ですが、本格的な制作にはPCを推奨します。
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 最終CTA -->
+        <section class="final-cta" style="padding: 100px 20px; background: linear-gradient(135deg, rgba(255, 0, 110, 0.2) 0%, rgba(58, 134, 255, 0.2) 100%); text-align: center;">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h2 style="font-size: 3rem; margin-bottom: 30px; background: linear-gradient(45deg, #ff006e 0%, #3a86ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    今すぐ、あなたの創造性を解放しよう
+                </h2>
+                <p style="font-size: 1.3rem; margin-bottom: 40px; opacity: 0.9;">
+                    ジェネラティブアートで、AIと共に新しい価値を創造する。<br>
+                    あなたの可能性は、想像以上に大きい。
+                </p>
+                
+                <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 30px; padding: 40px; margin-bottom: 40px;">
+                    <p style="font-size: 1.5rem; font-weight: bold; color: #ff006e; margin-bottom: 20px;">
+                        期間限定特典
+                    </p>
+                    <ul style="list-style: none; padding: 0; font-size: 1.1rem;">
+                        <li style="margin-bottom: 15px;">🎁 初月50%OFF（全プラン対象）</li>
+                        <li style="margin-bottom: 15px;">🎁 P5.js作品テンプレート集（5万円相当）</li>
+                        <li style="margin-bottom: 15px;">🎁 個別相談会への無料参加権</li>
+                    </ul>
+                </div>
+                
+                <a href="#" style="display: inline-block; padding: 20px 60px; background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%); color: white; text-decoration: none; border-radius: 50px; font-size: 1.3rem; font-weight: bold; box-shadow: 0 10px 30px rgba(255, 0, 110, 0.4); transition: all 0.3s ease;">
+                    無料カウンセリングを予約する
+                </a>
+                
+                <p style="margin-top: 30px; opacity: 0.7;">
+                    ※残席わずか。お早めにお申し込みください。
+                </p>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // P5.js スケッチ
+        let particles = [];
+        let connections = [];
+        let growthStage = 1;
+        let growthSpeed = 5;
+        let complexity = 5;
+        let energy = 5;
+        
+        function setup() {
+            const canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('canvas-container');
+            colorMode(HSB, 360, 100, 100, 100);
+            
+            // 初期パーティクルの生成
+            for (let i = 0; i < 50; i++) {
+                particles.push(new Particle(random(width), random(height)));
+            }
+        }
+        
+        function draw() {
+            // 背景（トレイル効果）
+            fill(0, 0, 0, 10);
+            rect(0, 0, width, height);
+            
+            // パーティクルの更新と描画
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.display();
+                
+                // 寿命が尽きたパーティクルを削除
+                if (p.isDead()) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            // 新しいパーティクルの生成
+            if (particles.length < 100 + complexity * 10) {
+                particles.push(new Particle(mouseX, mouseY));
+            }
+            
+            // パーティクル間の接続を描画
+            drawConnections();
+            
+            // 中心のコアを描画
+            drawCore();
+        }
+        
+        // パーティクルクラス
+        class Particle {
+            constructor(x, y) {
+                this.pos = createVector(x, y);
+                this.vel = p5.Vector.random2D().mult(random(1, 3));
+                this.acc = createVector(0, 0);
+                this.lifespan = 255;
+                this.size = random(2, 8);
+                this.hue = random(280, 320); // 紫〜青の範囲
+            }
+            
+            update() {
+                // マウスへの引力
+                const mouse = createVector(mouseX, mouseY);
+                const force = p5.Vector.sub(mouse, this.pos);
+                force.setMag(0.1 * energy / 10);
+                this.acc.add(force);
+                
+                // 成長ステージに応じた動き
+                if (growthStage === 2) {
+                    // らせん運動
+                    const angle = atan2(this.pos.y - height/2, this.pos.x - width/2);
+                    this.acc.add(createVector(cos(angle + PI/2) * 0.1, sin(angle + PI/2) * 0.1));
+                } else if (growthStage === 3) {
+                    // 放射状の展開
+                    const center = createVector(width/2, height/2);
+                    const radial = p5.Vector.sub(this.pos, center);
+                    radial.setMag(0.05);
+                    this.acc.add(radial);
+                }
+                
+                this.vel.add(this.acc);
+                this.vel.limit(growthSpeed / 2);
+                this.pos.add(this.vel);
+                this.acc.mult(0);
+                
+                this.lifespan -= 2;
+                
+                // 画面端でバウンス
+                if (this.pos.x < 0 || this.pos.x > width) this.vel.x *= -1;
+                if (this.pos.y < 0 || this.pos.y > height) this.vel.y *= -1;
+            }
+            
+            display() {
+                noStroke();
+                fill(this.hue, 80, 100, this.lifespan / 255 * 50);
+                ellipse(this.pos.x, this.pos.y, this.size);
+            }
+            
+            isDead() {
+                return this.lifespan <= 0;
+            }
+        }
+        
+        // パーティクル間の接続を描画
+        function drawConnections() {
+            strokeWeight(0.5);
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const d = dist(particles[i].pos.x, particles[i].pos.y, 
+                                  particles[j].pos.x, particles[j].pos.y);
+                    
+                    if (d < 100) {
+                        const alpha = map(d, 0, 100, 50, 0);
+                        stroke(300, 60, 100, alpha);
+                        line(particles[i].pos.x, particles[i].pos.y,
+                             particles[j].pos.x, particles[j].pos.y);
+                    }
+                }
+            }
+        }
+        
+        // 中心のコアを描画
+        function drawCore() {
+            const coreX = width / 2;
+            const coreY = height / 2;
+            const time = millis() * 0.001;
+            
+            // 脈動するコア
+            const coreSize = 50 + sin(time * 2) * 20 * (energy / 10);
+            
+            noStroke();
+            // グロー効果
+            for (let i = 5; i > 0; i--) {
+                fill(320, 100, 100, 5);
+                ellipse(coreX, coreY, coreSize * i, coreSize * i);
+            }
+            
+            // コア本体
+            fill(320, 100, 100, 80);
+            ellipse(coreX, coreY, coreSize, coreSize);
+        }
+        
+        // ウィンドウリサイズ対応
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        
+        // 成長ステージの変更
+        function changeGrowthStage(stage) {
+            growthStage = stage;
+            // パーティクルをリセット
+            particles = [];
+            for (let i = 0; i < 50 + stage * 20; i++) {
+                particles.push(new Particle(random(width), random(height)));
+            }
+        }
+        
+        // コントロールの更新
+        document.getElementById('growthSpeed').addEventListener('input', (e) => {
+            growthSpeed = e.target.value;
+        });
+        
+        document.getElementById('complexity').addEventListener('input', (e) => {
+            complexity = e.target.value;
+        });
+        
+        document.getElementById('energy').addEventListener('input', (e) => {
+            energy = e.target.value;
+        });
+        
+        // スクロールでヒーローを非表示
+        window.addEventListener('scroll', () => {
+            const hero = document.getElementById('hero');
+            if (window.scrollY > 100) {
+                hero.classList.add('scrolled');
+            } else {
+                hero.classList.remove('scrolled');
+            }
+        });
+        
+        // 統計のアニメーション
+        setInterval(() => {
+            document.getElementById('statGrowth').textContent = 
+                Math.floor(80 + Math.random() * 20) + '%';
+            document.getElementById('statSkills').textContent = 
+                Math.floor(20 + Math.random() * 10);
+            document.getElementById('statProjects').textContent = 
+                Math.floor(10 + Math.random() * 5);
+            document.getElementById('statRevenue').textContent = 
+                '¥' + (2 + Math.random() * 2).toFixed(1) + 'M';
+        }, 3000);
+
+        <!-- Floating Navigation Section -->
+        <div id="comparison-section" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.95); z-index: 9999; transform: translateY(0); transition: transform 0.5s ease; overflow-y: auto;">
+            <div style="max-width: 1200px; margin: 0 auto; padding: 50px 20px; color: white;">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 50px; color: #ff006e;">ジェネラティブアート技術比較</h2>
+                
+                <!-- Technology Comparison Matrix -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 50px;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 15px;">
+                        <h3 style="color: white; margin-bottom: 15px;">🎨 P5.js</h3>
+                        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;">クリエイティブコーディングの入門</p>
+                        <div style="font-size: 12px; opacity: 0.8;">
+                            <div>• 視覚的プログラミング</div>
+                            <div>• 直感的なAPI設計</div>
+                            <div>• 豊富なサンプルコード</div>
+                            <div>• 初心者フレンドリー</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 25px; border-radius: 15px;">
+                        <h3 style="color: white; margin-bottom: 15px;">⚡ Processing</h3>
+                        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;">デスクトップ向け高機能環境</p>
+                        <div style="font-size: 12px; opacity: 0.8;">
+                            <div>• 本格的なIDE環境</div>
+                            <div>• Java言語ベース</div>
+                            <div>• プラグイン豊富</div>
+                            <div>• 高度な機能対応</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 25px; border-radius: 15px;">
+                        <h3 style="color: white; margin-bottom: 15px;">🔥 OpenFrameworks</h3>
+                        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;">C++による高性能ツールキット</p>
+                        <div style="font-size: 12px; opacity: 0.8;">
+                            <div>• 高速レンダリング</div>
+                            <div>• リアルタイム処理</div>
+                            <div>• ハードウェア連携</div>
+                            <div>• インスタレーション対応</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 25px; border-radius: 15px;">
+                        <h3 style="color: white; margin-bottom: 15px;">✨ TouchDesigner</h3>
+                        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;">ノードベースビジュアルプログラミング</p>
+                        <div style="font-size: 12px; opacity: 0.8;">
+                            <div>• ノード接続式開発</div>
+                            <div>• リアルタイム演出</div>
+                            <div>• プロジェクション対応</div>
+                            <div>• 商用ライセンス</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Curriculum -->
+                <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; margin-bottom: 50px;">
+                    <h3 style="font-size: 2rem; margin-bottom: 30px; text-align: center;">AIDXschool ジェネラティブアート専門コース</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                            <h4 style="color: #ff006e; margin-bottom: 20px;">Phase 1: 基礎習得 (1-4週)</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="margin-bottom: 10px;">• P5.js環境構築・基本操作</li>
+                                <li style="margin-bottom: 10px;">• 座標系・図形・色彩理論</li>
+                                <li style="margin-bottom: 10px;">• アニメーションの基礎</li>
+                                <li style="margin-bottom: 10px;">• マウス・キーボード入力</li>
+                                <li style="margin-bottom: 10px;">• 乱数とノイズ関数</li>
+                                <li style="margin-bottom: 10px;">• 基本的なループ構造</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                            <h4 style="color: #8338ec; margin-bottom: 20px;">Phase 2: 応用技術 (5-10週)</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="margin-bottom: 10px;">• パーティクルシステム設計</li>
+                                <li style="margin-bottom: 10px;">• フラクタル・L-System</li>
+                                <li style="margin-bottom: 10px;">• 物理演算・重力シミュレーション</li>
+                                <li style="margin-bottom: 10px;">• 3D空間とカメラ制御</li>
+                                <li style="margin-bottom: 10px;">• 外部データ連携（API・CSV）</li>
+                                <li style="margin-bottom: 10px;">• オーディオビジュアライゼーション</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                            <h4 style="color: #3a86ff; margin-bottom: 20px;">Phase 3: 商用実践 (11-14週)</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="margin-bottom: 10px;">• NFTアート制作・販売</li>
+                                <li style="margin-bottom: 10px;">• ブランド向けビジュアル制作</li>
+                                <li style="margin-bottom: 10px;">• Webサイト組み込み技術</li>
+                                <li style="margin-bottom: 10px;">• インスタレーション企画</li>
+                                <li style="margin-bottom: 10px;">• クライアントワーク実習</li>
+                                <li style="margin-bottom: 10px;">• ポートフォリオ構築・営業</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Stories -->
+                <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; margin-bottom: 50px;">
+                    <h3 style="font-size: 2rem; margin-bottom: 30px; text-align: center;">受講生成功事例</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                            <h4 style="color: #00ff87; margin-bottom: 15px;">小林さん（グラフィックデザイナー・28歳）</h4>
+                            <p style="font-size: 14px; margin-bottom: 15px;">ジェネラティブNFTアート作家</p>
+                            <div style="font-size: 16px; font-weight: bold; color: #00ff87;">月380万円達成</div>
+                            <p style="font-size: 12px; opacity: 0.8; margin-top: 10px;">「P5.jsで生成したNFTアートが海外で大ヒット。OpenSeaでTop Creator入り」</p>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                            <h4 style="color: #00ff87; margin-bottom: 15px;">原田さん（エンジニア・35歳）</h4>
+                            <p style="font-size: 14px; margin-bottom: 15px;">データビジュアライゼーション専門家</p>
+                            <div style="font-size: 16px; font-weight: bold; color: #00ff87;">月250万円達成</div>
+                            <p style="font-size: 12px; opacity: 0.8; margin-top: 10px;">「企業のデータ可視化プロジェクトを単価100万円で継続受注中」</p>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                            <h4 style="color: #00ff87; margin-bottom: 15px;">松本さん（美大生・22歳）</h4>
+                            <p style="font-size: 14px; margin-bottom: 15px;">インタラクティブアート・インスタレーション</p>
+                            <div style="font-size: 16px; font-weight: bold; color: #00ff87;">月140万円達成</div>
+                            <p style="font-size: 12px; opacity: 0.8; margin-top: 10px;">「美術館でのインスタレーション作品が話題。企業イベントでの演出依頼多数」</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Plans -->
+                <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; margin-bottom: 30px;">
+                    <h3 style="font-size: 2rem; margin-bottom: 30px; text-align: center;">料金プラン</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; text-align: center;">
+                            <h4 style="color: #ff006e; margin-bottom: 20px;">クリエイター</h4>
+                            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 10px;">¥198,000</div>
+                            <p style="font-size: 14px; opacity: 0.8; margin-bottom: 20px;">基礎から応用まで10週間</p>
+                            <ul style="list-style: none; padding: 0; text-align: left;">
+                                <li style="margin-bottom: 8px;">• P5.js完全習得カリキュラム</li>
+                                <li style="margin-bottom: 8px;">• 週1回グループメンタリング</li>
+                                <li style="margin-bottom: 8px;">• 作品制作サポート</li>
+                                <li style="margin-bottom: 8px;">• ポートフォリオ作成指導</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%); padding: 30px; border-radius: 15px; text-align: center; position: relative;">
+                            <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #00ff87; color: black; padding: 5px 20px; border-radius: 20px; font-size: 12px;">おすすめ</div>
+                            <h4 style="color: white; margin-bottom: 20px;">アーティスト</h4>
+                            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 10px; color: white;">¥398,000</div>
+                            <p style="font-size: 14px; opacity: 0.9; margin-bottom: 20px; color: white;">商用制作14週間コース</p>
+                            <ul style="list-style: none; padding: 0; text-align: left; color: white;">
+                                <li style="margin-bottom: 8px;">• 全技術 + 高度なテクニック</li>
+                                <li style="margin-bottom: 8px;">• 週2回個別メンタリング</li>
+                                <li style="margin-bottom: 8px;">• NFT制作・販売サポート</li>
+                                <li style="margin-bottom: 8px;">• 商用案件獲得支援</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; text-align: center;">
+                            <h4 style="color: #3a86ff; margin-bottom: 20px;">マスター</h4>
+                            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 10px;">¥698,000</div>
+                            <p style="font-size: 14px; opacity: 0.8; margin-bottom: 20px;">プロ育成16週間コース</p>
+                            <ul style="list-style: none; padding: 0; text-align: left;">
+                                <li style="margin-bottom: 8px;">• 全技術 + TouchDesigner連携</li>
+                                <li style="margin-bottom: 8px;">• 専属メンター常駐</li>
+                                <li style="margin-bottom: 8px;">• 企業プロジェクト参加</li>
+                                <li style="margin-bottom: 8px;">• 年収300万円保証制度</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Section -->
+                <div style="text-align: center; background: linear-gradient(135deg, #ff006e 0%, #3a86ff 100%); padding: 40px; border-radius: 20px;">
+                    <h3 style="color: white; margin-bottom: 20px;">あなたの創造性を解放しよう</h3>
+                    <p style="color: white; opacity: 0.9; margin-bottom: 30px;">無料体験でジェネラティブアートの世界を体感してください</p>
+                    <a href="https://lin.ee/abc123" style="display: inline-block; background: white; color: #ff006e; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-right: 20px;">無料体験を開始</a>
+                    <a href="#" onclick="toggleSection()" style="display: inline-block; background: transparent; color: white; padding: 15px 40px; border: 2px solid white; border-radius: 50px; text-decoration: none; font-weight: bold;">アートに戻る</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Navigation Button -->
+        <div style="position: fixed; bottom: 30px; right: 30px; z-index: 10000;">
+            <button onclick="toggleSection()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%); border: none; cursor: pointer; box-shadow: 0 5px 20px rgba(255, 0, 110, 0.4); transition: all 0.3s ease;">
+                <span id="nav-icon" style="font-size: 24px;">🎨</span>
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        let sectionVisible = false;
+        
+        function toggleSection() {
+            const section = document.getElementById('comparison-section');
+            const icon = document.getElementById('nav-icon');
+            
+            if (!sectionVisible) {
+                section.style.transform = 'translateY(-100vh)';
+                icon.textContent = '📋';
+                sectionVisible = true;
+            } else {
+                section.style.transform = 'translateY(0)';
+                icon.textContent = '🎨';
+                sectionVisible = false;
+            }
+        }
+        
+        // P5.js スケッチ
+        let particles = [];
+        let connections = [];
+        let growthStage = 1;
+        let growthSpeed = 5;
+        let complexity = 5;
+        let energy = 5;
+        
+        function setup() {
+            const canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('canvas-container');
+            colorMode(HSB, 360, 100, 100, 100);
+            
+            // 初期パーティクルの生成
+            for (let i = 0; i < 50; i++) {
+                particles.push(new Particle(random(width), random(height)));
+            }
+        }
+        
+        function draw() {
+            // 背景（トレイル効果）
+            fill(0, 0, 0, 10);
+            rect(0, 0, width, height);
+            
+            // パーティクルの更新と描画
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.display();
+                
+                // 寿命が尽きたパーティクルを削除
+                if (p.isDead()) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            // 新しいパーティクルの生成
+            if (particles.length < 100 + complexity * 10) {
+                particles.push(new Particle(mouseX, mouseY));
+            }
+            
+            // パーティクル間の接続を描画
+            drawConnections();
+            
+            // 中心のコアを描画
+            drawCore();
+        }
+        
+        // パーティクルクラス
+        class Particle {
+            constructor(x, y) {
+                this.pos = createVector(x, y);
+                this.vel = p5.Vector.random2D().mult(random(1, 3));
+                this.acc = createVector(0, 0);
+                this.lifespan = 255;
+                this.size = random(2, 8);
+                this.hue = random(280, 320); // 紫〜青の範囲
+            }
+            
+            update() {
+                // マウスへの引力
+                const mouse = createVector(mouseX, mouseY);
+                const force = p5.Vector.sub(mouse, this.pos);
+                force.setMag(0.1 * energy / 10);
+                this.acc.add(force);
+                
+                // 成長ステージに応じた動き
+                if (growthStage === 2) {
+                    // らせん運動
+                    const angle = atan2(this.pos.y - height/2, this.pos.x - width/2);
+                    this.acc.add(createVector(cos(angle + PI/2) * 0.1, sin(angle + PI/2) * 0.1));
+                } else if (growthStage === 3) {
+                    // 放射状の展開
+                    const center = createVector(width/2, height/2);
+                    const radial = p5.Vector.sub(this.pos, center);
+                    radial.setMag(0.05);
+                    this.acc.add(radial);
+                }
+                
+                this.vel.add(this.acc);
+                this.vel.limit(growthSpeed / 2);
+                this.pos.add(this.vel);
+                this.acc.mult(0);
+                
+                this.lifespan -= 2;
+                
+                // 画面端でバウンス
+                if (this.pos.x < 0 || this.pos.x > width) this.vel.x *= -1;
+                if (this.pos.y < 0 || this.pos.y > height) this.vel.y *= -1;
+            }
+            
+            display() {
+                noStroke();
+                fill(this.hue, 80, 100, this.lifespan / 255 * 50);
+                ellipse(this.pos.x, this.pos.y, this.size);
+            }
+            
+            isDead() {
+                return this.lifespan <= 0;
+            }
+        }
+        
+        // パーティクル間の接続を描画
+        function drawConnections() {
+            strokeWeight(0.5);
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const d = dist(particles[i].pos.x, particles[i].pos.y, 
+                                  particles[j].pos.x, particles[j].pos.y);
+                    
+                    if (d < 100) {
+                        const alpha = map(d, 0, 100, 50, 0);
+                        stroke(300, 60, 100, alpha);
+                        line(particles[i].pos.x, particles[i].pos.y,
+                             particles[j].pos.x, particles[j].pos.y);
+                    }
+                }
+            }
+        }
+        
+        // 中心のコアを描画
+        function drawCore() {
+            const coreX = width / 2;
+            const coreY = height / 2;
+            const time = millis() * 0.001;
+            
+            // 脈動するコア
+            const coreSize = 50 + sin(time * 2) * 20 * (energy / 10);
+            
+            noStroke();
+            // グロー効果
+            for (let i = 5; i > 0; i--) {
+                fill(320, 100, 100, 5);
+                ellipse(coreX, coreY, coreSize * i, coreSize * i);
+            }
+            
+            // コア本体
+            fill(320, 100, 100, 80);
+            ellipse(coreX, coreY, coreSize, coreSize);
+        }
+        
+        // ウィンドウリサイズ対応
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        
+        // 成長ステージの変更
+        function changeGrowthStage(stage) {
+            growthStage = stage;
+            // パーティクルをリセット
+            particles = [];
+            for (let i = 0; i < 50 + stage * 20; i++) {
+                particles.push(new Particle(random(width), random(height)));
+            }
+        }
+        
+        // コントロールの更新
+        document.getElementById('growthSpeed').addEventListener('input', (e) => {
+            growthSpeed = e.target.value;
+        });
+        
+        document.getElementById('complexity').addEventListener('input', (e) => {
+            complexity = e.target.value;
+        });
+        
+        document.getElementById('energy').addEventListener('input', (e) => {
+            energy = e.target.value;
+        });
+        
+        // スクロールでヒーローを非表示
+        window.addEventListener('scroll', () => {
+            const hero = document.getElementById('hero');
+            if (window.scrollY > 100) {
+                hero.classList.add('scrolled');
+            } else {
+                hero.classList.remove('scrolled');
+            }
+        });
+        
+        // 統計のアニメーション
+        setInterval(() => {
+            document.getElementById('statGrowth').textContent = 
+                Math.floor(80 + Math.random() * 20) + '%';
+            document.getElementById('statSkills').textContent = 
+                Math.floor(20 + Math.random() * 10);
+            document.getElementById('statProjects').textContent = 
+                Math.floor(10 + Math.random() * 5);
+            document.getElementById('statRevenue').textContent = 
+                '¥' + (2 + Math.random() * 2).toFixed(1) + 'M';
+        }, 3000);
+    </script>
+</body>
+</html>

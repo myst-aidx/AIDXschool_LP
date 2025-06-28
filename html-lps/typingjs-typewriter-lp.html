@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - コードを書くように起業する | Typed.js & TypeIt.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.16/typed.umd.js"></script>
+    <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0D1421;
+            --bg-secondary: #1A1E2E;
+            --text-primary: #00FF41;
+            --text-secondary: #FFFFFF;
+            --accent-1: #00D4FF;
+            --accent-2: #FF6B35;
+            --accent-3: #FFE66D;
+        }
+        
+        body {
+            font-family: 'Courier New', 'Monaco', 'Lucida Console', monospace;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* ターミナル風背景 */
+        .terminal-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: 
+                linear-gradient(90deg, transparent 98%, rgba(0, 255, 65, 0.03) 100%),
+                linear-gradient(180deg, transparent 98%, rgba(0, 255, 65, 0.03) 100%);
+            background-size: 20px 20px;
+            z-index: 1;
+            animation: terminalScan 2s linear infinite;
+        }
+        
+        @keyframes terminalScan {
+            0% { opacity: 1; }
+            50% { opacity: 0.95; }
+            100% { opacity: 1; }
+        }
+        
+        /* スキャンライン */
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, var(--text-primary) 50%, transparent 100%);
+            z-index: 3;
+            animation: scan 3s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        
+        /* コンテンツラッパー */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* ターミナルヘッダー */
+        .terminal-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--text-primary);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+        }
+        
+        .terminal-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .terminal-button.close { background: #FF5F56; }
+        .terminal-button.minimize { background: #FFBD2E; }
+        .terminal-button.maximize { background: #27CA3F; }
+        
+        .terminal-title {
+            margin-left: 20px;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        
+        /* ヒーローセクション */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px 20px;
+        }
+        
+        .hero-content {
+            max-width: 1000px;
+            width: 100%;
+        }
+        
+        .terminal-window {
+            background: var(--bg-secondary);
+            border: 1px solid var(--text-primary);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.3);
+        }
+        
+        .terminal-header-inner {
+            background: var(--bg-primary);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .terminal-content {
+            padding: 30px;
+            min-height: 400px;
+        }
+        
+        .prompt {
+            color: var(--text-primary);
+            margin-right: 10px;
+        }
+        
+        .command-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .typed-cursor {
+            color: var(--text-primary);
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--accent-1);
+            margin: 30px 0;
+            line-height: 1.2;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .keyword { color: var(--accent-2); }
+        .string { color: var(--accent-3); }
+        .comment { color: #6A9955; }
+        .function { color: var(--accent-1); }
+        .variable { color: var(--text-primary); }
+        
+        /* タイピングデモセクション */
+        .typing-demo-section {
+            padding: 100px 20px;
+            background: var(--bg-secondary);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-primary);
+            text-shadow: 0 0 20px var(--text-primary);
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .demo-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--text-primary);
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--text-primary) 0%, var(--accent-1) 50%, var(--accent-2) 100%);
+        }
+        
+        .demo-title {
+            font-size: 1.5rem;
+            color: var(--accent-1);
+            margin-bottom: 20px;
+        }
+        
+        .demo-content {
+            min-height: 150px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .demo-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .demo-button {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--text-primary);
+            color: var(--text-primary);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        
+        .demo-button:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            box-shadow: 0 0 15px var(--text-primary);
+        }
+        
+        /* コーディングシミュレーター */
+        .coding-simulator {
+            padding: 100px 20px;
+            background: var(--bg-primary);
+        }
+        
+        .ide-window {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.3);
+        }
+        
+        .ide-header {
+            background: var(--bg-primary);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--accent-1);
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        
+        .ide-tabs {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .ide-tab {
+            padding: 8px 15px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent-1);
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            color: var(--accent-1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .ide-tab.active {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        .ide-content {
+            padding: 30px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+        
+        .line-numbers {
+            display: inline-block;
+            color: #6A6A6A;
+            margin-right: 20px;
+            text-align: right;
+            width: 30px;
+        }
+        
+        /* 成功メトリクス */
+        .metrics-section {
+            padding: 100px 20px;
+            background: var(--bg-secondary);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .metric-card {
+            text-align: center;
+            padding: 30px;
+            background: var(--bg-primary);
+            border: 1px solid var(--text-primary);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 65, 0.05) 50%, transparent 70%);
+            animation: shine 3s linear infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .metric-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+        
+        .metric-label {
+            color: var(--accent-1);
+            font-size: 1.1rem;
+        }
+        
+        /* CTA セクション */
+        .cta-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: var(--bg-primary);
+            position: relative;
+        }
+        
+        .cta-terminal {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border: 1px solid var(--text-primary);
+            border-radius: 10px;
+            padding: 40px;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 40px;
+            background: transparent;
+            border: 2px solid var(--text-primary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--text-primary);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        
+        .cta-button:hover::before {
+            left: 0;
+        }
+        
+        .cta-button:hover {
+            color: var(--bg-primary);
+            box-shadow: 0 0 30px var(--text-primary);
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .terminal-header {
+                display: none;
+            }
+            
+            .hero {
+                padding-top: 20px;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .ide-tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ターミナル風背景 -->
+    <div class="terminal-bg"></div>
+    <div class="scanline"></div>
+    
+    <!-- ターミナルヘッダー -->
+    <div class="terminal-header">
+        <div class="terminal-buttons">
+            <div class="terminal-button close"></div>
+            <div class="terminal-button minimize"></div>
+            <div class="terminal-button maximize"></div>
+        </div>
+        <div class="terminal-title">AIDXschool-terminal — startup-entrepreneur</div>
+    </div>
+    
+    <!-- コンテンツ -->
+    <div class="content-wrapper">
+        <!-- ヒーローセクション -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="terminal-window">
+                    <div class="terminal-header-inner">
+                        <div class="terminal-buttons">
+                            <div class="terminal-button close"></div>
+                            <div class="terminal-button minimize"></div>
+                            <div class="terminal-button maximize"></div>
+                        </div>
+                        <span style="color: var(--accent-1); margin-left: 15px;">entrepreneur.sh</span>
+                    </div>
+                    <div class="terminal-content">
+                        <div class="command-line">
+                            <span class="prompt">$</span>
+                            <span id="main-typed"></span>
+                        </div>
+                        
+                        <h1 class="hero-title" id="hero-title"></h1>
+                        
+                        <div class="code-block">
+                            <div id="code-demo"></div>
+                        </div>
+                        
+                        <div class="command-line">
+                            <span class="prompt">$</span>
+                            <span id="cta-typed"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- タイピングデモセクション -->
+        <section class="typing-demo-section">
+            <h2 class="section-title" id="section-title-1"></h2>
+            
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3 class="demo-title">Typed.js デモ</h3>
+                    <div class="demo-content">
+                        <div class="command-line">
+                            <span class="prompt">aidx@school:~$</span>
+                            <span id="typed-demo-1"></span>
+                        </div>
+                    </div>
+                    <div class="demo-controls">
+                        <button class="demo-button" onclick="restartTypedDemo1()">リスタート</button>
+                        <button class="demo-button" onclick="changeSpeedDemo1()">スピード変更</button>
+                    </div>
+                </div>
+                
+                <div class="demo-card">
+                    <h3 class="demo-title">TypeIt.js デモ</h3>
+                    <div class="demo-content">
+                        <div id="typeit-demo-1"></div>
+                    </div>
+                    <div class="demo-controls">
+                        <button class="demo-button" onclick="restartTypeItDemo1()">リスタート</button>
+                        <button class="demo-button" onclick="pauseTypeItDemo1()">一時停止</button>
+                    </div>
+                </div>
+                
+                <div class="demo-card">
+                    <h3 class="demo-title">ビジネス戦略ジェネレーター</h3>
+                    <div class="demo-content">
+                        <div id="strategy-generator"></div>
+                    </div>
+                    <div class="demo-controls">
+                        <button class="demo-button" onclick="generateStrategy()">戦略生成</button>
+                        <button class="demo-button" onclick="clearStrategy()">クリア</button>
+                    </div>
+                </div>
+                
+                <div class="demo-card">
+                    <h3 class="demo-title">成長ログシミュレーター</h3>
+                    <div class="demo-content">
+                        <div id="growth-log"></div>
+                    </div>
+                    <div class="demo-controls">
+                        <button class="demo-button" onclick="startGrowthLog()">ログ開始</button>
+                        <button class="demo-button" onclick="stopGrowthLog()">停止</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- コーディングシミュレーター -->
+        <section class="coding-simulator">
+            <h2 class="section-title" id="section-title-2"></h2>
+            
+            <div class="ide-window">
+                <div class="ide-header">
+                    <div class="ide-tabs">
+                        <div class="ide-tab active" onclick="switchTab('startup')" id="tab-startup">startup.js</div>
+                        <div class="ide-tab" onclick="switchTab('business')" id="tab-business">business-plan.md</div>
+                        <div class="ide-tab" onclick="switchTab('growth')" id="tab-growth">growth-strategy.py</div>
+                    </div>
+                </div>
+                <div class="ide-content">
+                    <div id="ide-content-startup" class="tab-content active">
+                        <div id="startup-code"></div>
+                    </div>
+                    <div id="ide-content-business" class="tab-content" style="display: none;">
+                        <div id="business-plan"></div>
+                    </div>
+                    <div id="ide-content-growth" class="tab-content" style="display: none;">
+                        <div id="growth-code"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 成功メトリクス -->
+        <section class="metrics-section">
+            <h2 class="section-title" id="section-title-3"></h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="metric-1">0</div>
+                    <div class="metric-label">成功率 (%)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="metric-2">0</div>
+                    <div class="metric-label">平均月収 (万円)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="metric-3">0</div>
+                    <div class="metric-label">受講生数</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="metric-4">0</div>
+                    <div class="metric-label">コード行数</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA -->
+        <section class="cta-section">
+            <div class="cta-terminal">
+                <div class="command-line">
+                    <span class="prompt">$</span>
+                    <span id="cta-command"></span>
+                </div>
+                <h2 class="cta-title" id="cta-title"></h2>
+                <div id="cta-description"></div>
+                <br>
+                <a href="#" class="cta-button" id="cta-button">></a>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // メイン初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMainTyping();
+            initializeSectionTitles();
+            initializeDemos();
+            initializeCodeSimulator();
+            initializeMetrics();
+            initializeCTA();
+        });
+        
+        // メインタイピング初期化
+        function initializeMainTyping() {
+            // メインコマンド
+            new Typed('#main-typed', {
+                strings: ['git clone https://github.com/entrepreneur/success.git'],
+                typeSpeed: 50,
+                showCursor: true,
+                cursorChar: '_',
+                onComplete: function() {
+                    // タイトルタイピング開始
+                    setTimeout(() => {
+                        new Typed('#hero-title', {
+                            strings: ['コードを書くように<br><span class="keyword">起業</span>する'],
+                            typeSpeed: 80,
+                            showCursor: false,
+                            contentType: 'html',
+                            onComplete: function() {
+                                initializeCodeDemo();
+                            }
+                        });
+                    }, 500);
+                }
+            });
+        }
+        
+        // コードデモ初期化
+        function initializeCodeDemo() {
+            const codeContent = `<span class="keyword">class</span> <span class="function">Entrepreneur</span> {
+    <span class="keyword">constructor</span>(<span class="variable">idea</span>, <span class="variable">passion</span>) {
+        <span class="keyword">this</span>.<span class="variable">idea</span> = <span class="variable">idea</span>;
+        <span class="keyword">this</span>.<span class="variable">passion</span> = <span class="variable">passion</span>;
+        <span class="keyword">this</span>.<span class="variable">success</span> = <span class="keyword">false</span>;
+    }
+    
+    <span class="function">execute</span>() {
+        <span class="keyword">if</span> (<span class="keyword">this</span>.<span class="variable">passion</span> > <span class="string">100</span>) {
+            <span class="keyword">this</span>.<span class="variable">success</span> = <span class="keyword">true</span>;
+            <span class="keyword">return</span> <span class="string">'🚀 起業成功！'</span>;
+        }
+    }
+}`;
+            
+            new Typed('#code-demo', {
+                strings: [codeContent],
+                typeSpeed: 30,
+                showCursor: false,
+                contentType: 'html',
+                onComplete: function() {
+                    // CTAコマンド開始
+                    setTimeout(() => {
+                        new Typed('#cta-typed', {
+                            strings: ['npm start your-business'],
+                            typeSpeed: 60,
+                            showCursor: true,
+                            cursorChar: '_'
+                        });
+                    }, 1000);
+                }
+            });
+        }
+        
+        // セクションタイトル初期化
+        function initializeSectionTitles() {
+            const titles = [
+                'タイピングの魔法で起業を学ぶ',
+                'IDEのように設計するビジネス',
+                'リアルタイムで成長する数値'
+            ];
+            
+            titles.forEach((title, index) => {
+                setTimeout(() => {
+                    new Typed(`#section-title-${index + 1}`, {
+                        strings: [title],
+                        typeSpeed: 80,
+                        showCursor: false
+                    });
+                }, (index + 1) * 2000);
+            });
+        }
+        
+        // デモ初期化
+        let typedDemo1, typeItDemo1, growthLogInterval;
+        
+        function initializeDemos() {
+            // Typed.js デモ
+            typedDemo1 = new Typed('#typed-demo-1', {
+                strings: [
+                    'mkdir my-startup',
+                    'cd my-startup',
+                    'npm init -y',
+                    'npm install success --save',
+                    'node start-business.js',
+                    '✅ ビジネス起動完了！'
+                ],
+                typeSpeed: 60,
+                backSpeed: 30,
+                loop: true,
+                loopCount: Infinity,
+                showCursor: true
+            });
+            
+            // TypeIt.js デモ
+            typeItDemo1 = new TypeIt('#typeit-demo-1', {
+                speed: 80,
+                loop: true
+            })
+                .type('const entrepreneur = new Entrepreneur();')
+                .break()
+                .type('entrepreneur.learn(')
+                .type('"AI"', { speed: 100 })
+                .delete(4)
+                .type('"DX"', { speed: 100 })
+                .delete(4)
+                .type('"NoCode"', { speed: 100 })
+                .type(');')
+                .break()
+                .type('entrepreneur.execute();')
+                .break()
+                .type('// 💰 月収100万円達成！', { speed: 50 })
+                .pause(2000)
+                .delete()
+                .go();
+        }
+        
+        // デモコントロール関数
+        function restartTypedDemo1() {
+            typedDemo1.reset();
+        }
+        
+        function changeSpeedDemo1() {
+            typedDemo1.destroy();
+            typedDemo1 = new Typed('#typed-demo-1', {
+                strings: ['高速モード起動中...', 'npm run turbo-growth 🚀'],
+                typeSpeed: 20,
+                showCursor: true
+            });
+        }
+        
+        function restartTypeItDemo1() {
+            typeItDemo1.reset();
+        }
+        
+        function pauseTypeItDemo1() {
+            typeItDemo1.freeze();
+            setTimeout(() => typeItDemo1.unfreeze(), 2000);
+        }
+        
+        // 戦略ジェネレーター
+        function generateStrategy() {
+            const strategies = [
+                '1. AIを活用した自動化ビジネス',
+                '2. ノーコードによる高速開発',
+                '3. DXコンサルティング事業',
+                '4. オンライン教育プラットフォーム',
+                '5. SaaS プロダクト開発'
+            ];
+            
+            const selectedStrategy = strategies[Math.floor(Math.random() * strategies.length)];
+            
+            new Typed('#strategy-generator', {
+                strings: [
+                    'ビジネス戦略を分析中...',
+                    '市場調査完了 ✅',
+                    '競合分析完了 ✅',
+                    '収益モデル設計完了 ✅',
+                    '',
+                    '📋 推奨戦略:',
+                    selectedStrategy,
+                    '',
+                    '💡 成功確率: 85%'
+                ],
+                typeSpeed: 50,
+                showCursor: false
+            });
+        }
+        
+        function clearStrategy() {
+            document.getElementById('strategy-generator').innerHTML = '';
+        }
+        
+        // 成長ログシミュレーター
+        function startGrowthLog() {
+            const logs = [
+                '[INFO] ビジネス開始',
+                '[SUCCESS] 初回売上達成',
+                '[INFO] 顧客数増加中...',
+                '[SUCCESS] 月商100万円突破',
+                '[INFO] チーム拡張中...',
+                '[SUCCESS] 事業拡大完了',
+                '[INFO] IPO準備開始'
+            ];
+            
+            let logIndex = 0;
+            growthLogInterval = setInterval(() => {
+                if (logIndex < logs.length) {
+                    const logElement = document.getElementById('growth-log');
+                    logElement.innerHTML += logs[logIndex] + '<br>';
+                    logIndex++;
+                } else {
+                    clearInterval(growthLogInterval);
+                }
+            }, 1500);
+        }
+        
+        function stopGrowthLog() {
+            clearInterval(growthLogInterval);
+            document.getElementById('growth-log').innerHTML = '[INFO] ログ停止';
+        }
+        
+        // IDEシミュレーター
+        function initializeCodeSimulator() {
+            setTimeout(() => {
+                // startup.js
+                new Typed('#startup-code', {
+                    strings: [`<span class="line-numbers">1</span><span class="comment">// スタートアップ起動ファイル</span>
+<span class="line-numbers">2</span><span class="keyword">import</span> { <span class="function">AIDXSchool</span> } <span class="keyword">from</span> <span class="string">'./education'</span>;
+<span class="line-numbers">3</span>
+<span class="line-numbers">4</span><span class="keyword">const</span> <span class="variable">startup</span> = <span class="keyword">new</span> <span class="function">AIDXSchool</span>({
+<span class="line-numbers">5</span>    <span class="variable">name</span>: <span class="string">'革新的AIビジネス'</span>,
+<span class="line-numbers">6</span>    <span class="variable">technology</span>: [<span class="string">'AI'</span>, <span class="string">'DX'</span>, <span class="string">'NoCode'</span>],
+<span class="line-numbers">7</span>    <span class="variable">target</span>: <span class="string">'起業家育成'</span>
+<span class="line-numbers">8</span>});
+<span class="line-numbers">9</span>
+<span class="line-numbers">10</span><span class="variable">startup</span>.<span class="function">launch</span>();`],
+                    typeSpeed: 20,
+                    showCursor: false,
+                    contentType: 'html'
+                });
+            }, 3000);
+        }
+        
+        // タブ切り替え
+        function switchTab(tabName) {
+            // タブのアクティブ状態更新
+            document.querySelectorAll('.ide-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            // コンテンツ切り替え
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            document.getElementById(`ide-content-${tabName}`).style.display = 'block';
+            
+            // 対応するタイピングアニメーション開始
+            if (tabName === 'business') {
+                new Typed('#business-plan', {
+                    strings: [`<span class="line-numbers">1</span># ビジネスプラン
+<span class="line-numbers">2</span>
+<span class="line-numbers">3</span>## 🎯 ミッション
+<span class="line-numbers">4</span>AI×DXで起業家を育成し、社会に革新をもたらす
+<span class="line-numbers">5</span>
+<span class="line-numbers">6</span>## 📊 市場分析
+<span class="line-numbers">7</span>- 市場規模: 1000億円
+<span class="line-numbers">8</span>- 成長率: 年20%
+<span class="line-numbers">9</span>- 競合優位性: ノーコード教育
+<span class="line-numbers">10</span>
+<span class="line-numbers">11</span>## 💰 収益モデル
+<span class="line-numbers">12</span>- 月額サブスクリプション
+<span class="line-numbers">13</span>- 企業研修プログラム
+<span class="line-numbers">14</span>- コンサルティング事業`],
+                    typeSpeed: 30,
+                    showCursor: false,
+                    contentType: 'html'
+                });
+            } else if (tabName === 'growth') {
+                new Typed('#growth-code', {
+                    strings: [`<span class="line-numbers">1</span><span class="comment"># 成長戦略アルゴリズム</span>
+<span class="line-numbers">2</span><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="line-numbers">3</span><span class="keyword">from</span> ai_tools <span class="keyword">import</span> AutoScaling
+<span class="line-numbers">4</span>
+<span class="line-numbers">5</span><span class="keyword">class</span> <span class="function">GrowthEngine</span>:
+<span class="line-numbers">6</span>    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="variable">self</span>):
+<span class="line-numbers">7</span>        <span class="variable">self</span>.<span class="variable">growth_rate</span> = <span class="string">0.1</span>
+<span class="line-numbers">8</span>        <span class="variable">self</span>.<span class="variable">automation</span> = <span class="function">AutoScaling</span>()
+<span class="line-numbers">9</span>    
+<span class="line-numbers">10</span>    <span class="keyword">def</span> <span class="function">accelerate</span>(<span class="variable">self</span>, <span class="variable">strategy</span>):
+<span class="line-numbers">11</span>        <span class="keyword">return</span> <span class="variable">strategy</span> * <span class="variable">self</span>.<span class="variable">growth_rate</span> * <span class="string">10</span>`],
+                    typeSpeed: 25,
+                    showCursor: false,
+                    contentType: 'html'
+                });
+            }
+        }
+        
+        // メトリクス初期化
+        function initializeMetrics() {
+            setTimeout(() => {
+                animateCounter('metric-1', 95, 1000);
+                animateCounter('metric-2', 150, 1200);
+                animateCounter('metric-3', 3500, 1500);
+                animateCounter('metric-4', 10000, 1800);
+            }, 4000);
+        }
+        
+        function animateCounter(elementId, target, duration) {
+            const element = document.getElementById(elementId);
+            const start = 0;
+            const startTime = performance.now();
+            
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = Math.floor(start + (target - start) * progress);
+                
+                element.textContent = current.toLocaleString();
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                }
+            }
+            
+            requestAnimationFrame(updateCounter);
+        }
+        
+        // CTA初期化
+        function initializeCTA() {
+            setTimeout(() => {
+                new Typed('#cta-command', {
+                    strings: ['sudo chmod +x your-future.sh'],
+                    typeSpeed: 60,
+                    showCursor: false,
+                    onComplete: function() {
+                        new Typed('#cta-title', {
+                            strings: ['./start-your-journey.sh'],
+                            typeSpeed: 80,
+                            showCursor: false,
+                            onComplete: function() {
+                                new Typed('#cta-description', {
+                                    strings: [
+                                        'AIDXschoolで、コードを書くような精密さで起業を学ぶ。<br>' +
+                                        'Typed.jsのように一文字ずつ、確実にスキルを積み上げよう。'
+                                    ],
+                                    typeSpeed: 40,
+                                    showCursor: false,
+                                    contentType: 'html',
+                                    onComplete: function() {
+                                        new Typed('#cta-button', {
+                                            strings: ['無料でコーディング体験を開始'],
+                                            typeSpeed: 50,
+                                            showCursor: false
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }, 6000);
+        }
+    </script>
+</body>
+</html>

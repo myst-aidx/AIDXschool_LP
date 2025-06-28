@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - After Effectsが生み出すビジネスアニメーション | Lottie</title>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://unpkg.com/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #FF6B35;
+            --secondary: #F7931E;
+            --accent: #FFD23F;
+            --dark: #1C1C1E;
+            --light: #F2F2F7;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        /* カスタムLottieアニメーション用キャンバス */
+        #lottie-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        /* ヒーローセクション */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(ellipse at center, rgba(255, 107, 53, 0.1) 0%, var(--dark) 100%);
+        }
+        
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            padding: 60px 40px;
+            max-width: 1000px;
+            background: rgba(28, 28, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+            color: var(--secondary);
+        }
+        
+        .cta-hero {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+        
+        .cta-hero:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.5);
+        }
+        
+        /* アニメーション制作プロセス */
+        .process-section {
+            padding: 150px 20px 100px;
+            background: linear-gradient(180deg, var(--dark) 0%, rgba(255, 107, 53, 0.05) 50%, var(--dark) 100%);
+        }
+        
+        .section-title {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(45deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .process-card {
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .process-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.2) 0%, transparent 70%);
+            transition: all 0.5s ease;
+            animation: processGlow 6s ease infinite;
+        }
+        
+        @keyframes processGlow {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+        
+        .process-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
+        }
+        
+        .process-lottie {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+        }
+        
+        .process-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        
+        .process-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        /* インタラクティブプレイグラウンド */
+        .playground-section {
+            padding: 100px 20px;
+            background: var(--dark);
+        }
+        
+        .playground-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .playground-canvas {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            background: rgba(255, 107, 53, 0.05);
+            border: 2px solid rgba(255, 107, 53, 0.2);
+            border-radius: 20px;
+            margin: 40px auto;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .playground-lottie {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .control-panel {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .control-button {
+            padding: 15px 30px;
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            color: var(--light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .control-button:hover {
+            background: rgba(255, 107, 53, 0.4);
+            transform: scale(1.05);
+        }
+        
+        .control-button.active {
+            background: var(--primary);
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.5);
+        }
+        
+        /* ビジネス活用例 */
+        .business-section {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, rgba(247, 147, 30, 0.1) 0%, rgba(255, 210, 63, 0.1) 100%);
+        }
+        
+        .business-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .business-card {
+            background: rgba(28, 28, 30, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+        }
+        
+        .business-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 107, 53, 0.2);
+        }
+        
+        .business-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+        }
+        
+        .business-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .business-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        /* 統計セクション */
+        .stats-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: var(--dark);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 800px;
+            margin: 40px auto 0;
+        }
+        
+        .stat-item {
+            position: relative;
+        }
+        
+        .stat-lottie {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+        
+        /* CTAセクション */
+        .cta-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(255, 107, 53, 0.15) 0%, transparent 70%);
+        }
+        
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta-description {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.6);
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .playground-canvas {
+                height: 300px;
+            }
+            
+            .business-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- カスタムLottieキャンバス -->
+    <div id="lottie-canvas"></div>
+    
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>After Effects × ビジネス</h1>
+            <p class="subtitle">
+                Lottieアニメーションで実現する、<br>
+                次世代のビジュアルコミュニケーション戦略
+            </p>
+            <a href="#process" class="cta-hero">Lottieの力を体験する</a>
+        </div>
+    </section>
+    
+    <!-- アニメーション制作プロセス -->
+    <section class="process-section" id="process">
+        <h2 class="section-title">After Effects → Lottie → ビジネス成功</h2>
+        
+        <div class="process-grid">
+            <div class="process-card">
+                <div class="process-lottie" id="ae-lottie"></div>
+                <h3 class="process-title">After Effectsで制作</h3>
+                <p class="process-description">
+                    プロフェッショナルなアニメーションツールで<br>
+                    ハイクオリティなモーションを設計。<br>
+                    表現力は無限大。
+                </p>
+            </div>
+            
+            <div class="process-card">
+                <div class="process-lottie" id="export-lottie"></div>
+                <h3 class="process-title">Lottie形式でエクスポート</h3>
+                <p class="process-description">
+                    重いビデオファイルではなく、<br>
+                    軽量で高品質なベクターアニメーション。<br>
+                    ロード時間を大幅短縮。
+                </p>
+            </div>
+            
+            <div class="process-card">
+                <div class="process-lottie" id="business-lottie"></div>
+                <h3 class="process-title">ビジネスで活用</h3>
+                <p class="process-description">
+                    ウェブサイト、アプリ、プレゼンで<br>
+                    顧客の心を掴むアニメーション体験。<br>
+                    コンバージョン率が向上。
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- インタラクティブプレイグラウンド -->
+    <section class="playground-section">
+        <div class="playground-container">
+            <h2 class="section-title">インタラクティブ・アニメーション</h2>
+            <p class="subtitle">クリックしてLottieアニメーションを体験</p>
+            
+            <div class="playground-canvas" id="playground">
+                <div class="playground-lottie" id="interactive-lottie"></div>
+            </div>
+            
+            <div class="control-panel">
+                <button class="control-button active" onclick="changeAnimation('success')">成功エフェクト</button>
+                <button class="control-button" onclick="changeAnimation('loading')">ローディング</button>
+                <button class="control-button" onclick="changeAnimation('growth')">成長グラフ</button>
+                <button class="control-button" onclick="changeAnimation('celebration')">祝福エフェクト</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ビジネス活用例 -->
+    <section class="business-section">
+        <h2 class="section-title">ビジネスでのLottie活用法</h2>
+        
+        <div class="business-grid">
+            <div class="business-card">
+                <div class="business-icon" id="web-icon"></div>
+                <h3 class="business-title">Webサイト強化</h3>
+                <p class="business-description">
+                    ヒーローセクションや製品紹介に<br>
+                    印象的なアニメーションを追加。<br>
+                    離脱率を20%削減。
+                </p>
+            </div>
+            
+            <div class="business-card">
+                <div class="business-icon" id="app-icon"></div>
+                <h3 class="business-title">アプリUX向上</h3>
+                <p class="business-description">
+                    ローディングやフィードバックに<br>
+                    スムーズなアニメーションを実装。<br>
+                    ユーザー満足度が向上。
+                </p>
+            </div>
+            
+            <div class="business-card">
+                <div class="business-icon" id="presentation-icon"></div>
+                <h3 class="business-title">プレゼン革命</h3>
+                <p class="business-description">
+                    静的なスライドから脱却し、<br>
+                    動的で魅力的な提案資料を作成。<br>
+                    成約率が30%アップ。
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 統計セクション -->
+    <section class="stats-section">
+        <h2 class="section-title">Lottieアニメーションの効果</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-lottie" id="stat1"></div>
+                <div class="stat-number" data-target="75">0</div>
+                <div class="stat-label">ファイルサイズ削減率</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-lottie" id="stat2"></div>
+                <div class="stat-number" data-target="40">0</div>
+                <div class="stat-label">エンゲージメント向上率</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-lottie" id="stat3"></div>
+                <div class="stat-number" data-target="25">0</div>
+                <div class="stat-label">コンバージョン向上率</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-lottie" id="stat4"></div>
+                <div class="stat-number" data-target="60">0</div>
+                <div class="stat-label">ロード時間短縮率</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2 class="cta-title">Lottieアニメーションで差をつけよう</h2>
+        <p class="cta-description">
+            AIDXschoolで、After Effects × Lottieの技術を習得。<br>
+            ビジュアルコミュニケーションの専門家になろう。
+        </p>
+        <a href="#" class="cta-button">無料でLottie制作を学ぶ</a>
+    </section>
+    
+    <script>
+        // カスタムLottieアニメーション作成
+        function createCustomLottie() {
+            // 背景用のパーティクルアニメーション
+            const bgContainer = document.getElementById('lottie-canvas');
+            
+            // 複数のLottieアニメーションを配置
+            const particles = lottie.loadAnimation({
+                container: bgContainer,
+                renderer: 'canvas',
+                loop: true,
+                autoplay: true,
+                animationData: {
+                    "v": "5.7.4",
+                    "fr": 30,
+                    "ip": 0,
+                    "op": 90,
+                    "w": window.innerWidth,
+                    "h": window.innerHeight,
+                    "nm": "Background Particles",
+                    "ddd": 0,
+                    "assets": [],
+                    "layers": [
+                        {
+                            "ddd": 0,
+                            "ind": 1,
+                            "ty": 4,
+                            "nm": "Particle",
+                            "sr": 1,
+                            "ks": {
+                                "o": {"a": 0, "k": 50},
+                                "r": {"a": 1, "k": [
+                                    {"i": {"x": [0.833], "y": [0.833]}, "o": {"x": [0.167], "y": [0.167]}, "t": 0, "s": [0]},
+                                    {"t": 90, "s": [360]}
+                                ]},
+                                "p": {"a": 1, "k": [
+                                    {"i": {"x": 0.833, "y": 0.833}, "o": {"x": 0.167, "y": 0.167}, "t": 0, "s": [100, 100], "to": [50, 0], "ti": [-50, 0]},
+                                    {"t": 90, "s": [400, 100]}
+                                ]},
+                                "s": {"a": 1, "k": [
+                                    {"i": {"x": [0.833], "y": [0.833]}, "o": {"x": [0.167], "y": [0.167]}, "t": 0, "s": [50, 50]},
+                                    {"i": {"x": [0.833], "y": [0.833]}, "o": {"x": [0.167], "y": [0.167]}, "t": 45, "s": [100, 100]},
+                                    {"t": 90, "s": [50, 50]}
+                                ]}
+                            },
+                            "ao": 0,
+                            "shapes": [
+                                {
+                                    "ty": "gr",
+                                    "it": [
+                                        {
+                                            "ty": "el",
+                                            "s": {"a": 0, "k": [20, 20]},
+                                            "p": {"a": 0, "k": [0, 0]}
+                                        },
+                                        {
+                                            "ty": "fl",
+                                            "c": {"a": 0, "k": [1, 0.42, 0.21, 1]}
+                                        }
+                                    ]
+                                }
+                            ],
+                            "ip": 0,
+                            "op": 90,
+                            "st": 0
+                        }
+                    ]
+                }
+            });
+        }
+        
+        // プロセスアニメーション
+        function initProcessAnimations() {
+            // After Effectsアイコン
+            const aeAnimation = lottie.loadAnimation({
+                container: document.getElementById('ae-lottie'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'https://assets5.lottiefiles.com/packages/lf20_dmw9el6k.json'
+            });
+            
+            // エクスポートアイコン
+            const exportAnimation = lottie.loadAnimation({
+                container: document.getElementById('export-lottie'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'https://assets2.lottiefiles.com/packages/lf20_ht2bqp2z.json'
+            });
+            
+            // ビジネスアイコン
+            const businessAnimation = lottie.loadAnimation({
+                container: document.getElementById('business-lottie'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'https://assets7.lottiefiles.com/packages/lf20_fvge9yez.json'
+            });
+        }
+        
+        // インタラクティブアニメーション
+        let currentInteractiveAnimation = null;
+        const animationPaths = {
+            success: 'https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json',
+            loading: 'https://assets6.lottiefiles.com/packages/lf20_u4yrau.json',
+            growth: 'https://assets3.lottiefiles.com/packages/lf20_rgdbvahr.json',
+            celebration: 'https://assets1.lottiefiles.com/packages/lf20_obhdq6o4.json'
+        };
+        
+        function changeAnimation(type) {
+            if (currentInteractiveAnimation) {
+                currentInteractiveAnimation.destroy();
+            }
+            
+            currentInteractiveAnimation = lottie.loadAnimation({
+                container: document.getElementById('interactive-lottie'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: animationPaths[type]
+            });
+            
+            // ボタンのアクティブ状態更新
+            document.querySelectorAll('.control-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        // ビジネスアイコンアニメーション
+        function initBusinessIcons() {
+            lottie.loadAnimation({
+                container: document.getElementById('web-icon'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'https://assets4.lottiefiles.com/packages/lf20_kkflmtur.json'
+            });
+            
+            lottie.loadAnimation({
+                container: document.getElementById('app-icon'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'https://assets8.lottiefiles.com/packages/lf20_ysas4vcp.json'
+            });
+            
+            lottie.loadAnimation({
+                container: document.getElementById('presentation-icon'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'https://assets1.lottiefiles.com/packages/lf20_vpptxq52.json'
+            });
+        }
+        
+        // 統計アニメーション
+        function initStatsAnimations() {
+            // 統計用Lottieアニメーション
+            const statIcons = ['stat1', 'stat2', 'stat3', 'stat4'];
+            const statPaths = [
+                'https://assets10.lottiefiles.com/packages/lf20_6grgucgx.json',
+                'https://assets9.lottiefiles.com/packages/lf20_mjg7oery.json',
+                'https://assets8.lottiefiles.com/packages/lf20_qmfs6c3i.json',
+                'https://assets7.lottiefiles.com/packages/lf20_gzlupphk.json'
+            ];
+            
+            statIcons.forEach((id, index) => {
+                lottie.loadAnimation({
+                    container: document.getElementById(id),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: statPaths[index]
+                });
+            });
+        }
+        
+        // カウントアップアニメーション
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                let current = 0;
+                const increment = target / 50;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    counter.textContent = Math.floor(current) + '%';
+                }, 30);
+            });
+        }
+        
+        // スクロール監視
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target.classList.contains('stats-section')) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+        
+        // プレイグラウンドクリックイベント
+        document.getElementById('playground').addEventListener('click', (e) => {
+            if (currentInteractiveAnimation) {
+                // アニメーションを最初から再生
+                currentInteractiveAnimation.goToAndPlay(0);
+                
+                // 視覚的フィードバック
+                const playground = document.getElementById('playground');
+                playground.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    playground.style.transform = 'scale(1)';
+                }, 100);
+            }
+        });
+        
+        // 初期化
+        window.addEventListener('load', () => {
+            createCustomLottie();
+            initProcessAnimations();
+            changeAnimation('success'); // デフォルトアニメーション
+            initBusinessIcons();
+            initStatsAnimations();
+            
+            observer.observe(document.querySelector('.stats-section'));
+        });
+        
+        // ウィンドウリサイズ対応
+        window.addEventListener('resize', () => {
+            // 背景アニメーションをリサイズ
+            const bgContainer = document.getElementById('lottie-canvas');
+            if (bgContainer.children.length > 0) {
+                createCustomLottie();
+            }
+        });
+        
+        console.log('Lottie Animation LP - Professional After Effects integration initialized');
+    </script>
+    
+    <!-- After Effects連携アニメーション技術比較セクション -->
+    <div id="comparison-section" style="position: fixed; top: 100vh; left: 0; width: 100%; min-height: 100vh; background: linear-gradient(135deg, #1C1C1E 0%, #2C2C2E 50%, #3A3A3C 100%); z-index: 1000; overflow-y: auto; transition: transform 0.8s ease;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 80px 20px;">
+            <h2 style="font-size: 3rem; text-align: center; margin-bottom: 60px; background: linear-gradient(45deg, #FF6B35, #F7931E, #FFD23F); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">After Effects連携アニメーション革命</h2>
+            
+            <!-- 技術比較マトリックス -->
+            <div style="background: rgba(28, 28, 30, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(255, 107, 53, 0.3);">
+                <h3 style="color: #FF6B35; font-size: 2rem; margin-bottom: 30px; text-align: center;">アニメーション制作技術スタック比較</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                    <div style="background: rgba(255, 107, 53, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #FF6B35;">
+                        <h4 style="color: #FF6B35; font-size: 1.5rem; margin-bottom: 15px;">Lottie + After Effects</h4>
+                        <p style="margin-bottom: 15px;">デザイナー向け最強ワークフロー</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #FFD23F;">✓ After Effects完全対応</li>
+                            <li style="margin: 8px 0; color: #FFD23F;">✓ ベクターベース軽量</li>
+                            <li style="margin: 8px 0; color: #FFD23F;">✓ インタラクティブ制御</li>
+                            <li style="margin: 8px 0; color: #FFD23F;">✓ JSON出力・編集可能</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(247, 147, 30, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #F7931E;">
+                        <h4 style="color: #F7931E; font-size: 1.5rem; margin-bottom: 15px;">Rive + Figma</h4>
+                        <p style="margin-bottom: 15px;">リアルタイムインタラクティブアニメーション</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #FFD23F;">✓ リアルタイム編集</li>
+                            <li style="margin: 8px 0; color: #FFD23F;">✓ ステートマシン対応</li>
+                            <li style="margin: 8px 0; color: #FF6B35;">△ 学習コスト高</li>
+                            <li style="margin: 8px 0; color: #F7931E;">✗ After Effects互換性なし</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(255, 210, 63, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #FFD23F;">
+                        <h4 style="color: #FFD23F; font-size: 1.5rem; margin-bottom: 15px;">CSS Animation</h4>
+                        <p style="margin-bottom: 15px;">軽量シンプルアニメーション</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #FFD23F;">✓ 超軽量</li>
+                            <li style="margin: 8px 0; color: #FFD23F;">✓ ブラウザネイティブ</li>
+                            <li style="margin: 8px 0; color: #F7931E;">✗ 複雑なアニメーション困難</li>
+                            <li style="margin: 8px 0; color: #F7931E;">✗ デザインツール連携なし</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(44, 44, 46, 0.8); border-radius: 15px; padding: 25px; border-left: 4px solid #8E8E93;">
+                        <h4 style="color: #8E8E93; font-size: 1.5rem; margin-bottom: 15px;">Web動画 (MP4/GIF)</h4>
+                        <p style="margin-bottom: 15px;">従来の動画ベースアニメーション</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #F7931E;">✗ ファイルサイズ大</li>
+                            <li style="margin: 8px 0; color: #F7931E;">✗ インタラクション不可</li>
+                            <li style="margin: 8px 0; color: #F7931E;">✗ 画質劣化</li>
+                            <li style="margin: 8px 0; color: #F7931E;">✗ レスポンシブ対応困難</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- カリキュラム詳細 -->
+            <div style="background: rgba(28, 28, 30, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(247, 147, 30, 0.3);">
+                <h3 style="color: #F7931E; font-size: 2rem; margin-bottom: 30px; text-align: center;">15週間After Effects × Lottieマスター</h3>
+                
+                <!-- フェーズ1: 基礎習得 -->
+                <div style="margin-bottom: 40px;">
+                    <h4 style="color: #FF6B35; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #FF6B35; padding-bottom: 10px;">フェーズ1: デザインツール習得 (1-5週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(255, 107, 53, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FF6B35; margin-bottom: 10px;">Week 1-2: After Effects基礎</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">UI理解、キーフレーム・タイムライン、イージング・エクスプレッション、シェイプレイヤー・ペンツール</p>
+                        </div>
+                        <div style="background: rgba(247, 147, 30, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #F7931E; margin-bottom: 10px;">Week 3: Lottie最適化技法</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">JSON構造理解、ファイルサイズ最適化、サポート機能・制限、BodymovinプラグインWord Flow</p>
+                        </div>
+                        <div style="background: rgba(255, 210, 63, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FFD23F; margin-bottom: 10px;">Week 4-5: アニメーション理論</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">12原則応用、イージング・カーブ、セカンダリアニメーション、ブランディング演出</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- フェーズ2: 実践開発 -->
+                <div style="margin-bottom: 40px;">
+                    <h4 style="color: #F7931E; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #F7931E; padding-bottom: 10px;">フェーズ2: 実践制作 (6-11週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(255, 210, 63, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FFD23F; margin-bottom: 10px;">Week 6-7: UI/UXアニメーション</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">ローディングアニメーション、ボタンエフェクト、マイクロインタラクション、フォームバリデーション</p>
+                        </div>
+                        <div style="background: rgba(255, 107, 53, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FF6B35; margin-bottom: 10px;">Week 8-9: ブランドアニメーション</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">ロゴアニメーション、アイコンアニメーション、イラストレーションモーション、ストーリーテリング</p>
+                        </div>
+                        <div style="background: rgba(247, 147, 30, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #F7931E; margin-bottom: 10px;">Week 10-11: インタラクティブ実装</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">JavaScript連携、ユーザー入力制御、スクロール同期、レスポンシブ対応</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- フェーズ3: ビジネス応用 -->
+                <div>
+                    <h4 style="color: #FFD23F; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #FFD23F; padding-bottom: 10px;">フェーズ3: ビジネス応用 (12-15週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(255, 107, 53, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FF6B35; margin-bottom: 10px;">Week 12-13: 商用プロジェクト</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">クライアントワーク実習、プレゼンテーション、修正対応、納期管理</p>
+                        </div>
+                        <div style="background: rgba(247, 147, 30, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #F7931E; margin-bottom: 10px;">Week 14: ポートフォリオ制作</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">作品集サイト構築、技術デモ、営業資料、ブランディング</p>
+                        </div>
+                        <div style="background: rgba(255, 210, 63, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FFD23F; margin-bottom: 10px;">Week 15: 収益化戦略</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">価格設定、営業手法、継続案件獲得、独立準備</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 成功事例 -->
+            <div style="background: rgba(28, 28, 30, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(255, 210, 63, 0.3);">
+                <h3 style="color: #FFD23F; font-size: 2rem; margin-bottom: 30px; text-align: center;">After Effects × Lottieで成功した卒業生</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(247, 147, 30, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(255, 107, 53, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #FF6B35, #F7931E); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">松本</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #FF6B35; font-size: 1.3rem;">ブランドアニメーション専門</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元グラフィックデザイナー</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(28, 28, 30, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #F7931E; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">中小企業向けロゴ・ブランドアニメーション制作。After EffectsからLottieへの変換ワークフローで高品質・軽量化を実現。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(255, 210, 63, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #FFD23F;">¥280万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(247, 147, 30, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #F7931E;">85%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">ファイルサイズ削減</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"Lottieアニメーションで、クライアントのWebサイト読み込み速度が3倍向上。ブランド価値向上と実用性を両立できています。"</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(247, 147, 30, 0.1), rgba(255, 210, 63, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(247, 147, 30, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #F7931E, #FFD23F); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">伊藤</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #F7931E; font-size: 1.3rem;">UI/UXアニメーション</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元ウェブデザイナー</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(28, 28, 30, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #FFD23F; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">スマートフォンアプリ向けUI/UXアニメーション制作。Lottieの軽量性を活かしたモバイルファーストアニメーション。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(255, 210, 63, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #FFD23F;">¥350万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(247, 147, 30, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #F7931E;">45%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">ユーザー満足度向上</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"Lottieアニメーションでアプリのユーザビリティが劇的改善。App Storeレビュー評価が4.2から4.8に向上しました。"</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(255, 210, 63, 0.1), rgba(255, 107, 53, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(255, 210, 63, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #FFD23F, #FF6B35); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">森田</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #FFD23F; font-size: 1.3rem;">教育コンテンツ制作</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元教材デザイナー</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(28, 28, 30, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #FF6B35; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">オンライン教育プラットフォーム向けインタラクティブ教材制作。Lottieアニメーションで学習効果を最大化。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(255, 210, 63, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #FFD23F;">¥420万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(247, 147, 30, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #F7931E;">65%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">学習効果向上</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"アニメーション教材で、生徒の理解度とエンゲージメントが大幅向上。教育業界でのLottie需要が急拡大しています。"</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 料金プラン -->
+            <div style="background: rgba(28, 28, 30, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(255, 107, 53, 0.3);">
+                <h3 style="color: #FF6B35; font-size: 2rem; margin-bottom: 30px; text-align: center;">After Effects × Lottieマスタープラン</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(247, 147, 30, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(255, 107, 53, 0.3); position: relative;">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #FF6B35, #F7931E); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">デザイナー向け</div>
+                        <h4 style="color: #FF6B35; font-size: 1.8rem; margin: 20px 0; text-align: center;">スタンダード</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #FF6B35;">¥458,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">15週間プログラム</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>After Effects基礎～上級</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>Lottie最適化技法</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>UI/UXアニメーション制作</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>週2回のライブ授業</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>ポートフォリオ制作支援</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #FF6B35, #F7931E); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">詳細を見る</a>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(247, 147, 30, 0.15), rgba(255, 210, 63, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(247, 147, 30, 0.5); position: relative; transform: scale(1.05);">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #F7931E, #FFD23F); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">最人気</div>
+                        <h4 style="color: #F7931E; font-size: 1.8rem; margin: 20px 0; text-align: center;">プロフェッショナル</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #F7931E;">¥758,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">15週間 + 実案件サポート</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>スタンダード内容すべて</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>ブランドアニメーション特化</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>実案件プロジェクト参加</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>個別メンタリング（月4回）</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>クライアント獲得支援</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>3ヶ月フォローアップ</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #F7931E, #FFD23F); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">申し込む</a>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(255, 210, 63, 0.15), rgba(255, 107, 53, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(255, 210, 63, 0.3); position: relative;">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #FFD23F, #FF6B35); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">制作会社向け</div>
+                        <h4 style="color: #FFD23F; font-size: 1.8rem; margin: 20px 0; text-align: center;">エンタープライズ</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #FFD23F;">¥1,480,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">チーム研修 + ワークフロー構築</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>全コース内容</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>チーム研修（最大10名）</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>ワークフロー最適化</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>品質管理システム構築</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>6ヶ月継続サポート</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #FFD23F; margin-right: 10px;">✓</span>専用技術サポート</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #FFD23F, #FF6B35); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">相談する</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 保証制度 -->
+                <div style="background: rgba(255, 210, 63, 0.1); border-radius: 15px; padding: 25px; margin-top: 40px; border: 1px solid rgba(255, 210, 63, 0.3);">
+                    <h4 style="color: #FFD23F; font-size: 1.5rem; margin-bottom: 15px; text-align: center;">🎨 制作スキル保証</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #FFD23F; margin-bottom: 5px;">30日間</div>
+                            <div style="font-size: 0.9rem;">全額返金保証</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #FFD23F; margin-bottom: 5px;">制作案件</div>
+                            <div style="font-size: 0.9rem;">3ヶ月以内保証</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #FFD23F; margin-bottom: 5px;">技術サポート</div>
+                            <div style="font-size: 0.9rem;">無制限対応</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #FFD23F; margin-bottom: 5px;">追加費用</div>
+                            <div style="font-size: 0.9rem;">一切なし</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTAセクション -->
+            <div style="text-align: center; background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(247, 147, 30, 0.2)); border-radius: 20px; padding: 60px 40px; border: 2px solid rgba(255, 107, 53, 0.3);">
+                <h3 style="font-size: 2.5rem; margin-bottom: 20px; background: linear-gradient(45deg, #FF6B35, #F7931E); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">After Effectsがビジネスを変える</h3>
+                <p style="font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9;">Lottieアニメーションで軽量・高品質・インタラクティブな体験を</p>
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #FF6B35, #F7931E); color: #000; padding: 20px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: transform 0.3s ease; box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);">無料相談を予約</a>
+                    <a href="#demo" style="display: inline-block; background: transparent; color: #FF6B35; padding: 20px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; border: 2px solid #FF6B35; transition: all 0.3s ease;">作品例を見る</a>
+                </div>
+                <div style="margin-top: 30px; font-size: 0.9rem; opacity: 0.8;">
+                    🎨 限定12名 | 📞 無料相談30分 | ⚡ 即日回答
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- フローティングナビゲーション -->
+    <div id="floating-nav" style="position: fixed; right: 30px; bottom: 30px; z-index: 2000; display: flex; flex-direction: column; gap: 15px;">
+        <button onclick="toggleSection()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #FF6B35, #F7931E); border: none; color: #000; font-weight: bold; cursor: pointer; box-shadow: 0 10px 25px rgba(255, 107, 53, 0.4); transition: transform 0.3s ease;">
+            <span id="nav-icon" style="font-size: 1.5rem;">📚</span>
+        </button>
+        <a href="#consultation" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #F7931E, #FFD23F); display: flex; align-items: center; justify-content: center; text-decoration: none; color: #000; font-size: 1.5rem; box-shadow: 0 10px 25px rgba(247, 147, 30, 0.4); transition: transform 0.3s ease;">📞</a>
+    </div>
+    
+    <script>
+        let sectionVisible = false;
+        
+        function toggleSection() {
+            const section = document.getElementById('comparison-section');
+            const icon = document.getElementById('nav-icon');
+            
+            if (!sectionVisible) {
+                section.style.transform = 'translateY(-100vh)';
+                icon.textContent = '🎨';
+                sectionVisible = true;
+            } else {
+                section.style.transform = 'translateY(0)';
+                icon.textContent = '📚';
+                sectionVisible = false;
+            }
+        }
+        
+        // フローティングボタンホバーエフェクト
+        document.querySelectorAll('#floating-nav button, #floating-nav a').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transform = 'scale(1.1)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

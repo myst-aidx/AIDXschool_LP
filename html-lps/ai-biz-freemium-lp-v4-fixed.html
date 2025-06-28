@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI業務自動化診断 | 3分で分かる！あなたの自動化ポテンシャル - AIDXschool V4</title>
+    
+    <meta name="description" content="無料診断であなたの業務自動化ポテンシャルを測定。AI×ノーコードで実現可能な時間削減とコスト削減をリアルタイムシミュレーション。">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --secondary: #10B981;
+            --danger: #EF4444;
+            --dark: #1F2937;
+            --gray-600: #6B7280;
+            --gray-400: #D1D5DB;
+            --gray-200: #F3F4F6;
+            --white: #FFFFFF;
+            
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, #818CF8 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--secondary) 0%, #34D399 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            color: var(--dark);
+            background: var(--gray-200);
+            line-height: 1.6;
+        }
+        
+        /* コンパクトなヘッダー */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--gray-400);
+            z-index: 100;
+            padding: 12px 0;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .progress-steps {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+        
+        .step.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .step-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--gray-400);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .step.active .step-circle {
+            background: var(--gradient-primary);
+        }
+        
+        .step-line {
+            width: 40px;
+            height: 2px;
+            background: var(--gray-400);
+        }
+        
+        /* メインコンテナ */
+        .main-container {
+            margin-top: 60px;
+            min-height: calc(100vh - 60px);
+            display: flex;
+            align-items: flex-start;
+            padding: 40px 20px;
+        }
+        
+        .content-wrapper {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        /* セクション共通 */
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        /* ウェルカムセクション */
+        .welcome-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .welcome-title {
+            font-size: 32px;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+        
+        .welcome-subtitle {
+            font-size: 16px;
+            color: var(--gray-600);
+            margin-bottom: 32px;
+        }
+        
+        .counter-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--gray-200);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+        
+        .counter-number {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        /* 業界選択 */
+        .industry-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+        
+        .industry-card {
+            background: var(--gray-200);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .industry-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .industry-card.selected {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .industry-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .industry-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .industry-count {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-top: 4px;
+        }
+        
+        /* 規模・課題 */
+        .scale-section {
+            margin-bottom: 32px;
+        }
+        
+        .scale-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .scale-slider {
+            background: var(--gray-200);
+            padding: 24px;
+            border-radius: 12px;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 6px;
+            background: var(--gray-400);
+            border-radius: 3px;
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .slider-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+            width: 30%;
+        }
+        
+        .slider-handle {
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: grab;
+        }
+        
+        .scale-value {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .challenge-item {
+            background: var(--gray-200);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .challenge-item:hover {
+            background: white;
+            border-color: var(--gray-400);
+        }
+        
+        .challenge-item.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .challenge-check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-400);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .challenge-item.selected .challenge-check {
+            background: white;
+            border-color: white;
+        }
+        
+        .challenge-item.selected .challenge-check::after {
+            content: '✓';
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .challenge-text {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* 業務フロー */
+        .workflow-area {
+            background: var(--gray-200);
+            border-radius: 12px;
+            padding: 24px;
+            min-height: 300px;
+            margin-bottom: 32px;
+        }
+        
+        .workflow-tools {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        
+        .workflow-tool {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: grab;
+        }
+        
+        .workflow-canvas {
+            background: white;
+            border: 2px dashed var(--gray-400);
+            border-radius: 8px;
+            min-height: 200px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-start;
+            align-content: flex-start;
+        }
+        
+        /* シミュレーション */
+        .simulation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .simulation-card {
+            background: var(--gray-200);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .simulation-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        
+        .simulation-label.before {
+            color: var(--danger);
+        }
+        
+        .simulation-label.after {
+            color: var(--secondary);
+        }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-400);
+        }
+        
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-name {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+        
+        .metric-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .metric-value.negative {
+            color: var(--danger);
+        }
+        
+        .metric-value.positive {
+            color: var(--secondary);
+        }
+        
+        .savings-highlight {
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        /* 提案書 */
+        .proposal-grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .proposal-section {
+            background: var(--gray-200);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .proposal-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .proposal-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .proposal-items {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .proposal-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .proposal-item-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .proposal-item-content {
+            flex: 1;
+        }
+        
+        .proposal-item-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .proposal-item-desc {
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+        
+        /* オファー */
+        .offer-section {
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            padding: 32px;
+            color: white;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .offer-timer {
+            display: inline-flex;
+            gap: 16px;
+            background: rgba(0,0,0,0.2);
+            padding: 12px 24px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .timer-unit {
+            text-align: center;
+        }
+        
+        .timer-value {
+            font-size: 24px;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .timer-label {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        
+        .offer-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        
+        /* ボタン */
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .button-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+        }
+        
+        .button-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+        }
+        
+        .button-secondary {
+            background: white;
+            color: var(--dark);
+            border: 2px solid var(--gray-400);
+        }
+        
+        .button-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-400);
+        }
+        
+        /* チャット */
+        .chat-button {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            z-index: 999;
+        }
+        
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .points-display {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-weight: 600;
+        }
+        
+        .points-value {
+            color: var(--primary);
+            font-size: 20px;
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .main-container {
+                margin-top: 100px;
+                padding: 20px;
+            }
+            
+            .section {
+                padding: 24px;
+            }
+            
+            .industry-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .challenges-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .simulation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* ローディング */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .loading.active {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <span>業界</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <span>規模・課題</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <span>業務フロー</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <span>結果</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="5">
+                    <div class="step-circle">5</div>
+                    <span>提案</span>
+                </div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+        </div>
+    </header>
+    
+    <div class="main-container">
+        <div class="content-wrapper">
+            <!-- Section 0: Welcome -->
+            <section class="section active" data-section="0">
+                <div class="welcome-content">
+                    <div class="counter-badge">
+                        <span>本日の診断参加者</span>
+                        <span class="counter-number" id="participantCount">1,234</span>
+                        <span>名</span>
+                    </div>
+                    <h1 class="welcome-title">
+                        AI業務自動化診断
+                    </h1>
+                    <p class="welcome-subtitle">
+                        3分で分かる！あなたの業務の自動化ポテンシャルを測定し、<br>
+                        パーソナライズされた改善提案を無料でお届けします
+                    </p>
+                    <button class="button button-primary" onclick="nextSection()">
+                        診断を開始する
+                        <span>→</span>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Section 1: Industry -->
+            <section class="section" data-section="1">
+                <h2 class="section-title">あなたの業界を選択してください</h2>
+                <div class="industry-grid">
+                    <div class="industry-card" data-industry="manufacturing" onclick="selectIndustry(this)">
+                        <div class="industry-icon">🏭</div>
+                        <div class="industry-name">製造業</div>
+                        <div class="industry-count">500社導入</div>
+                    </div>
+                    <div class="industry-card" data-industry="retail" onclick="selectIndustry(this)">
+                        <div class="industry-icon">🛍️</div>
+                        <div class="industry-name">小売・EC</div>
+                        <div class="industry-count">300社導入</div>
+                    </div>
+                    <div class="industry-card" data-industry="healthcare" onclick="selectIndustry(this)">
+                        <div class="industry-icon">🏥</div>
+                        <div class="industry-name">医療・介護</div>
+                        <div class="industry-count">200社導入</div>
+                    </div>
+                    <div class="industry-card" data-industry="finance" onclick="selectIndustry(this)">
+                        <div class="industry-icon">🏦</div>
+                        <div class="industry-name">金融・保険</div>
+                        <div class="industry-count">150社導入</div>
+                    </div>
+                    <div class="industry-card" data-industry="education" onclick="selectIndustry(this)">
+                        <div class="industry-icon">🎓</div>
+                        <div class="industry-name">教育・研修</div>
+                        <div class="industry-count">100社導入</div>
+                    </div>
+                    <div class="industry-card" data-industry="service" onclick="selectIndustry(this)">
+                        <div class="industry-icon">💼</div>
+                        <div class="industry-name">サービス業</div>
+                        <div class="industry-count">400社導入</div>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="button button-secondary" onclick="prevSection()">
+                        ← 戻る
+                    </button>
+                    <button class="button button-primary" onclick="nextSection()" disabled>
+                        次へ進む →
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Section 2: Scale & Challenges -->
+            <section class="section" data-section="2">
+                <div class="scale-section">
+                    <h3 class="scale-label">企業規模（従業員数）を教えてください</h3>
+                    <div class="scale-slider">
+                        <div class="slider">
+                            <div class="slider-fill"></div>
+                            <div class="slider-handle"></div>
+                        </div>
+                        <div class="scale-value" id="scaleValue">50名</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="scale-label">現在抱えている課題を選択してください（複数選択可）</h3>
+                    <div class="challenges-grid">
+                        <div class="challenge-item" onclick="toggleChallenge(this)">
+                            <div class="challenge-check"></div>
+                            <div class="challenge-text">繰り返し作業が多い</div>
+                        </div>
+                        <div class="challenge-item" onclick="toggleChallenge(this)">
+                            <div class="challenge-check"></div>
+                            <div class="challenge-text">データ入力でミスが発生</div>
+                        </div>
+                        <div class="challenge-item" onclick="toggleChallenge(this)">
+                            <div class="challenge-check"></div>
+                            <div class="challenge-text">顧客対応に時間がかかる</div>
+                        </div>
+                        <div class="challenge-item" onclick="toggleChallenge(this)">
+                            <div class="challenge-check"></div>
+                            <div class="challenge-text">レポート作成が大変</div>
+                        </div>
+                        <div class="challenge-item" onclick="toggleChallenge(this)">
+                            <div class="challenge-check"></div>
+                            <div class="challenge-text">部門間の情報共有が非効率</div>
+                        </div>
+                        <div class="challenge-item" onclick="toggleChallenge(this)">
+                            <div class="challenge-check"></div>
+                            <div class="challenge-text">外注コストが高い</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="button button-secondary" onclick="prevSection()">
+                        ← 戻る
+                    </button>
+                    <button class="button button-primary" onclick="nextSection()" disabled>
+                        次へ進む →
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Section 3: Workflow -->
+            <section class="section" data-section="3">
+                <h2 class="section-title">現在の業務フローを構築してください</h2>
+                
+                <div class="workflow-area">
+                    <div class="workflow-tools">
+                        <div class="workflow-tool" draggable="true">📧 メール受信</div>
+                        <div class="workflow-tool" draggable="true">📊 データ入力</div>
+                        <div class="workflow-tool" draggable="true">📝 書類作成</div>
+                        <div class="workflow-tool" draggable="true">✅ 承認確認</div>
+                        <div class="workflow-tool" draggable="true">📤 送信・共有</div>
+                        <div class="workflow-tool" draggable="true">💬 通知・連絡</div>
+                    </div>
+                    <div class="workflow-canvas" id="workflowCanvas">
+                        <p style="color: var(--gray-600); text-align: center; width: 100%;">
+                            上のツールをドラッグ&ドロップして業務フローを作成
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="button button-secondary" onclick="prevSection()">
+                        ← 戻る
+                    </button>
+                    <button class="button button-primary" onclick="nextSection()">
+                        シミュレーション実行 →
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Section 4: Simulation -->
+            <section class="section" data-section="4">
+                <h2 class="section-title">自動化シミュレーション結果</h2>
+                
+                <div class="simulation-grid">
+                    <div class="simulation-card">
+                        <div class="simulation-label before">現在</div>
+                        <div class="metric-row">
+                            <span class="metric-name">月間作業時間</span>
+                            <span class="metric-value negative">160時間</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-name">月間人件費</span>
+                            <span class="metric-value negative">¥400,000</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-name">エラー率</span>
+                            <span class="metric-value negative">5%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="simulation-card">
+                        <div class="simulation-label after">自動化後</div>
+                        <div class="metric-row">
+                            <span class="metric-name">月間作業時間</span>
+                            <span class="metric-value positive">16時間</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-name">月間コスト</span>
+                            <span class="metric-value positive">¥30,000</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-name">エラー率</span>
+                            <span class="metric-value positive">0%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="savings-highlight">
+                    削減効果: ¥370,000/月（年間444万円の削減）
+                </div>
+                
+                <div class="navigation">
+                    <button class="button button-secondary" onclick="prevSection()">
+                        ← 戻る
+                    </button>
+                    <button class="button button-primary" onclick="nextSection()">
+                        提案書を見る →
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Section 5: Proposal -->
+            <section class="section" data-section="5">
+                <h2 class="section-title">あなた専用の自動化提案書</h2>
+                
+                <div class="proposal-grid">
+                    <div class="proposal-section">
+                        <div class="proposal-title">
+                            <div class="proposal-icon">📊</div>
+                            <span>診断結果サマリー</span>
+                        </div>
+                        <div class="proposal-items">
+                            <div class="proposal-item">
+                                <div class="proposal-item-icon">🎯</div>
+                                <div class="proposal-item-content">
+                                    <div class="proposal-item-title">自動化ポテンシャル: 非常に高い</div>
+                                    <div class="proposal-item-desc">あなたの業務の90%以上が自動化可能です</div>
+                                </div>
+                            </div>
+                            <div class="proposal-item">
+                                <div class="proposal-item-icon">💰</div>
+                                <div class="proposal-item-content">
+                                    <div class="proposal-item-title">年間削減コスト: 444万円</div>
+                                    <div class="proposal-item-desc">人件費と時間コストの大幅削減が可能</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="proposal-section">
+                        <div class="proposal-title">
+                            <div class="proposal-icon">🛠️</div>
+                            <span>推奨ツール</span>
+                        </div>
+                        <div class="proposal-items">
+                            <div class="proposal-item">
+                                <div class="proposal-item-icon">🤖</div>
+                                <div class="proposal-item-content">
+                                    <div class="proposal-item-title">ChatGPT API</div>
+                                    <div class="proposal-item-desc">自然言語処理とコンテンツ生成</div>
+                                </div>
+                            </div>
+                            <div class="proposal-item">
+                                <div class="proposal-item-icon">⚡</div>
+                                <div class="proposal-item-content">
+                                    <div class="proposal-item-title">Make (Integromat)</div>
+                                    <div class="proposal-item-desc">複雑な業務フローの自動化</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="offer-section">
+                    <div class="offer-timer">
+                        <div class="timer-unit">
+                            <span class="timer-value">23</span>
+                            <span class="timer-label">時間</span>
+                        </div>
+                        <div class="timer-unit">
+                            <span class="timer-value">59</span>
+                            <span class="timer-label">分</span>
+                        </div>
+                        <div class="timer-unit">
+                            <span class="timer-value">59</span>
+                            <span class="timer-label">秒</span>
+                        </div>
+                    </div>
+                    <h3 class="offer-title">診断完了特別オファー</h3>
+                    <p style="margin-bottom: 24px;">初月無料 + 導入サポート付き</p>
+                    <a href="https://lin.ee/abc123" class="button button-primary" style="background: white; color: var(--primary);">
+                        今すぐ無料相談を予約 →
+                    </a>
+                </div>
+                
+                <div class="navigation">
+                    <button class="button button-secondary" onclick="prevSection()">
+                        ← 戻る
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <div class="chat-button" onclick="toggleChat()">💬</div>
+    
+    <div class="points-display">
+        ポイント: <span class="points-value" id="pointsValue">0</span>
+    </div>
+    
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+    
+    <script>
+        // グローバル変数
+        let currentSection = 0;
+        let totalSections = 6;
+        let userPoints = 0;
+        let diagnosisData = {
+            industry: null,
+            scale: 50,
+            challenges: [],
+            workflow: []
+        };
+        
+        // 初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeSlider();
+            initializeDragAndDrop();
+            updateProgressSteps();
+            startTimer();
+        });
+        
+        // セクション遷移
+        function nextSection() {
+            if (currentSection < totalSections - 1) {
+                if (validateCurrentSection()) {
+                    showLoading();
+                    setTimeout(() => {
+                        currentSection++;
+                        showSection(currentSection);
+                        updateProgressSteps();
+                        hideLoading();
+                        addPoints(100);
+                    }, 300);
+                }
+            }
+        }
+        
+        function prevSection() {
+            if (currentSection > 0) {
+                currentSection--;
+                showSection(currentSection);
+                updateProgressSteps();
+            }
+        }
+        
+        function showSection(index) {
+            document.querySelectorAll('.section').forEach((section, i) => {
+                section.classList.toggle('active', i === index);
+            });
+            
+            if (index === 4) {
+                runSimulation();
+            }
+        }
+        
+        function updateProgressSteps() {
+            document.querySelectorAll('.step').forEach((step, i) => {
+                step.classList.toggle('active', i <= currentSection && currentSection > 0);
+            });
+        }
+        
+        function validateCurrentSection() {
+            switch (currentSection) {
+                case 1:
+                    return diagnosisData.industry !== null;
+                case 2:
+                    return diagnosisData.challenges.length > 0;
+                default:
+                    return true;
+            }
+        }
+        
+        // 業界選択
+        function selectIndustry(card) {
+            document.querySelectorAll('.industry-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            diagnosisData.industry = card.dataset.industry;
+            document.querySelector('[data-section="1"] .button-primary').disabled = false;
+        }
+        
+        // スライダー
+        function initializeSlider() {
+            const handle = document.querySelector('.slider-handle');
+            const fill = document.querySelector('.slider-fill');
+            const slider = document.querySelector('.slider');
+            let isDragging = false;
+            
+            if (!handle || !slider) return;
+            
+            handle.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+            
+            function startDrag(e) {
+                isDragging = true;
+                e.preventDefault();
+            }
+            
+            function drag(e) {
+                if (!isDragging) return;
+                
+                const rect = slider.getBoundingClientRect();
+                const position = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                
+                handle.style.left = `${position * 100}%`;
+                fill.style.width = `${position * 100}%`;
+                
+                const scales = [10, 50, 100, 500, 1000];
+                const index = Math.round(position * (scales.length - 1));
+                diagnosisData.scale = scales[index];
+                document.getElementById('scaleValue').textContent = `${scales[index]}名`;
+            }
+            
+            function stopDrag() {
+                isDragging = false;
+            }
+        }
+        
+        // 課題選択
+        function toggleChallenge(item) {
+            item.classList.toggle('selected');
+            const text = item.querySelector('.challenge-text').textContent;
+            
+            if (item.classList.contains('selected')) {
+                diagnosisData.challenges.push(text);
+            } else {
+                diagnosisData.challenges = diagnosisData.challenges.filter(c => c !== text);
+            }
+            
+            document.querySelector('[data-section="2"] .button-primary').disabled = diagnosisData.challenges.length === 0;
+        }
+        
+        // ドラッグ&ドロップ
+        function initializeDragAndDrop() {
+            const tools = document.querySelectorAll('.workflow-tool');
+            const canvas = document.getElementById('workflowCanvas');
+            
+            tools.forEach(tool => {
+                tool.addEventListener('dragstart', handleDragStart);
+            });
+            
+            if (canvas) {
+                canvas.addEventListener('dragover', handleDragOver);
+                canvas.addEventListener('drop', handleDrop);
+            }
+        }
+        
+        function handleDragStart(e) {
+            e.dataTransfer.effectAllowed = 'copy';
+            e.dataTransfer.setData('text/html', e.target.innerHTML);
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            const data = e.dataTransfer.getData('text/html');
+            const element = document.createElement('div');
+            element.className = 'workflow-tool';
+            element.innerHTML = data;
+            element.style.cursor = 'move';
+            
+            const canvas = document.getElementById('workflowCanvas');
+            if (canvas.querySelector('p')) {
+                canvas.innerHTML = '';
+            }
+            canvas.appendChild(element);
+            
+            diagnosisData.workflow.push(data);
+        }
+        
+        // シミュレーション
+        function runSimulation() {
+            // アニメーション効果は簡略化
+            const values = document.querySelectorAll('.metric-value');
+            values.forEach(el => {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transition = 'opacity 0.5s ease';
+                }, 500);
+            });
+        }
+        
+        // ポイント
+        function addPoints(points) {
+            userPoints += points;
+            document.getElementById('pointsValue').textContent = userPoints.toLocaleString();
+        }
+        
+        // タイマー
+        function startTimer() {
+            let hours = 23;
+            let minutes = 59;
+            let seconds = 59;
+            
+            setInterval(() => {
+                seconds--;
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                    if (minutes < 0) {
+                        minutes = 59;
+                        hours--;
+                        if (hours < 0) {
+                            hours = 23;
+                        }
+                    }
+                }
+                
+                document.querySelectorAll('.timer-value')[0].textContent = hours.toString().padStart(2, '0');
+                document.querySelectorAll('.timer-value')[1].textContent = minutes.toString().padStart(2, '0');
+                document.querySelectorAll('.timer-value')[2].textContent = seconds.toString().padStart(2, '0');
+            }, 1000);
+        }
+        
+        // ローディング
+        function showLoading() {
+            document.getElementById('loading').classList.add('active');
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('active');
+        }
+        
+        // チャット（簡易版）
+        function toggleChat() {
+            alert('チャットサポートが開きます（デモ版）');
+        }
+        
+        // テーマ切り替え（簡易版）
+        function toggleTheme() {
+            document.body.style.background = document.body.style.background === 'var(--dark)' ? 'var(--gray-200)' : 'var(--dark)';
+        }
+    </script>
+</body>
+</html>

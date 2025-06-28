@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - 爆発的な成長をモーションで表現 | Mo.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/@mojs/core@1.6.1/dist/mo.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: #0f0f23;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* モーションコンテナ */
+        #motion-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        /* ヒーローセクション */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: radial-gradient(circle at center, #1a1a3e 0%, #0f0f23 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+            background: linear-gradient(45deg, #FFD93D, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: colorShift 5s ease infinite;
+        }
+        
+        @keyframes colorShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(45deg); }
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            color: #4ECDC4;
+        }
+        
+        /* インタラクティブボタン */
+        .motion-button {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .motion-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+        }
+        
+        /* モーションデモセクション */
+        .demo-section {
+            padding: 100px 20px;
+            background: linear-gradient(180deg, #0f0f23 0%, #1a1a3e 100%);
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #FFD93D 0%, #FF6B6B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* モーションカード */
+        .motion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .motion-card {
+            background: rgba(78, 205, 196, 0.05);
+            border: 1px solid rgba(78, 205, 196, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .motion-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(78, 205, 196, 0.3) 0%, transparent 70%);
+            transition: all 0.5s ease;
+            transform: translate(-50%, -50%);
+        }
+        
+        .motion-card:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .motion-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(78, 205, 196, 0.3);
+        }
+        
+        .motion-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        
+        .motion-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #FFD93D;
+        }
+        
+        .motion-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        /* プレイグラウンド */
+        .playground-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: #0f0f23;
+            position: relative;
+            min-height: 80vh;
+        }
+        
+        .playground-canvas {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: radial-gradient(circle at center, rgba(78, 205, 196, 0.05) 0%, transparent 70%);
+            border-radius: 30px;
+            margin: 40px auto;
+            max-width: 1000px;
+            cursor: crosshair;
+        }
+        
+        .playground-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.3rem;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        /* コントロールパネル */
+        .control-panel {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .control-button {
+            padding: 15px 30px;
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #FF6B6B;
+            border-radius: 30px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .control-button:hover {
+            background: rgba(255, 107, 107, 0.4);
+            transform: scale(1.05);
+        }
+        
+        .control-button.active {
+            background: #FF6B6B;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.5);
+        }
+        
+        /* CTA セクション */
+        .cta-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+        }
+        
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #FF6B6B 0%, #4ECDC4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 60px;
+            background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 50%, #4ECDC4 100%);
+            border-radius: 50px;
+            color: #0f0f23;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
+        }
+        
+        /* 統計アニメーション */
+        .stats-section {
+            padding: 80px 20px;
+            background: #1a1a3e;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #FFD93D;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            opacity: 0.8;
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .motion-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .playground-canvas {
+                height: 300px;
+            }
+            
+            .control-panel {
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- モーションコンテナ -->
+    <div id="motion-container"></div>
+    
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>爆発的な成長をモーションで</h1>
+            <p class="subtitle">Mo.jsが描く、ダイナミックな起業の軌跡</p>
+            <button class="motion-button" id="heroButton">モーションを体験する</button>
+        </div>
+    </section>
+    
+    <!-- モーションデモ -->
+    <section class="demo-section">
+        <h2 class="section-title">Mo.jsの表現力</h2>
+        
+        <div class="motion-grid">
+            <div class="motion-card" onclick="playBurst(this)">
+                <div class="motion-icon">💥</div>
+                <h3 class="motion-title">バースト効果</h3>
+                <p class="motion-description">
+                    起業の瞬間を爆発的に表現。
+                    アイデアが形になる瞬間の興奮を視覚化。
+                </p>
+            </div>
+            
+            <div class="motion-card" onclick="playSwirl(this)">
+                <div class="motion-icon">🌀</div>
+                <h3 class="motion-title">スワール効果</h3>
+                <p class="motion-description">
+                    渦巻くようなエネルギー。
+                    ビジネスの成長スパイラルを表現。
+                </p>
+            </div>
+            
+            <div class="motion-card" onclick="playShape(this)">
+                <div class="motion-icon">🔷</div>
+                <h3 class="motion-title">シェイプモーフィング</h3>
+                <p class="motion-description">
+                    形を変えながら進化。
+                    柔軟なビジネスモデルの変化を表現。
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- プレイグラウンド -->
+    <section class="playground-section">
+        <h2 class="section-title">インタラクティブ・プレイグラウンド</h2>
+        
+        <div class="playground-canvas" id="playground">
+            <p class="playground-hint">クリックしてエフェクトを生成</p>
+        </div>
+        
+        <div class="control-panel">
+            <button class="control-button active" onclick="setEffect('burst')">バースト</button>
+            <button class="control-button" onclick="setEffect('circle')">サークル</button>
+            <button class="control-button" onclick="setEffect('polygon')">ポリゴン</button>
+            <button class="control-button" onclick="setEffect('curve')">カーブ</button>
+            <button class="control-button" onclick="setEffect('zigzag')">ジグザグ</button>
+        </div>
+    </section>
+    
+    <!-- 統計アニメーション -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number" id="stat1">0</div>
+                <div class="stat-label">起業成功率</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="stat2">0</div>
+                <div class="stat-label">平均月収（万円）</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="stat3">0</div>
+                <div class="stat-label">受講生数</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="stat4">0</div>
+                <div class="stat-label">満足度</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2 class="cta-title">あなたの成長も爆発的に</h2>
+        <p style="font-size: 1.3rem; opacity: 0.9; margin-bottom: 3rem;">
+            AIDXschoolで、モーショングラフィックスのような
+            ダイナミックな成長を実現しよう
+        </p>
+        <a href="#" class="cta-button" id="ctaButton">無料で爆発的成長を始める</a>
+    </section>
+    
+    <script>
+        // グローバル変数
+        let currentEffect = 'burst';
+        const COLORS = {
+            primary: '#FF6B6B',
+            secondary: '#4ECDC4',
+            accent: '#FFD93D',
+            dark: '#0f0f23'
+        };
+        
+        // ヒーローボタンのアニメーション
+        document.getElementById('heroButton').addEventListener('click', function(e) {
+            const x = e.pageX;
+            const y = e.pageY;
+            
+            // バースト効果
+            const burst = new mojs.Burst({
+                parent: '#motion-container',
+                left: x,
+                top: y,
+                radius: { 0: 200 },
+                count: 20,
+                children: {
+                    shape: 'circle',
+                    fill: [COLORS.primary, COLORS.secondary, COLORS.accent],
+                    radius: { 20: 0 },
+                    duration: 2000,
+                    easing: mojs.easing.bezier(0.1, 1, 0.3, 1)
+                }
+            });
+            
+            // 円形波紋
+            const circle = new mojs.Shape({
+                parent: '#motion-container',
+                left: x,
+                top: y,
+                stroke: COLORS.secondary,
+                strokeWidth: { 20: 0 },
+                fill: 'none',
+                scale: { 0: 2 },
+                radius: 50,
+                duration: 600,
+                easing: 'cubic.out'
+            });
+            
+            // タイムラインで同時実行
+            const timeline = new mojs.Timeline();
+            timeline.add(burst, circle);
+            timeline.play();
+        });
+        
+        // カードエフェクト
+        function playBurst(element) {
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            
+            const burst = new mojs.Burst({
+                parent: '#motion-container',
+                left: x,
+                top: y,
+                radius: { 0: 150 },
+                count: 15,
+                children: {
+                    shape: 'zigzag',
+                    points: 7,
+                    fill: 'none',
+                    stroke: [COLORS.primary, COLORS.secondary],
+                    strokeDasharray: '100%',
+                    strokeDashoffset: { '-100%': '100%' },
+                    duration: 700,
+                    easing: 'quad.out'
+                }
+            });
+            
+            burst.play();
+        }
+        
+        function playSwirl(element) {
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            
+            const swirl = new mojs.ShapeSwirl({
+                parent: '#motion-container',
+                left: x,
+                top: y,
+                fill: COLORS.accent,
+                duration: 1000,
+                radius: { 0: 100 },
+                pathScale: 0.5,
+                swirlSize: 15,
+                swirlFrequency: 10,
+                direction: 1,
+                degreeShift: 45,
+                isSwirl: true,
+                easing: mojs.easing.bezier(0.1, 1, 0.3, 1)
+            });
+            
+            swirl.play();
+        }
+        
+        function playShape(element) {
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            
+            const shape = new mojs.Shape({
+                parent: '#motion-container',
+                left: x,
+                top: y,
+                shape: 'polygon',
+                points: 6,
+                fill: 'none',
+                stroke: COLORS.primary,
+                strokeWidth: { 10: 0 },
+                scale: { 0: 2 },
+                angle: { 0: 180 },
+                duration: 800,
+                easing: 'elastic.out'
+            });
+            
+            shape.play();
+        }
+        
+        // プレイグラウンドのクリックイベント
+        document.getElementById('playground').addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            switch(currentEffect) {
+                case 'burst':
+                    createBurstEffect(x + rect.left, y + rect.top);
+                    break;
+                case 'circle':
+                    createCircleEffect(x + rect.left, y + rect.top);
+                    break;
+                case 'polygon':
+                    createPolygonEffect(x + rect.left, y + rect.top);
+                    break;
+                case 'curve':
+                    createCurveEffect(x + rect.left, y + rect.top);
+                    break;
+                case 'zigzag':
+                    createZigzagEffect(x + rect.left, y + rect.top);
+                    break;
+            }
+            
+            // ヒントテキストを非表示
+            const hint = this.querySelector('.playground-hint');
+            if (hint) hint.style.display = 'none';
+        });
+        
+        // エフェクト作成関数
+        function createBurstEffect(x, y) {
+            const burst = new mojs.Burst({
+                parent: '#motion-container',
+                left: x,
+                top: y,
+                radius: { 0: 100 },
+                count: 10,
+                children: {
+                    shape: ['circle', 'rect', 'polygon'],
+                    fill: [COLORS.primary, COLORS.secondary, COLORS.accent],
+                    radius: { 10: 0 },
+                    duration: 1500,
+                    easing: mojs.easing.bezier(0.1, 1, 0.3, 1)
+                }
+            }).play();
+        }
+        
+        function createCircleEffect(x, y) {
+            const circle = new mojs.Shape({
+                parent: '#motion-container',
+                left: x,
+                top: y,
+                shape: 'circle',
+                fill: 'none',
+                stroke: COLORS.secondary,
+                strokeWidth: { 20: 0 },
+                scale: { 0: 3 },
+                duration: 1000,
+                easing: 'cubic.out'
+            }).play();
+        }
+        
+        function createPolygonEffect(x, y) {
+            const polygon = new mojs.Shape({
+                parent: '#motion-container',
+                left: x,
+                top: y,
+                shape: 'polygon',
+                points: 8,
+                fill: COLORS.accent,
+                scale: { 0: 2 },
+                angle: { 0: 360 },
+                duration: 1200,
+                easing: 'elastic.out'
+            }).play();
+        }
+        
+        function createCurveEffect(x, y) {
+            const curve = new mojs.Shape({
+                parent: '#motion-container',
+                left: x,
+                top: y,
+                shape: 'curve',
+                fill: 'none',
+                stroke: COLORS.primary,
+                strokeWidth: 5,
+                scale: { 0: 1.5 },
+                angle: { 0: 180 },
+                duration: 800,
+                easing: 'back.out'
+            }).play();
+        }
+        
+        function createZigzagEffect(x, y) {
+            const zigzag = new mojs.Shape({
+                parent: '#motion-container',
+                left: x,
+                top: y,
+                shape: 'zigzag',
+                points: 7,
+                fill: 'none',
+                stroke: COLORS.secondary,
+                strokeWidth: { 10: 0 },
+                scale: { 0: 2 },
+                duration: 1000,
+                easing: 'sin.out'
+            }).play();
+        }
+        
+        // エフェクト切り替え
+        function setEffect(effect) {
+            currentEffect = effect;
+            document.querySelectorAll('.control-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        // 統計アニメーション
+        function animateStats() {
+            // カウントアップアニメーション
+            const stats = [
+                { id: 'stat1', target: 92, suffix: '%' },
+                { id: 'stat2', target: 120, suffix: '' },
+                { id: 'stat3', target: 3500, suffix: '+' },
+                { id: 'stat4', target: 98, suffix: '%' }
+            ];
+            
+            stats.forEach(stat => {
+                const element = document.getElementById(stat.id);
+                let current = 0;
+                const increment = stat.target / 50;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= stat.target) {
+                        current = stat.target;
+                        clearInterval(timer);
+                    }
+                    element.textContent = Math.floor(current) + stat.suffix;
+                }, 30);
+            });
+        }
+        
+        // スクロールで統計アニメーションを開始
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+        
+        observer.observe(document.querySelector('.stats-section'));
+        
+        // CTAボタンエフェクト
+        document.getElementById('ctaButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const x = e.pageX;
+            const y = e.pageY;
+            
+            // 花火のような効果
+            const firework = new mojs.Burst({
+                parent: '#motion-container',
+                left: x,
+                top: y,
+                radius: { 0: 300 },
+                count: 30,
+                children: {
+                    shape: 'line',
+                    stroke: [COLORS.primary, COLORS.secondary, COLORS.accent],
+                    strokeWidth: { 5: 0 },
+                    radius: { 30: 0 },
+                    angle: { 360: 0 },
+                    duration: 2000,
+                    delay: 'stagger(0, 100)',
+                    easing: mojs.easing.bezier(0.1, 1, 0.3, 1)
+                }
+            });
+            
+            firework.play();
+        });
+        
+        // ページロード時のアニメーション
+        window.addEventListener('load', () => {
+            const timeline = new mojs.Timeline();
+            
+            // タイトルアニメーション
+            const titleBurst = new mojs.Burst({
+                parent: '.hero-content',
+                radius: { 0: 200 },
+                count: 15,
+                children: {
+                    shape: 'circle',
+                    fill: 'none',
+                    stroke: [COLORS.primary, COLORS.secondary, COLORS.accent],
+                    strokeWidth: { 3: 0 },
+                    radius: { 10: 30 },
+                    duration: 1500,
+                    delay: 300,
+                    easing: mojs.easing.bezier(0.1, 1, 0.3, 1)
+                }
+            });
+            
+            timeline.add(titleBurst);
+            timeline.play();
+        });
+    </script>
+    
+    <!-- モーショングラフィックス技術比較セクション -->
+    <div id="comparison-section" style="position: fixed; top: 100vh; left: 0; width: 100%; min-height: 100vh; background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d2d5f 100%); z-index: 1000; overflow-y: auto; transition: transform 0.8s ease;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 80px 20px;">
+            <h2 style="font-size: 3rem; text-align: center; margin-bottom: 60px; background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">モーショングラフィックス革命</h2>
+            
+            <!-- 技術比較マトリックス -->
+            <div style="background: rgba(15, 15, 35, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(255, 107, 107, 0.3);">
+                <h3 style="color: #FF6B6B; font-size: 2rem; margin-bottom: 30px; text-align: center;">モーションライブラリ技術比較</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                    <div style="background: rgba(255, 107, 107, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #FF6B6B;">
+                        <h4 style="color: #FF6B6B; font-size: 1.5rem; margin-bottom: 15px;">Mo.js (Motion for Web)</h4>
+                        <p style="margin-bottom: 15px;">モジュラー設計によるモーショングラフィックス</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ 爆発エフェクト特化</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ SVGベース軽量アニメーション</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ カスタムイージング豊富</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ モジュラー構造</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(78, 205, 196, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #4ECDC4;">
+                        <h4 style="color: #4ECDC4; font-size: 1.5rem; margin-bottom: 15px;">GSAP (GreenSock)</h4>
+                        <p style="margin-bottom: 15px;">業界標準のアニメーションエンジン</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ 高性能・軽量</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ 豊富なプラグイン</li>
+                            <li style="margin: 8px 0; color: #FFE66D;">△ 有料ライセンス</li>
+                            <li style="margin: 8px 0; color: #FF6B6B;">✗ 学習コスト高</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(69, 183, 209, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #45B7D1;">
+                        <h4 style="color: #45B7D1; font-size: 1.5rem; margin-bottom: 15px;">Anime.js</h4>
+                        <p style="margin-bottom: 15px;">軽量なJavaScriptアニメーションライブラリ</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ 軽量（9KB）</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ シンプルAPI</li>
+                            <li style="margin: 8px 0; color: #FF6B6B;">✗ 複雑なエフェクト限定的</li>
+                            <li style="margin: 8px 0; color: #FFE66D;">△ モーショングラフィックス向きでない</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(255, 230, 109, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #FFE66D;">
+                        <h4 style="color: #FFE66D; font-size: 1.5rem; margin-bottom: 15px;">Framer Motion</h4>
+                        <p style="margin-bottom: 15px;">React専用アニメーションライブラリ</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ React統合</li>
+                            <li style="margin: 8px 0; color: #4ECDC4;">✓ 宣言的API</li>
+                            <li style="margin: 8px 0; color: #FFE66D;">△ React限定</li>
+                            <li style="margin: 8px 0; color: #FF6B6B;">✗ バニラJS不可</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- カリキュラム詳細 -->
+            <div style="background: rgba(15, 15, 35, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(78, 205, 196, 0.3);">
+                <h3 style="color: #4ECDC4; font-size: 2rem; margin-bottom: 30px; text-align: center;">14週間モーショングラフィックスマスター</h3>
+                
+                <!-- フェーズ1: 基礎習得 -->
+                <div style="margin-bottom: 40px;">
+                    <h4 style="color: #FF6B6B; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #FF6B6B; padding-bottom: 10px;">フェーズ1: 基礎技術習得 (1-5週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(255, 107, 107, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FF6B6B; margin-bottom: 10px;">Week 1-2: Mo.js基礎</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">Shape、Burst、Timeline、Stagger基礎、SVGモーフィング、イージング関数、モジュール構造理解</p>
+                        </div>
+                        <div style="background: rgba(78, 205, 196, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #4ECDC4; margin-bottom: 10px;">Week 3: モーション理論</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">12原則アニメーション、タイミング・スペーシング、アンティシペーション、フォロースルー</p>
+                        </div>
+                        <div style="background: rgba(69, 183, 209, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #45B7D1; margin-bottom: 10px;">Week 4-5: エフェクト制作</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">爆発エフェクト、パーティクルシステム、トランジション、ローディングアニメーション</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- フェーズ2: 実践開発 -->
+                <div style="margin-bottom: 40px;">
+                    <h4 style="color: #4ECDC4; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #4ECDC4; padding-bottom: 10px;">フェーズ2: 実践開発 (6-10週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(255, 230, 109, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FFE66D; margin-bottom: 10px;">Week 6-7: UI/UXアニメーション</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">マイクロインタラクション、ボタンエフェクト、フォームバリデーション、メニューアニメーション</p>
+                        </div>
+                        <div style="background: rgba(255, 107, 107, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FF6B6B; margin-bottom: 10px;">Week 8-9: インタラクティブコンテンツ</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">スクロール連動アニメーション、ホバーエフェクト、ゲーミフィケーション要素</p>
+                        </div>
+                        <div style="background: rgba(78, 205, 196, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #4ECDC4; margin-bottom: 10px;">Week 10: パフォーマンス最適化</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">60FPS保証、モバイル最適化、メモリ管理、レンダリング効率化</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- フェーズ3: ビジネス応用 -->
+                <div>
+                    <h4 style="color: #45B7D1; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #45B7D1; padding-bottom: 10px;">フェーズ3: ビジネス応用 (11-14週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(255, 107, 107, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FF6B6B; margin-bottom: 10px;">Week 11-12: ブランドアニメーション</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">ロゴアニメーション、ブランドカラー統合、コーポレートアイデンティティ表現</p>
+                        </div>
+                        <div style="background: rgba(69, 183, 209, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #45B7D1; margin-bottom: 10px;">Week 13: 商用プロジェクト実践</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">クライアントワーク実習、プレゼンテーション技法、修正対応フロー</p>
+                        </div>
+                        <div style="background: rgba(255, 230, 109, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #FFE66D; margin-bottom: 10px;">Week 14: 収益化・独立準備</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">ポートフォリオ制作、価格設定、営業戦略、継続案件獲得法</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 成功事例 -->
+            <div style="background: rgba(15, 15, 35, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(69, 183, 209, 0.3);">
+                <h3 style="color: #45B7D1; font-size: 2rem; margin-bottom: 30px; text-align: center;">モーショングラフィックスで成功した卒業生</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(255, 107, 107, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">高橋</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #FF6B6B; font-size: 1.3rem;">UI/UXモーションデザイナー</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元Webデザイナー</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(15, 15, 35, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #4ECDC4; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">スタートアップ向けアプリUI/UXアニメーション制作。Mo.jsによる爆発的エフェクトでユーザーエンゲージメント向上に特化。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(78, 205, 196, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #4ECDC4;">¥240万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255, 230, 109, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #FFE66D;">35%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">エンゲージメント向上</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"Mo.jsの爆発エフェクトを使ったマイクロインタラクションで、アプリの離脱率が50%改善。クライアントからの継続依頼が絶えません。"</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(69, 183, 209, 0.1), rgba(255, 230, 109, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(69, 183, 209, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #45B7D1, #FFE66D); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">中村</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #45B7D1; font-size: 1.3rem;">ブランドアニメーション専門</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元グラフィックデザイナー</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(15, 15, 35, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #FFE66D; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">企業ロゴ・ブランドアニメーション制作事業。Mo.jsのモジュラー設計を活用し、ブランド価値を視覚化。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(78, 205, 196, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #4ECDC4;">¥380万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255, 230, 109, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #FFE66D;">28社</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">制作実績</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"Mo.jsで制作したロゴアニメーションが、クライアントの売上を平均23%向上させました。ブランド力強化の決定版ツールです。"</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(78, 205, 196, 0.1), rgba(255, 107, 107, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(78, 205, 196, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #4ECDC4, #FF6B6B); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">山本</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #4ECDC4; font-size: 1.3rem;">ゲーミフィケーション開発</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元ゲームデザイナー</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(15, 15, 35, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #FF6B6B; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">企業研修・教育向けゲーミフィケーションプラットフォーム開発。Mo.jsエフェクトでユーザーモチベーション最大化。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(78, 205, 196, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #4ECDC4;">¥520万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255, 230, 109, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #FFE66D;">90%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">完了率改善</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"Mo.jsの爆発エフェクトを達成感演出に使うことで、研修完了率が従来の3倍に。企業の人材育成効率が劇的に向上しています。"</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 料金プラン -->
+            <div style="background: rgba(15, 15, 35, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(255, 230, 109, 0.3);">
+                <h3 style="color: #FFE66D; font-size: 2rem; margin-bottom: 30px; text-align: center;">モーショングラフィックスマスタープラン</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(78, 205, 196, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(255, 107, 107, 0.3); position: relative;">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #FF6B6B, #4ECDC4); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">エッセンシャル</div>
+                        <h4 style="color: #FF6B6B; font-size: 1.8rem; margin: 20px 0; text-align: center;">スタンダード</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #FF6B6B;">¥428,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">14週間プログラム</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>Mo.js基礎から応用まで</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>モーション理論・実習</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>UI/UXアニメーション制作</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>週2回のライブ授業</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>基本ポートフォリオ制作</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">詳細を見る</a>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(69, 183, 209, 0.15), rgba(255, 230, 109, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(69, 183, 209, 0.5); position: relative; transform: scale(1.05);">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #45B7D1, #FFE66D); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">おすすめ</div>
+                        <h4 style="color: #45B7D1; font-size: 1.8rem; margin: 20px 0; text-align: center;">プロフェッショナル</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #45B7D1;">¥728,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">14週間 + 個別サポート</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>スタンダード内容すべて</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>ブランドアニメーション特化</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>実案件参加サポート</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>個別メンタリング（月4回）</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>営業・価格設定指導</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>3ヶ月フォローアップ</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #45B7D1, #FFE66D); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">申し込む</a>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(78, 205, 196, 0.15), rgba(255, 107, 107, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(78, 205, 196, 0.3); position: relative;">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #4ECDC4, #FF6B6B); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">法人・チーム</div>
+                        <h4 style="color: #4ECDC4; font-size: 1.8rem; margin: 20px 0; text-align: center;">エンタープライズ</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #4ECDC4;">¥1,380,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">チーム研修 + 技術支援</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>全コース内容</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>チーム研修（最大10名）</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>カスタムエフェクト開発</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>ブランド統合コンサル</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>6ヶ月継続サポート</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #4ECDC4; margin-right: 10px;">✓</span>専用技術サポート</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #4ECDC4, #FF6B6B); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">相談する</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 保証制度 -->
+                <div style="background: rgba(78, 205, 196, 0.1); border-radius: 15px; padding: 25px; margin-top: 40px; border: 1px solid rgba(78, 205, 196, 0.3);">
+                    <h4 style="color: #4ECDC4; font-size: 1.5rem; margin-bottom: 15px; text-align: center;">💫 モーション制作保証</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #4ECDC4; margin-bottom: 5px;">30日間</div>
+                            <div style="font-size: 0.9rem;">全額返金保証</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #4ECDC4; margin-bottom: 5px;">初案件</div>
+                            <div style="font-size: 0.9rem;">3ヶ月以内保証</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #4ECDC4; margin-bottom: 5px;">技術サポート</div>
+                            <div style="font-size: 0.9rem;">無制限対応</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #4ECDC4; margin-bottom: 5px;">追加料金</div>
+                            <div style="font-size: 0.9rem;">一切なし</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTAセクション -->
+            <div style="text-align: center; background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(78, 205, 196, 0.2)); border-radius: 20px; padding: 60px 40px; border: 2px solid rgba(255, 107, 107, 0.3);">
+                <h3 style="font-size: 2.5rem; margin-bottom: 20px; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">爆発的な成長をモーションで表現</h3>
+                <p style="font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9;">Mo.jsで創造する次世代ユーザーエクスペリエンス</p>
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); color: #000; padding: 20px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: transform 0.3s ease; box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);">無料相談を予約</a>
+                    <a href="#demo" style="display: inline-block; background: transparent; color: #FF6B6B; padding: 20px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; border: 2px solid #FF6B6B; transition: all 0.3s ease;">デモを体験</a>
+                </div>
+                <div style="margin-top: 30px; font-size: 0.9rem; opacity: 0.8;">
+                    💫 限定15名 | 📞 無料相談30分 | 🚀 即日回答
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- フローティングナビゲーション -->
+    <div id="floating-nav" style="position: fixed; right: 30px; bottom: 30px; z-index: 2000; display: flex; flex-direction: column; gap: 15px;">
+        <button onclick="toggleSection()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #FF6B6B, #4ECDC4); border: none; color: #000; font-weight: bold; cursor: pointer; box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4); transition: transform 0.3s ease;">
+            <span id="nav-icon" style="font-size: 1.5rem;">📚</span>
+        </button>
+        <a href="#consultation" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #4ECDC4, #FFE66D); display: flex; align-items: center; justify-content: center; text-decoration: none; color: #000; font-size: 1.5rem; box-shadow: 0 10px 25px rgba(78, 205, 196, 0.4); transition: transform 0.3s ease;">📞</a>
+    </div>
+    
+    <script>
+        let sectionVisible = false;
+        
+        function toggleSection() {
+            const section = document.getElementById('comparison-section');
+            const icon = document.getElementById('nav-icon');
+            
+            if (!sectionVisible) {
+                section.style.transform = 'translateY(-100vh)';
+                icon.textContent = '💫';
+                sectionVisible = true;
+            } else {
+                section.style.transform = 'translateY(0)';
+                icon.textContent = '📚';
+                sectionVisible = false;
+            }
+        }
+        
+        // フローティングボタンホバーエフェクト
+        document.querySelectorAll('#floating-nav button, #floating-nav a').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transform = 'scale(1.1)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - 3D時代の起業塾 | Spline 3D Experience</title>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@0.9.508/build/spline-viewer.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #4EB5FF;
+            --secondary: #38C172;
+            --accent: #FFD93D;
+            --dark: #0f0f23;
+            --light: #ffffff;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        /* 3Dヒーローセクション */
+        .hero-3d {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .spline-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+        
+        spline-viewer {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .hero-overlay {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+            background: rgba(15, 15, 35, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            max-width: 600px;
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            color: var(--accent);
+        }
+        
+        /* CTA */
+        .cta-3d {
+            display: inline-block;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(78, 181, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-3d::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .cta-3d:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .cta-3d:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(78, 181, 255, 0.4);
+        }
+        
+        /* 価値提案セクション */
+        .value-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, var(--accent) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+        
+        .value-card {
+            background: linear-gradient(135deg, rgba(78, 181, 255, 0.1) 0%, rgba(56, 193, 114, 0.1) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            border-radius: 20px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+        }
+        
+        .value-card:hover::before {
+            opacity: 1;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(15, 15, 35, 0.9);
+        }
+        
+        .value-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .value-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .value-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        /* 3Dデモセクション */
+        .demo-3d-section {
+            padding: 100px 20px;
+            background: linear-gradient(180deg, var(--dark) 0%, #1a1a3e 100%);
+        }
+        
+        .demo-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .demo-3d-viewer {
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 12px 24px;
+            background: rgba(78, 181, 255, 0.2);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .control-btn:hover {
+            background: var(--primary);
+            color: var(--dark);
+            transform: scale(1.05);
+        }
+        
+        /* 成功事例セクション */
+        .success-stories {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .story-card {
+            background: linear-gradient(135deg, rgba(255, 217, 61, 0.1) 0%, rgba(78, 181, 255, 0.1) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            transition: all 0.4s ease;
+        }
+        
+        .story-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 40px rgba(78, 181, 255, 0.2);
+        }
+        
+        .story-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .story-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .story-role {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        /* CTAセクション */
+        .cta-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(78, 181, 255, 0.1) 0%, rgba(56, 193, 114, 0.1) 100%);
+        }
+        
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .cta-primary {
+            padding: 20px 50px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(78, 181, 255, 0.4);
+        }
+        
+        .cta-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(78, 181, 255, 0.6);
+        }
+        
+        .cta-secondary {
+            padding: 20px 50px;
+            background: transparent;
+            border: 2px solid var(--accent);
+            border-radius: 50px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-secondary:hover {
+            background: var(--accent);
+            color: var(--dark);
+            transform: translateY(-3px);
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .story-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .value-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-3d-viewer {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3Dヒーローセクション -->
+    <section class="hero-3d">
+        <div class="spline-container">
+            <!-- Spline 3Dシーン -->
+            <spline-viewer url="https://prod.spline.design/6Wq1Q7YGyM-iab8c/scene.splinecode"></spline-viewer>
+        </div>
+        
+        <div class="hero-overlay">
+            <h1>3D時代の起業を、今始めよう</h1>
+            <p class="tagline">AIDXschoolで最先端の3D技術を学び、次世代ビジネスを創造する</p>
+            <a href="#apply" class="cta-3d">無料体験に申し込む</a>
+        </div>
+    </section>
+    
+    <!-- 価値提案 -->
+    <section class="value-section">
+        <h2 class="section-title">なぜ今、3D技術が起業の鍵なのか</h2>
+        
+        <div class="value-grid">
+            <div class="value-card">
+                <div class="value-icon">🚀</div>
+                <h3 class="value-title">市場の急成長</h3>
+                <p class="value-description">
+                    メタバース、VR/AR市場は2030年までに100兆円規模に。
+                    今参入すれば、市場のリーダーになれるチャンスです。
+                </p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">💡</div>
+                <h3 class="value-title">ノーコードで実現</h3>
+                <p class="value-description">
+                    Splineのような最新ツールで、プログラミング不要。
+                    アイデアを即座に3D体験として形にできます。
+                </p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">💰</div>
+                <h3 class="value-title">高単価ビジネス</h3>
+                <p class="value-description">
+                    3Dコンテンツ制作は平均単価50万円以上。
+                    技術を身につければ、即座に高収益ビジネスが可能です。
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 3Dデモセクション -->
+    <section class="demo-3d-section">
+        <div class="demo-container">
+            <h2 class="section-title">実際に体験してみよう</h2>
+            <p style="font-size: 1.2rem; opacity: 0.8; margin-bottom: 40px;">
+                下のボタンを押して、3Dオブジェクトを操作してみてください
+            </p>
+            
+            <div class="demo-3d-viewer">
+                <spline-viewer url="https://prod.spline.design/jEfKGU7C7PlFmUQD/scene.splinecode"></spline-viewer>
+            </div>
+            
+            <div class="demo-controls">
+                <button class="control-btn" onclick="alert('実際の授業では、このような3Dシーンを自分で作れるようになります！')">
+                    回転させる
+                </button>
+                <button class="control-btn" onclick="alert('マウスでドラッグして、自由に視点を変えられます')">
+                    視点を変える
+                </button>
+                <button class="control-btn" onclick="alert('AIDXschoolでは、実践的なプロジェクトを通じて学びます')">
+                    詳細を見る
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 成功事例 -->
+    <section class="success-stories">
+        <h2 class="section-title">卒業生の成功ストーリー</h2>
+        
+        <div class="story-card">
+            <div class="story-avatar">田中</div>
+            <div class="story-content">
+                <h3>田中 健太さん（32歳）</h3>
+                <p class="story-role">元営業職 → 3Dコンテンツクリエイター</p>
+                <p>
+                    「営業職から転身して3ヶ月で月収100万円を達成。
+                    Splineを使った3D Webサイト制作で、大手企業からの依頼が殺到しています。
+                    AIDXschoolの実践的カリキュラムのおかげです。」
+                </p>
+            </div>
+        </div>
+        
+        <div class="story-card">
+            <div class="story-avatar">佐藤</div>
+            <div class="story-content">
+                <h3>佐藤 美咲さん（28歳）</h3>
+                <p class="story-role">フリーデザイナー → メタバース空間デザイナー</p>
+                <p>
+                    「2Dデザインしかできなかった私が、今では企業のメタバース空間を設計。
+                    月額50万円のリテイナー契約を5社と結んでいます。
+                    3D技術は本当に人生を変えました。」
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 3Dツール比較セクション -->
+    <section class="tools-comparison" style="padding: 100px 20px; background: #1a1a3e;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">主要3Dツールを完全マスター</h2>
+            <p style="text-align: center; font-size: 1.2rem; opacity: 0.8; margin-bottom: 60px;">
+                AIDXschoolでは、業界標準の3Dツールをすべて学べます
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div class="tool-card" style="background: rgba(78, 181, 255, 0.1); border: 1px solid var(--primary); border-radius: 20px; padding: 30px; text-align: center;">
+                    <h3 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 15px;">Spline</h3>
+                    <p style="opacity: 0.8; margin-bottom: 20px;">ノーコードで3D制作</p>
+                    <ul style="text-align: left; list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;">✅ ブラウザ上で完結</li>
+                        <li style="margin-bottom: 10px;">✅ リアルタイムコラボ</li>
+                        <li style="margin-bottom: 10px;">✅ Web埋め込み簡単</li>
+                        <li style="margin-bottom: 10px;">✅ 学習期間: 2週間</li>
+                    </ul>
+                </div>
+                
+                <div class="tool-card" style="background: rgba(56, 193, 114, 0.1); border: 1px solid var(--secondary); border-radius: 20px; padding: 30px; text-align: center;">
+                    <h3 style="color: var(--secondary); font-size: 1.5rem; margin-bottom: 15px;">Blender</h3>
+                    <p style="opacity: 0.8; margin-bottom: 20px;">プロ級の3Dモデリング</p>
+                    <ul style="text-align: left; list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;">✅ 完全無料</li>
+                        <li style="margin-bottom: 10px;">✅ 業界標準ツール</li>
+                        <li style="margin-bottom: 10px;">✅ アニメーション対応</li>
+                        <li style="margin-bottom: 10px;">✅ 学習期間: 4週間</li>
+                    </ul>
+                </div>
+                
+                <div class="tool-card" style="background: rgba(255, 217, 61, 0.1); border: 1px solid var(--accent); border-radius: 20px; padding: 30px; text-align: center;">
+                    <h3 style="color: var(--accent); font-size: 1.5rem; margin-bottom: 15px;">Three.js</h3>
+                    <p style="opacity: 0.8; margin-bottom: 20px;">WebGL開発の定番</p>
+                    <ul style="text-align: left; list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;">✅ 高度なカスタマイズ</li>
+                        <li style="margin-bottom: 10px;">✅ 軽量・高速</li>
+                        <li style="margin-bottom: 10px;">✅ 豊富なエコシステム</li>
+                        <li style="margin-bottom: 10px;">✅ 学習期間: 3週間</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- カリキュラム詳細セクション -->
+    <section class="curriculum-section" style="padding: 100px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">12週間で3D起業家になるカリキュラム</h2>
+            
+            <div class="timeline" style="position: relative; padding: 40px 0;">
+                <!-- Week 1-3 -->
+                <div class="timeline-item" style="display: flex; align-items: center; margin-bottom: 60px;">
+                    <div class="timeline-marker" style="width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; margin-right: 40px;">1-3</div>
+                    <div class="timeline-content" style="flex: 1; background: rgba(78, 181, 255, 0.1); border-radius: 20px; padding: 30px;">
+                        <h3 style="color: var(--primary); margin-bottom: 15px;">基礎編：3Dの世界へようこそ</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 10px;">📌 3D座標系の理解</li>
+                            <li style="margin-bottom: 10px;">📌 基本的なモデリング技術</li>
+                            <li style="margin-bottom: 10px;">📌 マテリアルとテクスチャ</li>
+                            <li style="margin-bottom: 10px;">📌 ライティングの基礎</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Week 4-6 -->
+                <div class="timeline-item" style="display: flex; align-items: center; margin-bottom: 60px;">
+                    <div class="timeline-marker" style="width: 60px; height: 60px; background: var(--secondary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; margin-right: 40px;">4-6</div>
+                    <div class="timeline-content" style="flex: 1; background: rgba(56, 193, 114, 0.1); border-radius: 20px; padding: 30px;">
+                        <h3 style="color: var(--secondary); margin-bottom: 15px;">応用編：インタラクティブ3D</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 10px;">🚀 アニメーション制作</li>
+                            <li style="margin-bottom: 10px;">🚀 ユーザーインタラクション</li>
+                            <li style="margin-bottom: 10px;">🚀 パフォーマンス最適化</li>
+                            <li style="margin-bottom: 10px;">🚀 レスポンシブ3D設計</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Week 7-9 -->
+                <div class="timeline-item" style="display: flex; align-items: center; margin-bottom: 60px;">
+                    <div class="timeline-marker" style="width: 60px; height: 60px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; margin-right: 40px;">7-9</div>
+                    <div class="timeline-content" style="flex: 1; background: rgba(255, 217, 61, 0.1); border-radius: 20px; padding: 30px;">
+                        <h3 style="color: var(--accent); margin-bottom: 15px;">実践編：商用プロジェクト</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 10px;">💎 実案件シミュレーション</li>
+                            <li style="margin-bottom: 10px;">💎 クライアントワーク</li>
+                            <li style="margin-bottom: 10px;">💎 プロジェクト管理</li>
+                            <li style="margin-bottom: 10px;">💎 納品フロー構築</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Week 10-12 -->
+                <div class="timeline-item" style="display: flex; align-items: center;">
+                    <div class="timeline-marker" style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; margin-right: 40px;">10-12</div>
+                    <div class="timeline-content" style="flex: 1; background: linear-gradient(135deg, rgba(78, 181, 255, 0.1) 0%, rgba(56, 193, 114, 0.1) 100%); border-radius: 20px; padding: 30px;">
+                        <h3 style="background: linear-gradient(45deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px;">起業編：ビジネス立ち上げ</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 10px;">🎯 価格設定戦略</li>
+                            <li style="margin-bottom: 10px;">🎯 営業・マーケティング</li>
+                            <li style="margin-bottom: 10px;">🎯 ポートフォリオ作成</li>
+                            <li style="margin-bottom: 10px;">🎯 初案件獲得サポート</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 料金プランセクション -->
+    <section class="pricing-section" style="padding: 100px 20px; background: linear-gradient(180deg, var(--dark) 0%, #1a1a3e 100%);">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">選べる学習プラン</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; margin-top: 60px;">
+                <!-- ベーシックプラン -->
+                <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 30px; padding: 40px; text-align: center; position: relative; overflow: hidden;">
+                    <h3 style="font-size: 2rem; margin-bottom: 20px;">ベーシックプラン</h3>
+                    <div style="font-size: 3rem; font-weight: bold; color: var(--primary); margin-bottom: 30px;">
+                        ¥98,000
+                        <span style="font-size: 1rem; opacity: 0.7;">/3ヶ月</span>
+                    </div>
+                    <ul style="text-align: left; list-style: none; padding: 0; margin-bottom: 40px;">
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            オンライン講座受け放題
+                        </li>
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            週1回のグループメンタリング
+                        </li>
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            Slackコミュニティ参加
+                        </li>
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            修了証発行
+                        </li>
+                    </ul>
+                    <a href="#" style="display: block; padding: 15px 30px; background: rgba(78, 181, 255, 0.2); border: 2px solid var(--primary); color: var(--primary); text-decoration: none; border-radius: 30px; font-weight: bold; transition: all 0.3s ease;">
+                        このプランを選ぶ
+                    </a>
+                </div>
+                
+                <!-- プロフェッショナルプラン -->
+                <div style="background: linear-gradient(135deg, rgba(78, 181, 255, 0.1) 0%, rgba(56, 193, 114, 0.1) 100%); border: 2px solid var(--secondary); border-radius: 30px; padding: 40px; text-align: center; position: relative; overflow: hidden; transform: scale(1.05);">
+                    <div style="position: absolute; top: -30px; right: 30px; background: var(--accent); color: var(--dark); padding: 10px 30px; border-radius: 20px; font-weight: bold; transform: rotate(15deg);">
+                        人気No.1
+                    </div>
+                    <h3 style="font-size: 2rem; margin-bottom: 20px;">プロフェッショナルプラン</h3>
+                    <div style="font-size: 3rem; font-weight: bold; color: var(--secondary); margin-bottom: 30px;">
+                        ¥298,000
+                        <span style="font-size: 1rem; opacity: 0.7;">/3ヶ月</span>
+                    </div>
+                    <ul style="text-align: left; list-style: none; padding: 0; margin-bottom: 40px;">
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            ベーシックプランの全特典
+                        </li>
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            週2回の個別メンタリング
+                        </li>
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            実案件サポート（3件まで）
+                        </li>
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            起業支援コンサル付き
+                        </li>
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            収益保証制度あり
+                        </li>
+                    </ul>
+                    <a href="#" style="display: block; padding: 15px 30px; background: var(--secondary); color: white; text-decoration: none; border-radius: 30px; font-weight: bold; transition: all 0.3s ease;">
+                        このプランを選ぶ
+                    </a>
+                </div>
+                
+                <!-- エンタープライズプラン -->
+                <div style="background: rgba(255, 217, 61, 0.1); border: 2px solid var(--accent); border-radius: 30px; padding: 40px; text-align: center; position: relative; overflow: hidden;">
+                    <h3 style="font-size: 2rem; margin-bottom: 20px;">エンタープライズプラン</h3>
+                    <div style="font-size: 3rem; font-weight: bold; color: var(--accent); margin-bottom: 30px;">
+                        ¥598,000
+                        <span style="font-size: 1rem; opacity: 0.7;">/3ヶ月</span>
+                    </div>
+                    <ul style="text-align: left; list-style: none; padding: 0; margin-bottom: 40px;">
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            プロプランの全特典
+                        </li>
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            毎日の個別サポート
+                        </li>
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            実案件サポート無制限
+                        </li>
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            法人設立サポート
+                        </li>
+                        <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                            <span style="position: absolute; left: 0;">✅</span>
+                            年商1000万円保証
+                        </li>
+                    </ul>
+                    <a href="#" style="display: block; padding: 15px 30px; background: var(--accent); color: var(--dark); text-decoration: none; border-radius: 30px; font-weight: bold; transition: all 0.3s ease;">
+                        このプランを選ぶ
+                    </a>
+                </div>
+            </div>
+            
+            <p style="text-align: center; margin-top: 40px; opacity: 0.8;">
+                ※すべてのプランに30日間の返金保証が付いています
+            </p>
+        </div>
+    </section>
+    
+    <!-- FAQ セクション -->
+    <section class="faq-section" style="padding: 100px 20px;">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <h2 class="section-title">よくある質問</h2>
+            
+            <div class="faq-item" style="background: rgba(78, 181, 255, 0.05); border-radius: 20px; padding: 30px; margin-bottom: 20px;">
+                <h3 style="color: var(--primary); margin-bottom: 15px; font-size: 1.3rem;">
+                    Q: プログラミング経験がなくても大丈夫ですか？
+                </h3>
+                <p style="opacity: 0.8; line-height: 1.8;">
+                    A: はい、大丈夫です！AIDXschoolの3Dコースは、SplineやBlenderなどのノーコード・ローコードツールから始めるので、プログラミング経験は不要です。段階的にスキルアップできるカリキュラムを用意しています。
+                </p>
+            </div>
+            
+            <div class="faq-item" style="background: rgba(56, 193, 114, 0.05); border-radius: 20px; padding: 30px; margin-bottom: 20px;">
+                <h3 style="color: var(--secondary); margin-bottom: 15px; font-size: 1.3rem;">
+                    Q: どのくらいの期間で稼げるようになりますか？
+                </h3>
+                <p style="opacity: 0.8; line-height: 1.8;">
+                    A: 個人差はありますが、多くの受講生が2〜3ヶ月目から初案件を獲得しています。プロフェッショナルプラン以上では、実案件サポートも含まれているため、より確実に収益化できます。平均して3ヶ月目には月20〜50万円の収入を得ている方が多いです。
+                </p>
+            </div>
+            
+            <div class="faq-item" style="background: rgba(255, 217, 61, 0.05); border-radius: 20px; padding: 30px; margin-bottom: 20px;">
+                <h3 style="color: var(--accent); margin-bottom: 15px; font-size: 1.3rem;">
+                    Q: 仕事をしながらでも受講できますか？
+                </h3>
+                <p style="opacity: 0.8; line-height: 1.8;">
+                    A: もちろんです！オンライン完結型なので、自分のペースで学習できます。録画された講座はいつでも視聴可能で、メンタリングの時間も柔軟に調整できます。実際、受講生の70%以上が仕事を続けながら学習しています。
+                </p>
+            </div>
+            
+            <div class="faq-item" style="background: rgba(78, 181, 255, 0.05); border-radius: 20px; padding: 30px; margin-bottom: 20px;">
+                <h3 style="color: var(--primary); margin-bottom: 15px; font-size: 1.3rem;">
+                    Q: 必要な機材やソフトウェアは？
+                </h3>
+                <p style="opacity: 0.8; line-height: 1.8;">
+                    A: 基本的にはPCがあれば始められます。Splineはブラウザで動作し、Blenderは無料でダウンロード可能です。高スペックPCは必須ではありませんが、快適な作業のために推奨スペックをご案内しています。必要に応じて、機材選定のアドバイスも行っています。
+                </p>
+            </div>
+            
+            <div class="faq-item" style="background: rgba(56, 193, 114, 0.05); border-radius: 20px; padding: 30px;">
+                <h3 style="color: var(--secondary); margin-bottom: 15px; font-size: 1.3rem;">
+                    Q: 卒業後のサポートはありますか？
+                </h3>
+                <p style="opacity: 0.8; line-height: 1.8;">
+                    A: はい、充実したアフターサポートを用意しています。卒業生専用のコミュニティへの永続参加権、月1回のフォローアップセッション、新技術のアップデート講座への優待参加など、継続的な成長をサポートします。
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 講師紹介セクション -->
+    <section class="instructor-section" style="padding: 100px 20px; background: linear-gradient(180deg, #1a1a3e 0%, var(--dark) 100%);">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">業界トップクラスの講師陣</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin-top: 60px;">
+                <div style="text-align: center;">
+                    <div style="width: 150px; height: 150px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                        👨‍💻
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 10px;">山田 太郎</h3>
+                    <p style="color: var(--primary); margin-bottom: 15px;">3Dアーティスト / 起業家</p>
+                    <p style="opacity: 0.8; line-height: 1.6;">
+                        元ピクサー勤務。独立後、3D制作会社を設立し年商3億円達成。
+                        実践的な3D制作ノウハウと起業戦略を伝授。
+                    </p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="width: 150px; height: 150px; background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                        👩‍💻
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 10px;">鈴木 花子</h3>
+                    <p style="color: var(--secondary); margin-bottom: 15px;">WebGL開発者 / 教育者</p>
+                    <p style="opacity: 0.8; line-height: 1.6;">
+                        Three.js公式コントリビューター。大手IT企業での研修実績多数。
+                        初心者にも分かりやすい指導が評判。
+                    </p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="width: 150px; height: 150px; background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                        🎨
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 10px;">佐藤 健</h3>
+                    <p style="color: var(--accent); margin-bottom: 15px;">メタバースデザイナー</p>
+                    <p style="opacity: 0.8; line-height: 1.6;">
+                        Meta社認定クリエイター。VR/AR空間デザインの第一人者。
+                        最新の3Dトレンドと実装方法を指導。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 特別オファーセクション -->
+    <section class="special-offer" style="padding: 100px 20px; background: linear-gradient(135deg, rgba(78, 181, 255, 0.2) 0%, rgba(255, 217, 61, 0.2) 100%);">
+        <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+            <h2 style="font-size: 3rem; margin-bottom: 30px; background: linear-gradient(45deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                期間限定！新年特別キャンペーン
+            </h2>
+            
+            <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 30px; padding: 60px 40px; border: 2px solid rgba(255, 217, 61, 0.5);">
+                <p style="font-size: 2rem; font-weight: bold; color: var(--accent); margin-bottom: 30px;">
+                    今なら全プラン30% OFF
+                </p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 40px;">
+                    <div>
+                        <p style="opacity: 0.7;">ベーシックプラン</p>
+                        <p style="font-size: 1.5rem; text-decoration: line-through; opacity: 0.5;">¥98,000</p>
+                        <p style="font-size: 2rem; font-weight: bold; color: var(--primary);">¥68,600</p>
+                    </div>
+                    <div>
+                        <p style="opacity: 0.7;">プロフェッショナルプラン</p>
+                        <p style="font-size: 1.5rem; text-decoration: line-through; opacity: 0.5;">¥298,000</p>
+                        <p style="font-size: 2rem; font-weight: bold; color: var(--secondary);">¥208,600</p>
+                    </div>
+                    <div>
+                        <p style="opacity: 0.7;">エンタープライズプラン</p>
+                        <p style="font-size: 1.5rem; text-decoration: line-through; opacity: 0.5;">¥598,000</p>
+                        <p style="font-size: 2rem; font-weight: bold; color: var(--accent);">¥418,600</p>
+                    </div>
+                </div>
+                
+                <p style="font-size: 1.3rem; margin-bottom: 30px;">
+                    さらに今だけ！以下の特典も無料でプレゼント
+                </p>
+                
+                <ul style="text-align: left; max-width: 600px; margin: 0 auto 40px; list-style: none; padding: 0;">
+                    <li style="margin-bottom: 15px; padding-left: 30px; position: relative;">
+                        <span style="position: absolute; left: 0;">🎁</span>
+                        3D素材集（10万円相当）
+                    </li>
+                    <li style="margin-bottom: 15px; padding-left: 30px; position: relative;">
+                        <span style="position: absolute; left: 0;">🎁</span>
+                        プレミアムテンプレート100選
+                    </li>
+                    <li style="margin-bottom: 15px; padding-left: 30px; position: relative;">
+                        <span style="position: absolute; left: 0;">🎁</span>
+                        個別コンサル1回追加（3万円相当）
+                    </li>
+                    <li style="margin-bottom: 15px; padding-left: 30px; position: relative;">
+                        <span style="position: absolute; left: 0;">🎁</span>
+                        永久アップデート権
+                    </li>
+                </ul>
+                
+                <div style="background: var(--accent); color: var(--dark); padding: 20px 40px; border-radius: 50px; display: inline-block; font-weight: bold; font-size: 1.3rem; margin-bottom: 20px;">
+                    キャンペーン終了まで: <span id="offer-countdown">2日23時間45分</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTAセクション -->
+    <section class="cta-section" id="apply">
+        <h2 class="cta-title">あなたも3D起業家になりませんか？</h2>
+        <p style="font-size: 1.3rem; opacity: 0.9; max-width: 800px; margin: 0 auto;">
+            今なら期間限定で、通常30万円の起業プログラムを
+            <strong style="color: var(--accent); font-size: 1.5rem;">無料体験</strong>できます
+        </p>
+        
+        <div class="cta-buttons">
+            <a href="#" class="cta-primary">今すぐ無料体験に申し込む</a>
+            <a href="#" class="cta-secondary">カリキュラムを確認する</a>
+        </div>
+        
+        <p style="margin-top: 30px; opacity: 0.7;">
+            ※残り席数: <strong style="color: var(--accent);">7席</strong> | 
+            締切まで: <strong id="countdown">2日23時間45分</strong>
+        </p>
+    </section>
+
+    <!-- Floating Navigation Section -->
+    <div id="comparison-section" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.95); z-index: 9999; transform: translateY(0); transition: transform 0.5s ease; overflow-y: auto;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 50px 20px; color: white;">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 50px; color: #4EB5FF;">3D技術完全比較ガイド</h2>
+            
+            <!-- Technology Comparison Matrix -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 50px;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 15px;">
+                    <h3 style="color: white; margin-bottom: 15px;">🎯 Spline</h3>
+                    <p style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;">ノーコード3Dデザインツール</p>
+                    <div style="font-size: 12px; opacity: 0.8;">
+                        <div>• ブラウザベース編集</div>
+                        <div>• リアルタイムコラボ</div>
+                        <div>• Web直接埋込み</div>
+                        <div>• アニメーション対応</div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 25px; border-radius: 15px;">
+                    <h3 style="color: white; margin-bottom: 15px;">🎨 Blender</h3>
+                    <p style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;">プロフェッショナル3D制作</p>
+                    <div style="font-size: 12px; opacity: 0.8;">
+                        <div>• 完全無料オープンソース</div>
+                        <div>• 業界標準ツール</div>
+                        <div>• 高度なモデリング</div>
+                        <div>• レンダリング機能</div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 25px; border-radius: 15px;">
+                    <h3 style="color: white; margin-bottom: 15px;">⚡ Three.js</h3>
+                    <p style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;">JavaScriptライブラリ</p>
+                    <div style="font-size: 12px; opacity: 0.8;">
+                        <div>• WebGL基盤</div>
+                        <div>• 軽量・高速</div>
+                        <div>• カスタマイズ自由</div>
+                        <div>• 豊富なエコシステム</div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 25px; border-radius: 15px;">
+                    <h3 style="color: white; margin-bottom: 15px;">🚀 Unity WebGL</h3>
+                    <p style="font-size: 14px; opacity: 0.9; margin-bottom: 15px;">ゲームエンジンベース</p>
+                    <div style="font-size: 12px; opacity: 0.8;">
+                        <div>• 高度な物理演算</div>
+                        <div>• VR/AR対応</div>
+                        <div>• アセットストア</div>
+                        <div>• 大規模プロジェクト対応</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Curriculum -->
+            <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; margin-bottom: 50px;">
+                <h3 style="font-size: 2rem; margin-bottom: 30px; text-align: center;">AIDXschool 3Dマスターコース</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                        <h4 style="color: #4EB5FF; margin-bottom: 20px;">Phase 1: 基礎習得 (1-6週)</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 10px;">• 3D基礎理論・座標系</li>
+                            <li style="margin-bottom: 10px;">• Splineツール習得</li>
+                            <li style="margin-bottom: 10px;">• 基本モデリング技術</li>
+                            <li style="margin-bottom: 10px;">• マテリアル・ライティング</li>
+                            <li style="margin-bottom: 10px;">• アニメーション基礎</li>
+                            <li style="margin-bottom: 10px;">• WebGL入門</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                        <h4 style="color: #38C172; margin-bottom: 20px;">Phase 2: 応用技術 (7-12週)</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 10px;">• Blender高度技術</li>
+                            <li style="margin-bottom: 10px;">• Three.js実装</li>
+                            <li style="margin-bottom: 10px;">• インタラクション設計</li>
+                            <li style="margin-bottom: 10px;">• パフォーマンス最適化</li>
+                            <li style="margin-bottom: 10px;">• VR/AR基礎</li>
+                            <li style="margin-bottom: 10px;">• Unity WebGL開発</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                        <h4 style="color: #FFD93D; margin-bottom: 20px;">Phase 3: ビジネス実践 (13-18週)</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 10px;">• 商用プロジェクト実習</li>
+                            <li style="margin-bottom: 10px;">• クライアントワーク</li>
+                            <li style="margin-bottom: 10px;">• ポートフォリオ構築</li>
+                            <li style="margin-bottom: 10px;">• 価格設定・見積術</li>
+                            <li style="margin-bottom: 10px;">• 営業・マーケティング</li>
+                            <li style="margin-bottom: 10px;">• 法人設立・事業拡大</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Stories -->
+            <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; margin-bottom: 50px;">
+                <h3 style="font-size: 2rem; margin-bottom: 30px; text-align: center;">受講生成功事例</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                        <h4 style="color: #00ff87; margin-bottom: 15px;">鈴木さん（元営業職・34歳）</h4>
+                        <p style="font-size: 14px; margin-bottom: 15px;">3Dウェブサイト制作フリーランス</p>
+                        <div style="font-size: 16px; font-weight: bold; color: #00ff87;">月350万円達成</div>
+                        <p style="font-size: 12px; opacity: 0.8; margin-top: 10px;">「営業経験を活かし、3D制作で差別化。大手企業から月50万円の継続案件を7社獲得」</p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                        <h4 style="color: #00ff87; margin-bottom: 15px;">田中さん（デザイナー・29歳）</h4>
+                        <p style="font-size: 14px; margin-bottom: 15px;">メタバース空間デザイン事業</p>
+                        <div style="font-size: 16px; font-weight: bold; color: #00ff87;">月480万円達成</div>
+                        <p style="font-size: 12px; opacity: 0.8; margin-top: 10px;">「2Dから3Dへ転換。VR展示会設計で単価200万円のプロジェクトを月2件受注」</p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px;">
+                        <h4 style="color: #00ff87; margin-bottom: 15px;">山田さん（学生・22歳）</h4>
+                        <p style="font-size: 14px; margin-bottom: 15px;">3Dゲーム開発スタジオ設立</p>
+                        <div style="font-size: 16px; font-weight: bold; color: #00ff87;">月280万円達成</div>
+                        <p style="font-size: 12px; opacity: 0.8; margin-top: 10px;">「在学中に起業。Unity WebGLゲーム開発で月20万円×14タイトル運営」</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Plans -->
+            <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; margin-bottom: 30px;">
+                <h3 style="font-size: 2rem; margin-bottom: 30px; text-align: center;">料金プラン</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; text-align: center;">
+                        <h4 style="color: #4EB5FF; margin-bottom: 20px;">スタンダード</h4>
+                        <div style="font-size: 2rem; font-weight: bold; margin-bottom: 10px;">¥398,000</div>
+                        <p style="font-size: 14px; opacity: 0.8; margin-bottom: 20px;">基礎から応用まで12週間</p>
+                        <ul style="list-style: none; padding: 0; text-align: left;">
+                            <li style="margin-bottom: 8px;">• Spline + Blender習得</li>
+                            <li style="margin-bottom: 8px;">• 週2回グループ指導</li>
+                            <li style="margin-bottom: 8px;">• 基礎プロジェクト5件</li>
+                            <li style="margin-bottom: 8px;">• ポートフォリオ制作</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #4EB5FF 0%, #38C172 100%); padding: 30px; border-radius: 15px; text-align: center; position: relative;">
+                        <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #ff6b6b; color: white; padding: 5px 20px; border-radius: 20px; font-size: 12px;">推奨</div>
+                        <h4 style="color: white; margin-bottom: 20px;">プロフェッショナル</h4>
+                        <div style="font-size: 2rem; font-weight: bold; margin-bottom: 10px; color: white;">¥698,000</div>
+                        <p style="font-size: 14px; opacity: 0.9; margin-bottom: 20px; color: white;">実案件対応18週間</p>
+                        <ul style="list-style: none; padding: 0; text-align: left; color: white;">
+                            <li style="margin-bottom: 8px;">• 全技術 + Three.js + Unity</li>
+                            <li style="margin-bottom: 8px;">• 週3回個別メンタリング</li>
+                            <li style="margin-bottom: 8px;">• 実案件サポート5件</li>
+                            <li style="margin-bottom: 8px;">• 起業支援プログラム</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; text-align: center;">
+                        <h4 style="color: #FFD93D; margin-bottom: 20px;">エンタープライズ</h4>
+                        <div style="font-size: 2rem; font-weight: bold; margin-bottom: 10px;">¥1,280,000</div>
+                        <p style="font-size: 14px; opacity: 0.8; margin-bottom: 20px;">法人設立サポート24週間</p>
+                        <ul style="list-style: none; padding: 0; text-align: left;">
+                            <li style="margin-bottom: 8px;">• 全技術 + 高度カスタマイズ</li>
+                            <li style="margin-bottom: 8px;">• 専属メンター常駐</li>
+                            <li style="margin-bottom: 8px;">• 案件紹介・共同開発</li>
+                            <li style="margin-bottom: 8px;">• 年商1000万円保証</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Section -->
+            <div style="text-align: center; background: linear-gradient(135deg, #4EB5FF 0%, #38C172 100%); padding: 40px; border-radius: 20px;">
+                <h3 style="color: white; margin-bottom: 20px;">3D時代の起業家になろう</h3>
+                <p style="color: white; opacity: 0.9; margin-bottom: 30px;">無料体験セッションで、あなたの3Dビジネス戦略を設計しませんか？</p>
+                <a href="https://lin.ee/abc123" style="display: inline-block; background: white; color: #4EB5FF; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-right: 20px;">無料体験に申し込む</a>
+                <a href="#" onclick="toggleSection()" style="display: inline-block; background: transparent; color: white; padding: 15px 40px; border: 2px solid white; border-radius: 50px; text-decoration: none; font-weight: bold;">詳細に戻る</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Navigation Button -->
+    <div style="position: fixed; bottom: 30px; right: 30px; z-index: 10000;">
+        <button onclick="toggleSection()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #4EB5FF 0%, #38C172 100%); border: none; cursor: pointer; box-shadow: 0 5px 20px rgba(78, 181, 255, 0.4); transition: all 0.3s ease;">
+            <span id="nav-icon" style="font-size: 24px;">🎯</span>
+        </button>
+    </div>
+    
+    <script>
+        let sectionVisible = false;
+        
+        function toggleSection() {
+            const section = document.getElementById('comparison-section');
+            const icon = document.getElementById('nav-icon');
+            
+            if (!sectionVisible) {
+                section.style.transform = 'translateY(-100vh)';
+                icon.textContent = '📋';
+                sectionVisible = true;
+            } else {
+                section.style.transform = 'translateY(0)';
+                icon.textContent = '🎯';
+                sectionVisible = false;
+            }
+        }
+        
+        // カウントダウンタイマー
+        function updateCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 3);
+            
+            const now = new Date();
+            const diff = endDate - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            countdownEl.textContent = `${days}日${hours}時間${minutes}分`;
+        }
+        
+        setInterval(updateCountdown, 60000);
+        updateCountdown();
+        
+        // スムーズスクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

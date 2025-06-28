@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - 高速レンダリングで駆け抜ける起業 | Pixi.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #00FFFF;
+            --secondary: #FF00FF;
+            --accent: #FFFF00;
+            --dark: #000011;
+            --light: #F0F8FF;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        /* カスタムカーソル */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: screen;
+            transition: transform 0.1s ease;
+        }
+        
+        .cursor-trail {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--secondary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.5;
+        }
+        
+        /* Pixi.jsキャンバス */
+        #pixiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+        }
+        
+        /* コンテンツオーバーレイ */
+        .content-overlay {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .content-overlay * {
+            pointer-events: auto;
+        }
+        
+        /* ヒーローセクション */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 1000px;
+            background: rgba(0, 0, 17, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 30px;
+            padding: 60px 40px;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.3);
+        }
+        
+        h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            line-height: 1.8;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+        }
+        
+        .cta-button:hover::before {
+            transform: scale(1);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.8);
+        }
+        
+        /* パフォーマンスメーター */
+        .performance-hud {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: rgba(0, 0, 17, 0.9);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 100;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .hud-title {
+            color: var(--primary);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .hud-stats {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stat-label {
+            color: var(--light);
+            font-size: 0.9rem;
+        }
+        
+        .stat-value {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .stat-bar {
+            width: 100px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+        
+        .stat-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        
+        /* エフェクトコントロール */
+        .effect-controls {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 17, 0.9);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            z-index: 100;
+        }
+        
+        .control-title {
+            color: var(--secondary);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .effect-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .effect-button {
+            padding: 15px 20px;
+            background: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .effect-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--secondary);
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+            border-radius: 50%;
+        }
+        
+        .effect-button:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .effect-button:hover {
+            color: var(--dark);
+            border-color: var(--secondary);
+            box-shadow: 0 0 20px var(--secondary);
+        }
+        
+        /* 機能セクション */
+        .features-section {
+            padding: 150px 20px 100px;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 17, 0.9) 50%, var(--dark) 100%);
+            position: relative;
+            z-index: 20;
+        }
+        
+        .section-title {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(45deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.2) 0%, transparent 70%);
+            transition: all 0.5s ease;
+            animation: cardGlow 4s ease infinite;
+        }
+        
+        @keyframes cardGlow {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+        
+        .feature-card:hover::before {
+            top: -150%;
+            left: -150%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 20px var(--primary));
+        }
+        
+        .feature-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--accent);
+        }
+        
+        .feature-description {
+            color: var(--light);
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        /* インタラクションヒント */
+        .interaction-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 17, 0.9);
+            border: 1px solid rgba(255, 255, 0, 0.3);
+            color: var(--light);
+            padding: 15px 30px;
+            border-radius: 50px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.3);
+        }
+        
+        .hint-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .hint-icon {
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            color: var(--dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 0 15px var(--accent);
+        }
+        
+        /* CTA セクション */
+        .cta-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(255, 0, 255, 0.1) 0%, transparent 70%);
+        }
+        
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--secondary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px var(--secondary);
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .performance-hud,
+            .effect-controls {
+                display: none;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .interaction-hint {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px 20px;
+            }
+            
+            body {
+                cursor: auto;
+            }
+            
+            .custom-cursor,
+            .cursor-trail {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- カスタムカーソル -->
+    <div class="custom-cursor" id="cursor"></div>
+    
+    <!-- Pixi.jsキャンバス -->
+    <div id="pixiCanvas"></div>
+    
+    <!-- パフォーマンスHUD -->
+    <div class="performance-hud">
+        <div class="hud-title">WebGL Stats</div>
+        <div class="hud-stats">
+            <div class="stat-item">
+                <span class="stat-label">FPS:</span>
+                <span class="stat-value" id="fps">60</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Sprites:</span>
+                <span class="stat-value" id="sprites">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">GPU:</span>
+                <div class="stat-bar">
+                    <div class="stat-fill" id="gpuBar" style="width: 45%"></div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Memory:</span>
+                <div class="stat-bar">
+                    <div class="stat-fill" id="memoryBar" style="width: 30%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- エフェクトコントロール -->
+    <div class="effect-controls">
+        <div class="control-title">Effects</div>
+        <div class="effect-grid">
+            <button class="effect-button" onclick="triggerParticleExplosion()">Explosion</button>
+            <button class="effect-button" onclick="triggerWaveEffect()">Wave</button>
+            <button class="effect-button" onclick="triggerGalaxySpiral()">Galaxy</button>
+            <button class="effect-button" onclick="triggerMatrixRain()">Matrix</button>
+            <button class="effect-button" onclick="triggerFireworks()">Fireworks</button>
+            <button class="effect-button" onclick="clearAllEffects()">Clear</button>
+        </div>
+    </div>
+    
+    <!-- インタラクションヒント -->
+    <div class="interaction-hint">
+        <div class="hint-item">
+            <div class="hint-icon">🖱️</div>
+            <span>マウスで相互作用</span>
+        </div>
+        <div class="hint-item">
+            <div class="hint-icon">⚡</div>
+            <span>エフェクトを試す</span>
+        </div>
+        <div class="hint-item">
+            <div class="hint-icon">🚀</div>
+            <span>WebGL最適化</span>
+        </div>
+    </div>
+    
+    <!-- コンテンツオーバーレイ -->
+    <div class="content-overlay">
+        <!-- ヒーローセクション -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>高速レンダリングで<br>駆け抜ける起業</h1>
+                <p class="subtitle">
+                    Pixi.jsの威力で実現する、WebGL最適化されたビジネス体験。<br>
+                    60FPSの滑らかさで、競合を置き去りにする。
+                </p>
+                <a href="#features" class="cta-button">WebGLパワーを体験</a>
+            </div>
+        </section>
+        
+        <!-- 機能セクション -->
+        <section class="features-section" id="features">
+            <h2 class="section-title">Pixi.jsが実現する超高速体験</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">WebGL最適化</h3>
+                    <p class="feature-description">
+                        GPU加速による超高速レンダリング。<br>
+                        ビジネスプロセスも同じように、<br>
+                        最適化されたパフォーマンスで競合を圧倒。
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3 class="feature-title">インタラクティブ体験</h3>
+                    <p class="feature-description">
+                        リアルタイムな反応とエフェクト。<br>
+                        顧客との関係も同じように、<br>
+                        即座に応答する体験を提供。
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">スケーラブル設計</h3>
+                    <p class="feature-description">
+                        デバイスを問わない最適化。<br>
+                        ビジネスモデルも柔軟にスケール、<br>
+                        あらゆる市場に対応。
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA -->
+        <section class="cta-section">
+            <h2 class="cta-title">WebGLスピードで起業しよう</h2>
+            <p style="font-size: 1.3rem; margin-bottom: 3rem; color: var(--light); opacity: 0.9;">
+                AIDXschoolで、Pixi.jsのような高速最適化された<br>
+                ビジネススキルを習得。GPU級の成長速度を実現。
+            </p>
+            <a href="#" class="cta-button">無料で高速体験を開始</a>
+        </section>
+    </div>
+    
+    <script>
+        // Pixi.js アプリケーション初期化
+        const app = new PIXI.Application({
+            width: window.innerWidth,
+            height: window.innerHeight,
+            backgroundColor: 0x000011,
+            antialias: true,
+            transparent: false,
+            resolution: window.devicePixelRatio || 1,
+            autoDensity: true
+        });
+        
+        document.getElementById('pixiCanvas').appendChild(app.view);
+        
+        // グローバル変数
+        let particles = [];
+        let effects = [];
+        let mousePosition = { x: 0, y: 0 };
+        let frameCount = 0;
+        let spriteCount = 0;
+        
+        // パーティクル用テクスチャ作成
+        const particleTexture = createParticleTexture();
+        const starTexture = createStarTexture();
+        const glowTexture = createGlowTexture();
+        
+        function createParticleTexture() {
+            const graphics = new PIXI.Graphics();
+            graphics.beginFill(0x00FFFF);
+            graphics.drawCircle(0, 0, 8);
+            graphics.endFill();
+            return app.renderer.generateTexture(graphics);
+        }
+        
+        function createStarTexture() {
+            const graphics = new PIXI.Graphics();
+            graphics.beginFill(0xFFFFFF);
+            graphics.drawStar(0, 0, 5, 10, 5);
+            graphics.endFill();
+            return app.renderer.generateTexture(graphics);
+        }
+        
+        function createGlowTexture() {
+            const graphics = new PIXI.Graphics();
+            graphics.beginFill(0xFF00FF, 0.5);
+            graphics.drawCircle(0, 0, 20);
+            graphics.endFill();
+            return app.renderer.generateTexture(graphics);
+        }
+        
+        // 背景星空エフェクト
+        function createStarfield() {
+            const container = new PIXI.Container();
+            
+            for (let i = 0; i < 200; i++) {
+                const star = new PIXI.Sprite(particleTexture);
+                star.x = Math.random() * app.screen.width;
+                star.y = Math.random() * app.screen.height;
+                star.scale.set(Math.random() * 0.5 + 0.2);
+                star.alpha = Math.random() * 0.8 + 0.2;
+                star.tint = Math.random() > 0.5 ? 0x00FFFF : 0xFF00FF;
+                
+                // アニメーションデータ
+                star.vx = (Math.random() - 0.5) * 0.5;
+                star.vy = (Math.random() - 0.5) * 0.5;
+                star.pulse = Math.random() * Math.PI * 2;
+                
+                container.addChild(star);
+                particles.push(star);
+            }
+            
+            app.stage.addChild(container);
+            return container;
+        }
+        
+        const starfield = createStarfield();
+        
+        // パーティクル爆発エフェクト
+        function triggerParticleExplosion() {
+            const explosionContainer = new PIXI.Container();
+            app.stage.addChild(explosionContainer);
+            
+            const centerX = mousePosition.x || app.screen.width / 2;
+            const centerY = mousePosition.y || app.screen.height / 2;
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = new PIXI.Sprite(particleTexture);
+                particle.x = centerX;
+                particle.y = centerY;
+                particle.anchor.set(0.5);
+                particle.scale.set(Math.random() * 1.5 + 0.5);
+                particle.tint = [0x00FFFF, 0xFF00FF, 0xFFFF00][Math.floor(Math.random() * 3)];
+                
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 8 + 2;
+                particle.vx = Math.cos(angle) * speed;
+                particle.vy = Math.sin(angle) * speed;
+                particle.life = 1.0;
+                particle.decay = Math.random() * 0.02 + 0.01;
+                
+                explosionContainer.addChild(particle);
+                effects.push(particle);
+                spriteCount++;
+            }
+            
+            updateSpriteCount();
+        }
+        
+        // 波エフェクト
+        function triggerWaveEffect() {
+            const waveContainer = new PIXI.Container();
+            app.stage.addChild(waveContainer);
+            
+            for (let ring = 0; ring < 5; ring++) {
+                const wave = new PIXI.Graphics();
+                wave.lineStyle(3, 0x00FFFF, 0.8);
+                wave.drawCircle(0, 0, 50 + ring * 30);
+                wave.x = mousePosition.x || app.screen.width / 2;
+                wave.y = mousePosition.y || app.screen.height / 2;
+                wave.scale.set(0);
+                wave.alpha = 1;
+                wave.ring = ring;
+                
+                waveContainer.addChild(wave);
+                effects.push(wave);
+                
+                // GSAP アニメーション
+                gsap.to(wave.scale, {
+                    x: 3,
+                    y: 3,
+                    duration: 2,
+                    delay: ring * 0.2,
+                    ease: "power2.out"
+                });
+                
+                gsap.to(wave, {
+                    alpha: 0,
+                    duration: 2,
+                    delay: ring * 0.2,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        waveContainer.removeChild(wave);
+                        effects.splice(effects.indexOf(wave), 1);
+                    }
+                });
+            }
+        }
+        
+        // ギャラクシースパイラル
+        function triggerGalaxySpiral() {
+            const galaxyContainer = new PIXI.Container();
+            app.stage.addChild(galaxyContainer);
+            
+            const centerX = mousePosition.x || app.screen.width / 2;
+            const centerY = mousePosition.y || app.screen.height / 2;
+            
+            for (let i = 0; i < 100; i++) {
+                const particle = new PIXI.Sprite(particleTexture);
+                particle.x = centerX;
+                particle.y = centerY;
+                particle.anchor.set(0.5);
+                particle.scale.set(Math.random() * 0.8 + 0.3);
+                particle.tint = 0xFF00FF;
+                particle.alpha = Math.random() * 0.8 + 0.2;
+                
+                particle.angle = Math.random() * Math.PI * 2;
+                particle.radius = Math.random() * 20;
+                particle.spiralSpeed = Math.random() * 0.05 + 0.02;
+                particle.radiusSpeed = Math.random() * 2 + 1;
+                
+                galaxyContainer.addChild(particle);
+                effects.push(particle);
+                spriteCount++;
+            }
+            
+            updateSpriteCount();
+        }
+        
+        // マトリックス雨
+        function triggerMatrixRain() {
+            const matrixContainer = new PIXI.Container();
+            app.stage.addChild(matrixContainer);
+            
+            for (let i = 0; i < 30; i++) {
+                const text = new PIXI.Text('01', {
+                    fontFamily: 'Courier New',
+                    fontSize: 20,
+                    fill: 0x00FF00,
+                    alpha: 0.8
+                });
+                
+                text.x = Math.random() * app.screen.width;
+                text.y = -50;
+                text.speed = Math.random() * 5 + 2;
+                
+                matrixContainer.addChild(text);
+                effects.push(text);
+                
+                // 自動削除
+                setTimeout(() => {
+                    if (matrixContainer.children.includes(text)) {
+                        matrixContainer.removeChild(text);
+                        effects.splice(effects.indexOf(text), 1);
+                    }
+                }, 5000);
+            }
+        }
+        
+        // 花火エフェクト
+        function triggerFireworks() {
+            const fireworksContainer = new PIXI.Container();
+            app.stage.addChild(fireworksContainer);
+            
+            for (let burst = 0; burst < 3; burst++) {
+                setTimeout(() => {
+                    const x = Math.random() * app.screen.width;
+                    const y = Math.random() * app.screen.height * 0.5 + 100;
+                    
+                    for (let i = 0; i < 30; i++) {
+                        const particle = new PIXI.Sprite(starTexture);
+                        particle.x = x;
+                        particle.y = y;
+                        particle.anchor.set(0.5);
+                        particle.scale.set(Math.random() * 1.2 + 0.5);
+                        particle.tint = [0xFF0000, 0x00FF00, 0x0000FF, 0xFFFF00, 0xFF00FF][Math.floor(Math.random() * 5)];
+                        
+                        const angle = Math.random() * Math.PI * 2;
+                        const speed = Math.random() * 6 + 2;
+                        particle.vx = Math.cos(angle) * speed;
+                        particle.vy = Math.sin(angle) * speed - 2;
+                        particle.gravity = 0.1;
+                        particle.life = 2.0;
+                        
+                        fireworksContainer.addChild(particle);
+                        effects.push(particle);
+                        spriteCount++;
+                    }
+                }, burst * 1000);
+            }
+            
+            updateSpriteCount();
+        }
+        
+        // 全エフェクトクリア
+        function clearAllEffects() {
+            effects.forEach(effect => {
+                if (effect.parent) {
+                    effect.parent.removeChild(effect);
+                }
+            });
+            effects = [];
+            spriteCount = 0;
+            updateSpriteCount();
+        }
+        
+        // スプライト数更新
+        function updateSpriteCount() {
+            document.getElementById('sprites').textContent = spriteCount;
+        }
+        
+        // メインアニメーションループ
+        app.ticker.add((delta) => {
+            frameCount++;
+            
+            // 星空アニメーション
+            particles.forEach(star => {
+                star.x += star.vx;
+                star.y += star.vy;
+                star.pulse += 0.1;
+                star.alpha = 0.5 + Math.sin(star.pulse) * 0.3;
+                
+                // 画面外に出たら反対側から出現
+                if (star.x > app.screen.width) star.x = 0;
+                if (star.x < 0) star.x = app.screen.width;
+                if (star.y > app.screen.height) star.y = 0;
+                if (star.y < 0) star.y = app.screen.height;
+            });
+            
+            // エフェクトアニメーション
+            effects.forEach((effect, index) => {
+                if (effect.vx !== undefined) {
+                    // パーティクル系
+                    effect.x += effect.vx;
+                    effect.y += effect.vy;
+                    
+                    if (effect.gravity !== undefined) {
+                        effect.vy += effect.gravity;
+                    }
+                    
+                    if (effect.life !== undefined) {
+                        effect.life -= effect.decay || 0.016;
+                        effect.alpha = effect.life;
+                        
+                        if (effect.life <= 0) {
+                            if (effect.parent) effect.parent.removeChild(effect);
+                            effects.splice(index, 1);
+                            spriteCount--;
+                        }
+                    }
+                } else if (effect.spiralSpeed !== undefined) {
+                    // スパイラル系
+                    effect.angle += effect.spiralSpeed;
+                    effect.radius += effect.radiusSpeed;
+                    
+                    const centerX = mousePosition.x || app.screen.width / 2;
+                    const centerY = mousePosition.y || app.screen.height / 2;
+                    
+                    effect.x = centerX + Math.cos(effect.angle) * effect.radius;
+                    effect.y = centerY + Math.sin(effect.angle) * effect.radius;
+                    
+                    if (effect.radius > 500) {
+                        if (effect.parent) effect.parent.removeChild(effect);
+                        effects.splice(index, 1);
+                        spriteCount--;
+                    }
+                } else if (effect.speed !== undefined) {
+                    // マトリックス系
+                    effect.y += effect.speed;
+                    
+                    if (effect.y > app.screen.height + 100) {
+                        if (effect.parent) effect.parent.removeChild(effect);
+                        effects.splice(index, 1);
+                    }
+                }
+            });
+            
+            // FPS表示更新
+            if (frameCount % 60 === 0) {
+                const fps = Math.round(app.ticker.FPS);
+                document.getElementById('fps').textContent = fps;
+                updateSpriteCount();
+                
+                // GPU使用率シミュレーション
+                const gpuUsage = Math.min(100, (spriteCount / 500) * 100);
+                document.getElementById('gpuBar').style.width = gpuUsage + '%';
+                
+                // メモリ使用率シミュレーション
+                const memoryUsage = Math.min(100, (effects.length / 200) * 100);
+                document.getElementById('memoryBar').style.width = memoryUsage + '%';
+            }
+        });
+        
+        // マウス追跡
+        let cursorTrails = [];
+        
+        document.addEventListener('mousemove', (e) => {
+            mousePosition.x = e.clientX;
+            mousePosition.y = e.clientY;
+            
+            // カスタムカーソル更新
+            const cursor = document.getElementById('cursor');
+            cursor.style.left = (e.clientX - 10) + 'px';
+            cursor.style.top = (e.clientY - 10) + 'px';
+            
+            // カーソルトレイル作成
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = (e.clientX - 5) + 'px';
+            trail.style.top = (e.clientY - 5) + 'px';
+            document.body.appendChild(trail);
+            
+            cursorTrails.push(trail);
+            
+            // 古いトレイルを削除
+            if (cursorTrails.length > 10) {
+                const oldTrail = cursorTrails.shift();
+                if (oldTrail.parentNode) {
+                    oldTrail.parentNode.removeChild(oldTrail);
+                }
+            }
+            
+            // トレイルのフェードアウト
+            setTimeout(() => {
+                if (trail.parentNode) {
+                    trail.style.opacity = '0';
+                    setTimeout(() => {
+                        if (trail.parentNode) {
+                            trail.parentNode.removeChild(trail);
+                        }
+                    }, 200);
+                }
+            }, 100);
+        });
+        
+        // クリックでパーティクル生成
+        document.addEventListener('click', (e) => {
+            mousePosition.x = e.clientX;
+            mousePosition.y = e.clientY;
+            triggerParticleExplosion();
+        });
+        
+        // ウィンドウリサイズ対応
+        window.addEventListener('resize', () => {
+            app.renderer.resize(window.innerWidth, window.innerHeight);
+        });
+        
+        // 初期エフェクト
+        setTimeout(() => {
+            triggerWaveEffect();
+        }, 1000);
+        
+        setTimeout(() => {
+            triggerGalaxySpiral();
+        }, 3000);
+    </script>
+</body>
+</html>

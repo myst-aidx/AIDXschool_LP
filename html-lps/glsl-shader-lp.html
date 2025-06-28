@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - GPUが描く未来の起業 | GLSL Shaders</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* WebGLキャンバス */
+        #shader-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+        }
+        
+        /* コンテンツ */
+        .content {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.7) 80%, #000 100%);
+        }
+        
+        /* ヒーローセクション */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        
+        /* シェーダー効果セレクター */
+        .shader-selector {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+        }
+        
+        .selector-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #00ffff;
+        }
+        
+        .shader-button {
+            display: block;
+            width: 100%;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .shader-button:hover {
+            background: rgba(0, 255, 255, 0.3);
+            transform: translateX(5px);
+        }
+        
+        .shader-button.active {
+            background: rgba(0, 255, 255, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+        
+        /* マウスインタラクション表示 */
+        .mouse-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 15px 30px;
+            border-radius: 50px;
+            z-index: 100;
+            animation: pulse 2s ease infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.8;
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateX(-50%) scale(1.05);
+            }
+        }
+        
+        /* 特徴セクション */
+        .features-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #00ffff 0%, #ff00ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            background: linear-gradient(45deg, #00ffff 0%, #ff00ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .feature-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #00ffff;
+        }
+        
+        .feature-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        /* CTAセクション */
+        .cta-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+        }
+        
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #00ffff 0%, #ff00ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
+            border-radius: 50px;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.6);
+        }
+        
+        /* シェーダー情報 */
+        .shader-info {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            max-width: 300px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            z-index: 100;
+        }
+        
+        .shader-name {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #ff00ff;
+        }
+        
+        .shader-description {
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .shader-selector {
+                top: auto;
+                bottom: 100px;
+                left: 20px;
+                right: 20px;
+            }
+            
+            .shader-info {
+                display: none;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="shader-canvas"></canvas>
+    
+    <!-- シェーダーセレクター -->
+    <div class="shader-selector">
+        <h3 class="selector-title">視覚効果を選択</h3>
+        <button class="shader-button active" onclick="changeShader(0)">水面の波紋</button>
+        <button class="shader-button" onclick="changeShader(1)">ネオングロー</button>
+        <button class="shader-button" onclick="changeShader(2)">プラズマ</button>
+        <button class="shader-button" onclick="changeShader(3)">万華鏡</button>
+        <button class="shader-button" onclick="changeShader(4)">デジタルノイズ</button>
+    </div>
+    
+    <!-- シェーダー情報 -->
+    <div class="shader-info">
+        <h3 class="shader-name" id="shaderName">水面の波紋</h3>
+        <p class="shader-description" id="shaderDescription">
+            マウスの動きに反応してリアルな波紋が広がります。
+            GPU処理により、なめらかな60fpsを実現。
+        </p>
+    </div>
+    
+    <!-- マウスインジケーター -->
+    <div class="mouse-indicator">
+        マウスを動かして効果を体験
+    </div>
+    
+    <!-- コンテンツ -->
+    <div class="content">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>GPUが描く未来の起業</h1>
+                <p class="subtitle">GLSL Shadersで実現する、次世代のビジュアル体験</p>
+            </div>
+        </section>
+        
+        <section class="features-section">
+            <h2 class="section-title">シェーダーで変わるビジネス表現</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">超高速レンダリング</h3>
+                    <p class="feature-description">
+                        GPUの並列処理により、複雑な視覚効果も60fps以上で動作。
+                        顧客体験を損なうことなく、印象的な演出が可能です。
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">無限の表現力</h3>
+                    <p class="feature-description">
+                        数式で描くアート。パラメータを変えるだけで、
+                        全く新しいビジュアルを生成。あなたのブランドに
+                        唯一無二の個性を。
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔮</div>
+                    <h3 class="feature-title">リアルタイムインタラクション</h3>
+                    <p class="feature-description">
+                        ユーザーの操作に即座に反応。マウス、タッチ、
+                        音声など、あらゆる入力をビジュアルに変換して
+                        没入感のある体験を提供。
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="cta-section">
+            <h2 class="cta-title">最先端の技術で起業しよう</h2>
+            <p style="font-size: 1.3rem; opacity: 0.9; margin-bottom: 3rem;">
+                AIDXschoolで、シェーダープログラミングから
+                AI活用まで、次世代の起業スキルを習得
+            </p>
+            <a href="#" class="cta-button">無料体験に申し込む</a>
+        </section>
+    </div>
+    
+    <script>
+        // Three.js セットアップ
+        const canvas = document.getElementById('shader-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        // マウス座標
+        const mouse = new THREE.Vector2();
+        const mouseSpeed = new THREE.Vector2();
+        let lastMouse = new THREE.Vector2();
+        
+        // 時間
+        const clock = new THREE.Clock();
+        
+        // シェーダー定義
+        const shaders = [
+            // 水面の波紋
+            {
+                name: '水面の波紋',
+                description: 'マウスの動きに反応してリアルな波紋が広がります。GPU処理により、なめらかな60fpsを実現。',
+                vertex: `
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragment: `
+                    uniform float time;
+                    uniform vec2 mouse;
+                    uniform vec2 resolution;
+                    varying vec2 vUv;
+                    
+                    void main() {
+                        vec2 uv = vUv;
+                        vec2 center = mouse;
+                        
+                        float dist = distance(uv, center);
+                        float ripple = sin(dist * 50.0 - time * 5.0) * exp(-dist * 5.0);
+                        
+                        vec3 color = vec3(0.0, 0.8, 1.0);
+                        color += ripple * 0.5;
+                        
+                        // 背景グラデーション
+                        color *= 1.0 - dist * 0.5;
+                        
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            },
+            // ネオングロー
+            {
+                name: 'ネオングロー',
+                description: 'サイバーパンクな雰囲気のネオン効果。起業家の革新的な精神を表現。',
+                vertex: `
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragment: `
+                    uniform float time;
+                    uniform vec2 mouse;
+                    uniform vec2 resolution;
+                    varying vec2 vUv;
+                    
+                    void main() {
+                        vec2 uv = vUv;
+                        vec2 center = vec2(0.5);
+                        
+                        float d = distance(uv, mouse);
+                        float glow = 0.02 / d;
+                        
+                        vec3 color = vec3(0.0);
+                        color.r = glow * abs(sin(time * 2.0));
+                        color.g = glow * abs(cos(time * 3.0));
+                        color.b = glow;
+                        
+                        // パルス効果
+                        float pulse = sin(time * 10.0) * 0.5 + 0.5;
+                        color *= 1.0 + pulse * 0.5;
+                        
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            },
+            // プラズマ
+            {
+                name: 'プラズマ',
+                description: '有機的に変化する流体表現。ビジネスの柔軟性と適応力を視覚化。',
+                vertex: `
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragment: `
+                    uniform float time;
+                    uniform vec2 mouse;
+                    varying vec2 vUv;
+                    
+                    void main() {
+                        vec2 uv = vUv;
+                        
+                        float v1 = sin(uv.x * 10.0 + time);
+                        float v2 = sin(10.0 * (uv.x * sin(time / 2.0) + uv.y * cos(time / 3.0)) + time);
+                        
+                        vec2 center = mouse;
+                        float v3 = sin(distance(uv, center) * 20.0 - time * 2.0);
+                        
+                        float v = v1 + v2 + v3;
+                        
+                        vec3 color = vec3(0.0);
+                        color.r = sin(v * 1.0);
+                        color.g = sin(v * 1.5 + 2.0);
+                        color.b = sin(v * 2.0 + 4.0);
+                        
+                        gl_FragColor = vec4(color * 0.5 + 0.5, 1.0);
+                    }
+                `
+            },
+            // 万華鏡
+            {
+                name: '万華鏡',
+                description: '対称性の美しさ。複雑な問題をシンプルなパターンに変換する起業家の視点。',
+                vertex: `
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragment: `
+                    uniform float time;
+                    uniform vec2 mouse;
+                    varying vec2 vUv;
+                    
+                    vec2 kaleidoscope(vec2 uv, float segments) {
+                        float angle = atan(uv.y, uv.x);
+                        float radius = length(uv);
+                        float segmentAngle = 6.28318 / segments;
+                        angle = mod(angle, segmentAngle);
+                        if (angle > segmentAngle / 2.0) {
+                            angle = segmentAngle - angle;
+                        }
+                        return vec2(cos(angle), sin(angle)) * radius;
+                    }
+                    
+                    void main() {
+                        vec2 uv = vUv - 0.5;
+                        uv = kaleidoscope(uv, 6.0);
+                        
+                        float d = length(uv - (mouse - 0.5) * 0.5);
+                        float pattern = sin(d * 50.0 - time * 3.0) * sin(uv.x * 30.0) * sin(uv.y * 30.0);
+                        
+                        vec3 color = vec3(0.0);
+                        color.r = pattern * 0.5 + 0.5;
+                        color.g = pattern * 0.7 + 0.3;
+                        color.b = 1.0 - pattern * 0.5;
+                        
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            },
+            // デジタルノイズ
+            {
+                name: 'デジタルノイズ',
+                description: 'データの海から価値を見出す。情報時代の起業家精神を表現。',
+                vertex: `
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragment: `
+                    uniform float time;
+                    uniform vec2 mouse;
+                    varying vec2 vUv;
+                    
+                    float random(vec2 st) {
+                        return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+                    }
+                    
+                    void main() {
+                        vec2 uv = vUv;
+                        
+                        // グリッド
+                        vec2 grid = floor(uv * 50.0);
+                        float noise = random(grid + floor(time * 10.0));
+                        
+                        // マウスの影響
+                        float d = distance(uv, mouse);
+                        float influence = 1.0 - smoothstep(0.0, 0.3, d);
+                        
+                        // 色の計算
+                        vec3 color = vec3(0.0);
+                        if (noise > 0.5 + influence * 0.3) {
+                            color = vec3(0.0, 1.0, 1.0);
+                        } else if (noise > 0.3) {
+                            color = vec3(1.0, 0.0, 1.0);
+                        }
+                        
+                        // スキャンライン
+                        float scanline = sin(uv.y * 300.0) * 0.04;
+                        color += scanline;
+                        
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            }
+        ];
+        
+        let currentShaderIndex = 0;
+        let material;
+        
+        // プレーンジオメトリ
+        const geometry = new THREE.PlaneGeometry(2, 2);
+        
+        // 初期シェーダーの作成
+        function createShaderMaterial(shaderIndex) {
+            return new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    mouse: { value: mouse },
+                    resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+                },
+                vertexShader: shaders[shaderIndex].vertex,
+                fragmentShader: shaders[shaderIndex].fragment
+            });
+        }
+        
+        material = createShaderMaterial(0);
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+        
+        // シェーダー変更
+        function changeShader(index) {
+            currentShaderIndex = index;
+            material = createShaderMaterial(index);
+            mesh.material = material;
+            
+            // UI更新
+            document.querySelectorAll('.shader-button').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            
+            document.getElementById('shaderName').textContent = shaders[index].name;
+            document.getElementById('shaderDescription').textContent = shaders[index].description;
+        }
+        
+        // マウスイベント
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.clientX / window.innerWidth;
+            mouse.y = 1.0 - event.clientY / window.innerHeight;
+            
+            mouseSpeed.x = mouse.x - lastMouse.x;
+            mouseSpeed.y = mouse.y - lastMouse.y;
+            lastMouse.copy(mouse);
+        });
+        
+        // リサイズ
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            material.uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
+        });
+        
+        // アニメーションループ
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const elapsedTime = clock.getElapsedTime();
+            
+            material.uniforms.time.value = elapsedTime;
+            material.uniforms.mouse.value = mouse;
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // タッチデバイス対応
+        window.addEventListener('touchmove', (event) => {
+            const touch = event.touches[0];
+            mouse.x = touch.clientX / window.innerWidth;
+            mouse.y = 1.0 - touch.clientY / window.innerHeight;
+        });
+    </script>
+    
+    <!-- GLSLシェーダー技術比較セクション -->
+    <section class="shader-technology">
+        <div class="container">
+            <h2>シェーダー技術の比較と選択指南</h2>
+            <p class="section-intro">
+                GPUプログラミングで使用される主要なシェーダー言語とフレームワークの比較
+            </p>
+            
+            <div class="tech-comparison-grid">
+                <div class="tech-card featured">
+                    <h3>GLSL (OpenGL)</h3>
+                    <div class="tech-metrics">
+                        <span class="metric">パフォーマンス: 最高</span>
+                        <span class="metric">互換性: 高</span>
+                        <span class="metric">学習難易度: 中</span>
+                    </div>
+                    <div class="tech-features">
+                        <h4>特徴</h4>
+                        <ul>
+                            <li>WebGLでの標準的なシェーダー言語</li>
+                            <li>高速なGPUレンダリング</li>
+                            <li>豊富なドキュメントとコミュニティ</li>
+                            <li>クロスプラットフォーム対応</li>
+                        </ul>
+                        
+                        <h4>適用事例</h4>
+                        <ul>
+                            <li>リアルタイムビジュアルエフェクト</li>
+                            <li>データ視覚化ツール</li>
+                            <li>インタラクティブアート</li>
+                            <li>高品質なWebアプリケーション</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <h3>HLSL (DirectX)</h3>
+                    <div class="tech-metrics">
+                        <span class="metric">パフォーマンス: 高</span>
+                        <span class="metric">互換性: 低</span>
+                        <span class="metric">学習難易度: 中</span>
+                    </div>
+                    <div class="tech-features">
+                        <h4>特徴</h4>
+                        <ul>
+                            <li>Microsoftが開発したDirectX用</li>
+                            <li>Windowsプラットフォームに最適化</li>
+                            <li>ゲーム開発での使用実績</li>
+                            <li>Visual Studio統合</li>
+                        </ul>
+                        
+                        <h4>適用事例</h4>
+                        <ul>
+                            <li>Windowsネイティブアプリ</li>
+                            <li>AAAゲーム開発</li>
+                            <li>エンタープライズアプリ</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <h3>Metal Shading Language</h3>
+                    <div class="tech-metrics">
+                        <span class="metric">パフォーマンス: 最高</span>
+                        <span class="metric">互換性: 低</span>
+                        <span class="metric">学習難易度: 高</span>
+                    </div>
+                    <div class="tech-features">
+                        <h4>特徴</h4>
+                        <ul>
+                            <li>Appleプラットフォーム専用</li>
+                            <li>最高レベルのパフォーマンス</li>
+                            <li>iOS/macOSネイティブアプリ</li>
+                            <li>機械学習・コンピュートシェーダー</li>
+                        </ul>
+                        
+                        <h4>適用事例</h4>
+                        <ul>
+                            <li>iOSアプリ開発</li>
+                            <li>macOSプロフェッショナルアプリ</li>
+                            <li>AR/VRアプリケーション</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="tech-card">
+                    <h3>Compute Shaders</h3>
+                    <div class="tech-metrics">
+                        <span class="metric">パフォーマンス: 特化</span>
+                        <span class="metric">互換性: 中</span>
+                        <span class="metric">学習難易度: 高</span>
+                    </div>
+                    <div class="tech-features">
+                        <h4>特徴</h4>
+                        <ul>
+                            <li>汎用コンピューティング特化</li>
+                            <li>高速な並列処理</li>
+                            <li>AI・機械学習に最適</li>
+                            <li>ビッグデータ処理</li>
+                        </ul>
+                        
+                        <h4>適用事例</h4>
+                        <ul>
+                            <li>機械学習モデル訓練</li>
+                            <li>ビッグデータ解析</li>
+                            <li>物理シミュレーション</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="selection-guide">
+                <h3>🎯 技術選択指南</h3>
+                <div class="guide-recommendations">
+                    <div class="recommendation-item">
+                        <h4>🌐 Webアプリケーション開発</h4>
+                        <p><strong>GLSL + WebGL</strong> - クロスプラットフォーム対応で幅広いユーザーに対応</p>
+                    </div>
+                    <div class="recommendation-item">
+                        <h4>🔧 ビジネスアプリケーション</h4>
+                        <p><strong>GLSL</strong> - コスト効率と保守性のバランスが優秀</p>
+                    </div>
+                    <div class="recommendation-item">
+                        <h4>📱 モバイルアプリ開発</h4>
+                        <p><strong>Metal (iOS) / Vulkan (Android)</strong> - プラットフォーム特化で最高性能</p>
+                    </div>
+                    <div class="recommendation-item">
+                        <h4>🤖 AI・MLアプリケーション</h4>
+                        <p><strong>Compute Shaders</strong> - GPUコンピューティングの力を最大限活用</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- GLSL学習カリキュラムセクション -->
+    <section class="curriculum-section">
+        <div class="container">
+            <h2>GLSLシェーダープログラミングマスターコース</h2>
+            <p class="curriculum-intro">
+                GPUプログラミングを活用した革新的ビジュアルアプリケーション開発、18週間の実践コース
+            </p>
+            
+            <div class="curriculum-phases">
+                <div class="phase-container">
+                    <h3>基礎フェーズ（1-6週）</h3>
+                    <div class="weeks-container">
+                        <div class="week-block">
+                            <div class="week-header">Week 1-2</div>
+                            <h4>GLSL基礎とGPUアーキテクチャ</h4>
+                            <ul>
+                                <li>GPUとCPUの違い、並列処理の基本概念</li>
+                                <li>GLSL構文とデータ型の理解</li>
+                                <li>バーテックスショーダーとフラグメントシェーダー</li>
+                                <li>WebGLとThree.jsでのシェーダー連携</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="week-block">
+                            <div class="week-header">Week 3-4</div>
+                            <h4>数学関数とアルゴリズム</h4>
+                            <ul>
+                                <li>ベクトル演算と行列変換</li>
+                                <li>三角関数、指数関数の活用</li>
+                                <li>ノイズ関数とプロシージャル生成</li>
+                                <li>基本的なアニメーションテクニック</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="week-block">
+                            <div class="week-header">Week 5-6</div>
+                            <h4>色彩とライティング</h4>
+                            <ul>
+                                <li>色空間と色変換アルゴリズム</li>
+                                <li>Phong、Blinn-Phongライティングモデル</li>
+                                <li>PBR(物理ベースレンダリング)基礎</li>
+                                <li>シャドウマッピングと深度テスト</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phase-container">
+                    <h3>中級フェーズ（7-12週）</h3>
+                    <div class="weeks-container">
+                        <div class="week-block">
+                            <div class="week-header">Week 7-8</div>
+                            <h4>テクスチャとマテリアル</h4>
+                            <ul>
+                                <li>テクスチャサンプリングとフィルタリング</li>
+                                <li>マルチテクスチャとブレンディング</li>
+                                <li>ノーマルマッピングとバンプマッピング</li>
+                                <li>環境マッピングと反射プローブ</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="week-block">
+                            <div class="week-header">Week 9-10</div>
+                            <h4>ポストプロセッシング</h4>
+                            <ul>
+                                <li>フレームバッファとレンダーターゲット</li>
+                                <li>ブルーム、DOF、モーションブラー</li>
+                                <li>カラーグレーディングとトーンマッピング</li>
+                                <li>HDRとガンマ補正処理</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="week-block">
+                            <div class="week-header">Week 11-12</div>
+                            <h4>インタラクティブエフェクト</h4>
+                            <ul>
+                                <li>マウス・タッチインタラクション</li>
+                                <li>リアルタイムデータ連携</li>
+                                <li>音声反応ビジュアライザー</li>
+                                <li>AR/VR用シェーダー開発</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="phase-container">
+                    <h3>実践フェーズ（13-18週）</h3>
+                    <div class="weeks-container">
+                        <div class="week-block">
+                            <div class="week-header">Week 13-14</div>
+                            <h4>パフォーマンス最適化</h4>
+                            <ul>
+                                <li>GPUメモリとバンド幅最適化</li>
+                                <li>シェーダーコンパイル最適化</li>
+                                <li>LOD(詳細レベル)と動的品質調整</li>
+                                <li>プロファイリングとデバッグ技法</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="week-block">
+                            <div class="week-header">Week 15-16</div>
+                            <h4>実世界プロジェクト開発</h4>
+                            <ul>
+                                <li>ビジネス要件に基づいたアプリ設計</li>
+                                <li>チーム開発とバージョン管理</li>
+                                <li>クロスプラットフォーム対応</li>
+                                <li>ユーザビリティテストと改善</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="week-block">
+                            <div class="week-header">Week 17-18</div>
+                            <h4>公開とマネタイズ</h4>
+                            <ul>
+                                <li>プロダクションデプロイとCDN最適化</li>
+                                <li>マネタイゼーション戦略と価格設定</li>
+                                <li>顧客獲得とマーケティング方法</li>
+                                <li>継続的な改善とアップデート計画</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- GPUプログラミング成功事例 -->
+    <section class="success-cases">
+        <div class="container">
+            <h2>GPUプログラミング成功事例</h2>
+            
+            <div class="cases-showcase">
+                <div class="case-featured">
+                    <div class="case-visual">🎨</div>
+                    <div class="case-content">
+                        <h3>デジタルアートプラットフォーム</h3>
+                        <div class="case-metrics">
+                            <span class="metric">月収益: 850万円</span>
+                            <span class="metric">クリエイター: 5,200名</span>
+                            <span class="metric">作品数: 28,000点</span>
+                        </div>
+                        <p>
+                            「GLSLで作成したリアルタイムアートジェネレーターが爆発的にヒット。
+                            クリエイターが少ない時間で高品質なアートを作成できることで、
+                            多くのプロクリエイターに愛用され、月額サブスクリプションで着実な収益を上げています。」
+                        </p>
+                        <div class="case-author">
+                            <strong>デジタルクリエイト株式会社 代表 田中アート様（32歳）</strong>
+                            <span>受講期間: 4ヶ月</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cases-grid">
+                    <div class="case-card">
+                        <div class="case-icon">📈</div>
+                        <h3>リアルタイムデータビジュアライゼーション</h3>
+                        <div class="case-stats">
+                            <span>料金: 月120万円</span>
+                            <span>導入企業: 15社</span>
+                        </div>
+                        <p>
+                            「金融データのリアルタイム視覚化ツールをGPUで高速化。
+                            従来の100倍速いレンダリングで、トレーダーの意思決定を大幅に支援しています。」
+                        </p>
+                        <div class="case-author">
+                            <strong>フィンテックソリューションズ 山田様</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="case-card">
+                        <div class="case-icon">🎮</div>
+                        <h3>ブラウザゲームエンジン</h3>
+                        <div class="case-stats">
+                            <span>ダウンロード: 200万回</span>
+                            <span>月収益: 450万円</span>
+                        </div>
+                        <p>
+                            「WebGLとGLSLで構築したブラウザゲームエンジンが大ヒット。
+                            コンソールレベルのグラフィックをWebで実現し、複数のゲーム会社からライセンス契約を獲得。」
+                        </p>
+                        <div class="case-author">
+                            <strong>インディーゲームスタジオ 鈴木様</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="case-card">
+                        <div class="case-icon">🏢</div>
+                        <h3>建築ビジュアライゼーション</h3>
+                        <div class="case-stats">
+                            <span>受注单価: 250万円</span>
+                            <span>クライアント: 8社</span>
+                        </div>
+                        <p>
+                            「建築設計のリアルタイムレンダリングシステムを開発。
+                            クライアントが建築物をリアルタイムで確認できることで、設計変更が激減し、受注率が200%向上しました。」
+                        </p>
+                        <div class="case-author">
+                            <strong>スマートアーキテクト 佐藤様</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="case-card">
+                        <div class="case-icon">🌌</div>
+                        <h3>気象シミュレーション</h3>
+                        <div class="case-stats">
+                            <span>ライセンス: 5,000万円</span>
+                            <span>導入先: 気象庁</span>
+                        </div>
+                        <p>
+                            「気象データのリアルタイムシミュレーションシステムを開発。
+                            従来数時間かかっていた計算が数分で完了し、天気予報の精度が大幅に向上しました。」
+                        </p>
+                        <div class="case-author">
+                            <strong>ウェザーテックシステムズ 高橋様</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 料金プランセクション -->
+    <section class="pricing-section">
+        <div class="container">
+            <h2>コース料金プラン</h2>
+            <p class="pricing-intro">
+                GPUプログラミングで次世代ビジュアルアプリケーションを開発し、技術的優位性を築こう
+            </p>
+            
+            <div class="pricing-plans">
+                <div class="plan-item basic">
+                    <div class="plan-header">
+                        <h3>ベーシックコース</h3>
+                        <div class="plan-price">
+                            <span class="price">¥398,000</span>
+                            <span class="period">/ 18週間</span>
+                        </div>
+                    </div>
+                    <div class="plan-benefits">
+                        <h4>コース内容</h4>
+                        <ul>
+                            <li>✅ 全18週間の動画講座</li>
+                            <li>✅ GLSL基礎から実践まで</li>
+                            <li>✅ コミュニティアクセス</li>
+                            <li>✅ 基本的な質問サポート</li>
+                            <li>❌ 個別メンタリング</li>
+                            <li>❌ コードレビュー</li>
+                        </ul>
+                    </div>
+                    <div class="plan-action">
+                        <a href="#" class="plan-button">ベーシックで始める</a>
+                    </div>
+                </div>
+                
+                <div class="plan-item premium featured">
+                    <div class="plan-badge">おすすめ</div>
+                    <div class="plan-header">
+                        <h3>プレミアムコース</h3>
+                        <div class="plan-price">
+                            <span class="price">¥698,000</span>
+                            <span class="period">/ 18週間</span>
+                        </div>
+                    </div>
+                    <div class="plan-benefits">
+                        <h4>コース内容</h4>
+                        <ul>
+                            <li>✅ ベーシックの全機能</li>
+                            <li>✅ 月２回個別メンタリング</li>
+                            <li>✅ コードレビュー無制限</li>
+                            <li>✅ 実世界プロジェクト企画支援</li>
+                            <li>✅ ポートフォリオ作成支援</li>
+                            <li>✅ 就転職サポート</li>
+                        </ul>
+                    </div>
+                    <div class="plan-action">
+                        <a href="#" class="plan-button">プレミアムで始める</a>
+                    </div>
+                </div>
+                
+                <div class="plan-item enterprise">
+                    <div class="plan-header">
+                        <h3>エンタープライズ</h3>
+                        <div class="plan-price">
+                            <span class="price">¥1,200,000</span>
+                            <span class="period">/ 18週間</span>
+                        </div>
+                    </div>
+                    <div class="plan-benefits">
+                        <h4>コース内容</h4>
+                        <ul>
+                            <li>✅ プレミアムの全機能</li>
+                            <li>✅ 1対1専属メンター</li>
+                            <li>✅ カスタムカリキュラム</li>
+                            <li>✅ 企業向けプロジェクト実装</li>
+                            <li>✅ チーム研修対応</li>
+                            <li>✅ 6ヶ月間アフターサポート</li>
+                        </ul>
+                    </div>
+                    <div class="plan-action">
+                        <a href="#" class="plan-button">エンタープライズで相談</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pricing-guarantees">
+                <div class="guarantee-item">
+                    <span class="guarantee-icon">🔄</span>
+                    <span><strong>30日間返金保証</strong> - 満足いただけない場合は全額返金</span>
+                </div>
+                <div class="guarantee-item">
+                    <span class="guarantee-icon">📊</span>
+                    <span><strong>スキル保証</strong> - コース終了後にGPUプログラミングスキル証明書発行</span>
+                </div>
+                <div class="guarantee-item">
+                    <span class="guarantee-icon">💳</span>
+                    <span><strong>分割払い対応</strong> - 最大18回までの分割払いに対応</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 最終CTAセクション -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>GPUが描く未来の起業へ</h2>
+            <p class="cta-description">
+                GLSLシェーダープログラミングで、GPUの無限の可能性を活用した<br>
+                革新的ビジュアルアプリケーションを開発し、新しい市場を開拓しよう
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="#" class="cta-btn primary">
+                    今すぐ無料相談を予約
+                    <span class="cta-note">（残り枠：本日2名様）</span>
+                </a>
+                <a href="#" class="cta-btn secondary">
+                    詳細資料をダウンロード
+                </a>
+            </div>
+            
+            <div class="success-metrics">
+                <div class="metric-item">
+                    <span class="metric-icon">🎆</span>
+                    <span>受講生満足度96.8%</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-icon">💼</span>
+                    <span>就転職成功率89%</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-icon">📈</span>
+                    <span>平均年収アップ180万円</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+        /* 新しいセクションのスタイル */
+        .shader-technology,
+        .curriculum-section,
+        .success-cases,
+        .pricing-section,
+        .final-cta {
+            padding: 80px 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-intro {
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+        
+        /* シェーダー技術比較 */
+        .shader-technology {
+            background: rgba(0, 0, 0, 0.9);
+        }
+        
+        .tech-comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .tech-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-card.featured {
+            border-color: #ff6b35;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+        
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .tech-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .metric {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .tech-features h4 {
+            color: #ff6b35;
+            margin: 20px 0 10px 0;
+        }
+        
+        .tech-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tech-features li {
+            padding: 5px 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .selection-guide {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 40px;
+        }
+        
+        .guide-recommendations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .recommendation-item {
+            padding: 20px;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 10px;
+        }
+        
+        .recommendation-item h4 {
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+        
+        /* カリキュラムセクション */
+        .curriculum-section {
+            background: rgba(255, 107, 53, 0.05);
+        }
+        
+        .curriculum-intro {
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+        
+        .phase-container {
+            margin-bottom: 50px;
+        }
+        
+        .phase-container h3 {
+            color: #ff6b35;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .weeks-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .week-block {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .week-block:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.2);
+        }
+        
+        .week-header {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .week-block h4 {
+            color: #fff;
+            margin-bottom: 15px;
+        }
+        
+        .week-block ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .week-block li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .week-block li::before {
+            content: '▶';
+            color: #ff6b35;
+            position: absolute;
+            left: 0;
+            font-size: 0.8rem;
+        }
+        
+        /* 成功事例 */
+        .success-cases {
+            background: rgba(0, 0, 0, 0.9);
+        }
+        
+        .case-featured {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .case-visual {
+            font-size: 6rem;
+            flex-shrink: 0;
+        }
+        
+        .case-metrics {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .case-metrics .metric {
+            background: #ff6b35;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .case-author {
+            margin-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 15px;
+        }
+        
+        .case-author strong {
+            color: #ff6b35;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .case-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .case-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .case-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .case-stats span {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        /* 料金プラン */
+        .pricing-section {
+            background: rgba(255, 107, 53, 0.05);
+        }
+        
+        .pricing-intro {
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+        
+        .pricing-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .plan-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .plan-item.featured {
+            border-color: #ff6b35;
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.3);
+        }
+        
+        .plan-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff6b35;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .plan-price .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+        
+        .plan-price .period {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+        
+        .plan-benefits {
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .plan-benefits h4 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff6b35;
+        }
+        
+        .plan-benefits ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .plan-benefits li {
+            padding: 8px 0;
+            font-size: 0.95rem;
+        }
+        
+        .plan-button {
+            display: block;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .plan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+        
+        .pricing-guarantees {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .guarantee-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .guarantee-icon {
+            font-size: 1.5rem;
+        }
+        
+        /* 最終CTA */
+        .final-cta {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: #fff;
+            text-align: center;
+        }
+        
+        .cta-description {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .cta-btn {
+            padding: 20px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-btn.primary {
+            background: #fff;
+            color: #ff6b35;
+        }
+        
+        .cta-btn.secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cta-note {
+            display: block;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+        
+        .success-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .metric-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .metric-icon {
+            font-size: 1.3rem;
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .tech-comparison-grid,
+            .weeks-container,
+            .cases-grid,
+            .pricing-plans {
+                grid-template-columns: 1fr;
+            }
+            
+            .case-featured {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .plan-item.featured {
+                transform: none;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .success-metrics {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIがあなたの起業プランを設計します - AIDXschool</title>
+    
+    <meta name="description" content="AIアシスタントとの対話を通じて、あなただけの起業プランを無料で設計。5分で完成するパーソナライズド起業計画。">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --bg-dark: #0f0f23;
+            --bg-chat: #1a1a2e;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b8;
+            --input-bg: #16213e;
+            --bubble-user: #667eea;
+            --bubble-ai: #2d2d44;
+            --accent: #00f2fe;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* 背景アニメーション */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .gradient-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .sphere-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--primary-gradient);
+            top: -300px;
+            left: -300px;
+        }
+        
+        .sphere-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--secondary-gradient);
+            bottom: -200px;
+            right: -200px;
+            animation-delay: -10s;
+        }
+        
+        .sphere-3 {
+            width: 500px;
+            height: 500px;
+            background: var(--success-gradient);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -5s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-50px) scale(1.1);
+            }
+        }
+        
+        /* ヘッダー */
+        .header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        
+        .header-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .header-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+        
+        /* チャットコンテナ */
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-chat);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .chat-header {
+            background: var(--primary-gradient);
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .ai-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .ai-avatar {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            position: relative;
+        }
+        
+        .status-dot {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 12px;
+            height: 12px;
+            background: #00ff88;
+            border-radius: 50%;
+            border: 2px solid var(--bg-chat);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+            }
+        }
+        
+        .ai-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .ai-info p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .chat-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            display: block;
+        }
+        
+        /* チャットエリア */
+        .chat-area {
+            height: 500px;
+            overflow-y: auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .chat-area::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-area::-webkit-scrollbar-track {
+            background: var(--input-bg);
+        }
+        
+        .chat-area::-webkit-scrollbar-thumb {
+            background: var(--bubble-user);
+            border-radius: 4px;
+        }
+        
+        .message {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message.ai {
+            flex-direction: row;
+        }
+        
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .message.ai .message-avatar {
+            background: var(--bubble-ai);
+        }
+        
+        .message.user .message-avatar {
+            background: var(--bubble-user);
+        }
+        
+        .message-content {
+            background: var(--bubble-ai);
+            padding: 15px 20px;
+            border-radius: 20px;
+            max-width: 70%;
+            position: relative;
+        }
+        
+        .message.user .message-content {
+            background: var(--bubble-user);
+        }
+        
+        .message-text {
+            line-height: 1.6;
+        }
+        
+        .typing-indicator {
+            display: inline-flex;
+            gap: 4px;
+            padding: 10px 0;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                opacity: 0.3;
+            }
+            30% {
+                opacity: 1;
+            }
+        }
+        
+        /* オプションボタン */
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .option-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .option-button:hover {
+            background: var(--bubble-user);
+            border-color: var(--bubble-user);
+            transform: translateY(-2px);
+        }
+        
+        /* 入力エリア */
+        .chat-input-area {
+            padding: 20px 30px;
+            background: var(--input-bg);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .chat-input {
+            flex: 1;
+            background: var(--bg-chat);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 15px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--bubble-user);
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .send-button {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .send-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 結果セクション */
+        .result-section {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .result-card {
+            background: var(--bg-chat);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+        
+        .result-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .plan-summary {
+            background: var(--input-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .plan-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .plan-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .plan-content h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .plan-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 60px;
+            background: var(--primary-gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* プログレスバー */
+        .progress-container {
+            padding: 20px 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .progress-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: var(--input-bg);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        /* フィーチャーカード */
+        .features-section {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            background: var(--bg-chat);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 32px;
+            }
+            
+            .chat-container {
+                margin: 20px;
+                border-radius: 20px;
+            }
+            
+            .chat-area {
+                height: 400px;
+                padding: 20px;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+            
+            .chat-stats {
+                display: none;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景アニメーション -->
+    <div class="bg-animation">
+        <div class="gradient-sphere sphere-1"></div>
+        <div class="gradient-sphere sphere-2"></div>
+        <div class="gradient-sphere sphere-3"></div>
+    </div>
+    
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="logo">AIDXschool AI起業プランナー</div>
+        <h1 class="header-title">
+            AIとの対話で見つかる<br>
+            あなただけの起業成功ルート
+        </h1>
+        <p class="header-subtitle">
+            5つの質問に答えるだけで、AI起業の具体的なプランが完成
+        </p>
+    </header>
+    
+    <!-- チャットコンテナ -->
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="ai-status">
+                <div class="ai-avatar">
+                    🤖
+                    <div class="status-dot"></div>
+                </div>
+                <div class="ai-info">
+                    <h3>AIDX起業アドバイザー</h3>
+                    <p>オンライン</p>
+                </div>
+            </div>
+            <div class="chat-stats">
+                <div class="stat-item">
+                    <span class="stat-number">2,847</span>
+                    <span>起業プラン作成</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">92%</span>
+                    <span>満足度</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-area" id="chatArea">
+            <!-- チャットメッセージがここに追加される -->
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-label">診断進捗: <span id="progressText">0%</span></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        
+        <div class="chat-input-area">
+            <input 
+                type="text" 
+                class="chat-input" 
+                id="chatInput" 
+                placeholder="メッセージを入力..." 
+                disabled
+            >
+            <button class="send-button" id="sendButton" disabled>
+                ➤
+            </button>
+        </div>
+    </div>
+    
+    <!-- 結果セクション -->
+    <section class="result-section" id="resultSection">
+        <div class="result-card">
+            <h2 class="result-title">
+                あなたの起業プランが完成しました！
+            </h2>
+            
+            <div class="plan-summary" id="planSummary">
+                <!-- プラン内容がここに表示される -->
+            </div>
+            
+            <div class="cta-section">
+                <p style="margin-bottom: 20px; font-size: 18px;">
+                    このプランを実現するための<br>
+                    具体的なステップを無料相談でお伝えします
+                </p>
+                <a href="#" class="cta-button">
+                    無料相談を予約する（残り2枠）
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- フィーチャーセクション -->
+    <section class="features-section">
+        <h2 style="text-align: center; font-size: 36px; margin-bottom: 20px;">
+            AIDXschoolが選ばれる理由
+        </h2>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">パーソナライズド学習</h3>
+                <p class="feature-description">
+                    AIが分析したあなたの特性に合わせて、
+                    最適な起業プランと学習カリキュラムを設計
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">最速3ヶ月で起業</h3>
+                <p class="feature-description">
+                    ノーコード×AIの組み合わせで、
+                    プログラミング未経験でも最速で起業可能
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💎</div>
+                <h3 class="feature-title">少人数制エリート教育</h3>
+                <p class="feature-description">
+                    1期10名限定の少人数制で、
+                    一人ひとりに寄り添った指導を実現
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        // チャットボットロジック
+        const chatArea = document.getElementById('chatArea');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const resultSection = document.getElementById('resultSection');
+        const planSummary = document.getElementById('planSummary');
+        
+        let currentStep = 0;
+        let userAnswers = [];
+        
+        // 質問フロー
+        const questions = [
+            {
+                text: "こんにちは！私はAIDX起業アドバイザーです。\nあなたに最適なAI起業プランを一緒に見つけましょう！\n\nまず、お名前を教えていただけますか？",
+                options: null,
+                key: 'name'
+            },
+            {
+                text: "{name}さん、よろしくお願いします！\n\n現在のご職業を教えてください。",
+                options: ["会社員", "フリーランス", "経営者", "学生", "その他"],
+                key: 'occupation'
+            },
+            {
+                text: "なるほど！{occupation}として活動されているんですね。\n\n起業したい理由は何ですか？",
+                options: ["時間の自由が欲しい", "収入を増やしたい", "やりがいを見つけたい", "社会に貢献したい", "AIの可能性に魅力を感じる"],
+                key: 'motivation'
+            },
+            {
+                text: "素晴らしい動機ですね！\n\n月にどのくらいの時間を起業準備に使えますか？",
+                options: ["週5時間未満", "週5-10時間", "週10-20時間", "週20時間以上", "フルタイムで取り組める"],
+                key: 'time'
+            },
+            {
+                text: "ありがとうございます。\n\n最後に、どの分野でAI起業したいですか？",
+                options: ["コンテンツ制作", "業務自動化", "教育・コーチング", "EC・マーケティング", "まだ決まっていない"],
+                key: 'field'
+            }
+        ];
+        
+        // メッセージ追加関数
+        function addMessage(text, isUser = false, options = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = isUser ? '👤' : '🤖';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            
+            const textDiv = document.createElement('div');
+            textDiv.className = 'message-text';
+            textDiv.innerHTML = text.replace(/\n/g, '<br>');
+            content.appendChild(textDiv);
+            
+            if (options) {
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options-container';
+                
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = 'option-button';
+                    button.textContent = option;
+                    button.onclick = () => selectOption(option);
+                    optionsDiv.appendChild(button);
+                });
+                
+                content.appendChild(optionsDiv);
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            chatArea.appendChild(messageDiv);
+            
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+        
+        // タイピングインジケーター
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message ai';
+            typingDiv.id = 'typingIndicator';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = '🤖';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            
+            const typing = document.createElement('div');
+            typing.className = 'typing-indicator';
+            typing.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+            
+            content.appendChild(typing);
+            typingDiv.appendChild(avatar);
+            typingDiv.appendChild(content);
+            chatArea.appendChild(typingDiv);
+            
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+        
+        function removeTyping() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+        
+        // オプション選択
+        function selectOption(option) {
+            addMessage(option, true);
+            userAnswers.push({ key: questions[currentStep].key, value: option });
+            
+            // オプションボタンを無効化
+            document.querySelectorAll('.option-button').forEach(btn => {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+            });
+            
+            nextQuestion();
+        }
+        
+        // 次の質問へ
+        function nextQuestion() {
+            currentStep++;
+            updateProgress();
+            
+            if (currentStep < questions.length) {
+                showTyping();
+                setTimeout(() => {
+                    removeTyping();
+                    const question = questions[currentStep];
+                    let text = question.text;
+                    
+                    // プレースホルダー置換
+                    userAnswers.forEach(answer => {
+                        text = text.replace(`{${answer.key}}`, answer.value);
+                    });
+                    
+                    addMessage(text, false, question.options);
+                    
+                    if (!question.options) {
+                        chatInput.disabled = false;
+                        sendButton.disabled = false;
+                        chatInput.focus();
+                    }
+                }, 1500);
+            } else {
+                generatePlan();
+            }
+        }
+        
+        // プログレス更新
+        function updateProgress() {
+            const progress = (currentStep / questions.length) * 100;
+            progressFill.style.width = `${progress}%`;
+            progressText.textContent = `${Math.round(progress)}%`;
+        }
+        
+        // プラン生成
+        function generatePlan() {
+            showTyping();
+            
+            setTimeout(() => {
+                removeTyping();
+                addMessage("素晴らしい！すべての質問にお答えいただきありがとうございます。\n\nあなたの回答を分析して、最適な起業プランを作成しています...");
+                
+                setTimeout(() => {
+                    // プラン内容を生成
+                    const planItems = [
+                        {
+                            icon: '🎯',
+                            title: 'おすすめのビジネスモデル',
+                            description: getBusinessModel()
+                        },
+                        {
+                            icon: '📚',
+                            title: '必要なスキルセット',
+                            description: '・ノーコードツール（Bubble/Zapier）\n・ChatGPT API活用\n・基本的なマーケティング'
+                        },
+                        {
+                            icon: '⏰',
+                            title: '起業までのタイムライン',
+                            description: getTimeline()
+                        },
+                        {
+                            icon: '💰',
+                            title: '予想収益',
+                            description: '3ヶ月目：月20万円\n6ヶ月目：月50万円\n1年後：月100万円以上'
+                        }
+                    ];
+                    
+                    let planHTML = '';
+                    planItems.forEach(item => {
+                        planHTML += `
+                            <div class="plan-item">
+                                <div class="plan-icon">${item.icon}</div>
+                                <div class="plan-content">
+                                    <h4>${item.title}</h4>
+                                    <p>${item.description.replace(/\n/g, '<br>')}</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    planSummary.innerHTML = planHTML;
+                    resultSection.style.display = 'block';
+                    
+                    // スクロール
+                    resultSection.scrollIntoView({ behavior: 'smooth' });
+                }, 2000);
+            }, 1500);
+        }
+        
+        // ビジネスモデル判定
+        function getBusinessModel() {
+            const field = userAnswers.find(a => a.key === 'field')?.value;
+            const models = {
+                'コンテンツ制作': 'AI記事作成サービス（月額サブスク）',
+                '業務自動化': 'カスタムAI業務効率化ツール',
+                '教育・コーチング': 'AI学習アシスタントプラットフォーム',
+                'EC・マーケティング': 'AI商品レコメンドシステム',
+                'まだ決まっていない': 'AIチャットボット開発サービス'
+            };
+            return models[field] || 'AIソリューション開発';
+        }
+        
+        // タイムライン判定
+        function getTimeline() {
+            const time = userAnswers.find(a => a.key === 'time')?.value;
+            const timelines = {
+                '週5時間未満': '6ヶ月での起業を目指す',
+                '週5-10時間': '4ヶ月での起業を目指す',
+                '週10-20時間': '3ヶ月での起業を目指す',
+                '週20時間以上': '2ヶ月での起業を目指す',
+                'フルタイムで取り組める': '1ヶ月での起業を目指す'
+            };
+            return timelines[time] || '3ヶ月での起業を目指す';
+        }
+        
+        // 入力処理
+        sendButton.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            
+            addMessage(text, true);
+            userAnswers.push({ key: questions[currentStep].key, value: text });
+            
+            chatInput.value = '';
+            chatInput.disabled = true;
+            sendButton.disabled = true;
+            
+            nextQuestion();
+        }
+        
+        // 初期化
+        window.onload = () => {
+            setTimeout(() => {
+                addMessage(questions[0].text, false, questions[0].options);
+                chatInput.disabled = false;
+                sendButton.disabled = false;
+            }, 1000);
+        };
+        
+        // CTA クリック
+        document.querySelector('.cta-button').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert(`${userAnswers[0]?.value || 'ゲスト'}さんの起業プランを元に、無料相談の準備を進めています。`);
+        });
+    </script>
+</body>
+</html>

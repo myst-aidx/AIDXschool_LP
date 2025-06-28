@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDXschool - 流れるように成功する起業 | WebGL Fluid</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        /* カスタムカーソル */
+        .cursor {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+        
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+        }
+        
+        /* 流体キャンバス */
+        #fluid-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        /* コンテンツオーバーレイ */
+        .overlay {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .overlay * {
+            pointer-events: auto;
+        }
+        
+        /* ヒーローセクション */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: flowText 5s ease infinite;
+        }
+        
+        @keyframes flowText {
+            0%, 100% { 
+                filter: hue-rotate(0deg);
+                transform: scale(1);
+            }
+            50% { 
+                filter: hue-rotate(30deg);
+                transform: scale(1.05);
+            }
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            color: #3a86ff;
+        }
+        
+        /* インタラクション説明 */
+        .interaction-guide {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            border-radius: 50px;
+            display: flex;
+            gap: 30px;
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .interaction-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .interaction-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        /* 流体コントロール */
+        .fluid-controls {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            z-index: 100;
+        }
+        
+        .control-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #3a86ff;
+        }
+        
+        .control-button {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            background: rgba(58, 134, 255, 0.2);
+            border: 1px solid #3a86ff;
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .control-button:hover {
+            background: rgba(58, 134, 255, 0.4);
+            transform: translateX(-5px);
+        }
+        
+        /* コンテンツセクション */
+        .content-section {
+            padding: 150px 20px;
+            position: relative;
+            z-index: 20;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 50%, #000 100%);
+        }
+        
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(45deg, #ff006e 0%, #3a86ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* フロー説明カード */
+        .flow-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 100px;
+        }
+        
+        .flow-card {
+            background: rgba(58, 134, 255, 0.05);
+            border: 1px solid rgba(58, 134, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .flow-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 0, 110, 0.2) 0%, transparent 70%);
+            animation: flowAnimation 10s linear infinite;
+        }
+        
+        @keyframes flowAnimation {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(50%, 50%) rotate(360deg); }
+        }
+        
+        .flow-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(58, 134, 255, 0.3);
+        }
+        
+        .flow-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .flow-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #3a86ff;
+        }
+        
+        .flow-description {
+            opacity: 0.8;
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        /* CTA セクション */
+        .cta-section {
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(131, 58, 236, 0.2) 0%, transparent 70%);
+            animation: pulse 4s ease infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #ff006e 0%, #3a86ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 60px;
+            background: linear-gradient(135deg, #ff006e 0%, #8338ec 50%, #3a86ff 100%);
+            border-radius: 50px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(131, 58, 236, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .cta-button:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(131, 58, 236, 0.6);
+        }
+        
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .fluid-controls {
+                display: none;
+            }
+            
+            .interaction-guide {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 25px;
+            }
+            
+            .flow-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            body {
+                cursor: auto;
+            }
+            
+            .cursor, .cursor-dot {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- カスタムカーソル -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    
+    <!-- 流体シミュレーションキャンバス -->
+    <canvas id="fluid-canvas"></canvas>
+    
+    <!-- 流体コントロール -->
+    <div class="fluid-controls">
+        <h3 class="control-title">流体エフェクト</h3>
+        <button class="control-button" onclick="changeFluidColor('rainbow')">虹色グラデーション</button>
+        <button class="control-button" onclick="changeFluidColor('fire')">炎のような赤</button>
+        <button class="control-button" onclick="changeFluidColor('ocean')">海のような青</button>
+        <button class="control-button" onclick="changeFluidColor('aurora')">オーロラ</button>
+        <button class="control-button" onclick="resetFluid()">リセット</button>
+    </div>
+    
+    <!-- インタラクションガイド -->
+    <div class="interaction-guide">
+        <div class="interaction-item">
+            <div class="interaction-icon">👆</div>
+            <span>ドラッグで流体を動かす</span>
+        </div>
+        <div class="interaction-item">
+            <div class="interaction-icon">🎨</div>
+            <span>右クリックで色を追加</span>
+        </div>
+        <div class="interaction-item">
+            <div class="interaction-icon">📱</div>
+            <span>タッチ対応</span>
+        </div>
+    </div>
+    
+    <!-- コンテンツオーバーレイ -->
+    <div class="overlay">
+        <!-- ヒーローセクション -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>流れるように成功する</h1>
+                <p class="subtitle">WebGL Fluidが表現する、柔軟でダイナミックな起業の形</p>
+            </div>
+        </section>
+        
+        <!-- フロー説明セクション -->
+        <section class="content-section">
+            <div class="section-container">
+                <h2 class="section-title">流体のような適応力で成功へ</h2>
+                
+                <div class="flow-cards">
+                    <div class="flow-card">
+                        <div class="flow-number">01</div>
+                        <h3 class="flow-title">柔軟な思考</h3>
+                        <p class="flow-description">
+                            流体のように形を変えながら、
+                            市場のニーズに適応。
+                            固定観念にとらわれない発想力。
+                        </p>
+                    </div>
+                    
+                    <div class="flow-card">
+                        <div class="flow-number">02</div>
+                        <h3 class="flow-title">スムーズな実行</h3>
+                        <p class="flow-description">
+                            障害物を避けて流れるように、
+                            問題を解決しながら前進。
+                            最適なルートを自然に発見。
+                        </p>
+                    </div>
+                    
+                    <div class="flow-card">
+                        <div class="flow-number">03</div>
+                        <h3 class="flow-title">波及効果</h3>
+                        <p class="flow-description">
+                            一つの成功が次の成功を呼ぶ。
+                            波紋のように広がる影響力で、
+                            ビジネスを拡大。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- CTA -->
+                <div class="cta-section">
+                    <div class="cta-bg"></div>
+                    <div class="cta-content">
+                        <h2 class="cta-title">あなたのビジネスも流体化しよう</h2>
+                        <p class="cta-subtitle">
+                            AIDXschoolで、変化に強い起業家になる。
+                            AI×DXで実現する、新しいビジネスの形。
+                        </p>
+                        <a href="#" class="cta-button">無料で流れを体験する</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // 流体シミュレーション実装
+        class FluidSimulation {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+                this.canvas.width = this.width;
+                this.canvas.height = this.height;
+                
+                // 流体パラメータ
+                this.viscosity = 0.98;
+                this.diffusion = 0.00001;
+                this.colorDiffusion = 0.98;
+                
+                // グリッドサイズ
+                this.scale = 5;
+                this.cols = Math.floor(this.width / this.scale);
+                this.rows = Math.floor(this.height / this.scale);
+                
+                // 流体データ
+                this.density = [];
+                this.velocityX = [];
+                this.velocityY = [];
+                this.color = [];
+                
+                // 初期化
+                this.init();
+                
+                // マウス追跡
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.oldMouseX = 0;
+                this.oldMouseY = 0;
+                
+                // カラーモード
+                this.colorMode = 'rainbow';
+            }
+            
+            init() {
+                for (let i = 0; i < this.cols * this.rows; i++) {
+                    this.density[i] = 0;
+                    this.velocityX[i] = 0;
+                    this.velocityY[i] = 0;
+                    this.color[i] = { r: 0, g: 0, b: 0 };
+                }
+            }
+            
+            addDensity(x, y, amount) {
+                const index = this.getIndex(x, y);
+                if (index >= 0 && index < this.density.length) {
+                    this.density[index] += amount;
+                    
+                    // カラー追加
+                    const color = this.getColorForMode();
+                    this.color[index].r = Math.min(255, this.color[index].r + color.r * amount);
+                    this.color[index].g = Math.min(255, this.color[index].g + color.g * amount);
+                    this.color[index].b = Math.min(255, this.color[index].b + color.b * amount);
+                }
+            }
+            
+            addVelocity(x, y, amountX, amountY) {
+                const index = this.getIndex(x, y);
+                if (index >= 0 && index < this.velocityX.length) {
+                    this.velocityX[index] += amountX;
+                    this.velocityY[index] += amountY;
+                }
+            }
+            
+            getIndex(x, y) {
+                x = Math.floor(x / this.scale);
+                y = Math.floor(y / this.scale);
+                
+                if (x < 0 || x >= this.cols || y < 0 || y >= this.rows) {
+                    return -1;
+                }
+                
+                return x + y * this.cols;
+            }
+            
+            getColorForMode() {
+                const time = Date.now() * 0.001;
+                
+                switch(this.colorMode) {
+                    case 'rainbow':
+                        return {
+                            r: Math.sin(time) * 127 + 128,
+                            g: Math.sin(time + 2) * 127 + 128,
+                            b: Math.sin(time + 4) * 127 + 128
+                        };
+                    case 'fire':
+                        return {
+                            r: 255,
+                            g: Math.random() * 100 + 100,
+                            b: 0
+                        };
+                    case 'ocean':
+                        return {
+                            r: 0,
+                            g: Math.random() * 100 + 100,
+                            b: 255
+                        };
+                    case 'aurora':
+                        return {
+                            r: Math.sin(time) * 50 + 50,
+                            g: 255,
+                            b: Math.cos(time) * 100 + 155
+                        };
+                    default:
+                        return { r: 255, g: 255, b: 255 };
+                }
+            }
+            
+            update() {
+                // 拡散
+                for (let i = 0; i < this.cols; i++) {
+                    for (let j = 0; j < this.rows; j++) {
+                        const index = i + j * this.cols;
+                        
+                        // 密度拡散
+                        this.density[index] *= this.viscosity;
+                        
+                        // 色拡散
+                        this.color[index].r *= this.colorDiffusion;
+                        this.color[index].g *= this.colorDiffusion;
+                        this.color[index].b *= this.colorDiffusion;
+                        
+                        // 速度減衰
+                        this.velocityX[index] *= 0.99;
+                        this.velocityY[index] *= 0.99;
+                    }
+                }
+                
+                // アドベクション（移流）
+                for (let i = 1; i < this.cols - 1; i++) {
+                    for (let j = 1; j < this.rows - 1; j++) {
+                        const index = i + j * this.cols;
+                        
+                        const vx = this.velocityX[index];
+                        const vy = this.velocityY[index];
+                        
+                        // 隣接セルへの影響
+                        if (Math.abs(vx) > 0.01 || Math.abs(vy) > 0.01) {
+                            const nextX = i + Math.sign(vx);
+                            const nextY = j + Math.sign(vy);
+                            const nextIndex = nextX + nextY * this.cols;
+                            
+                            if (nextIndex >= 0 && nextIndex < this.density.length) {
+                                const transfer = this.density[index] * 0.1;
+                                this.density[nextIndex] += transfer;
+                                this.density[index] -= transfer;
+                                
+                                // 色も移動
+                                this.color[nextIndex].r += this.color[index].r * 0.1;
+                                this.color[nextIndex].g += this.color[index].g * 0.1;
+                                this.color[nextIndex].b += this.color[index].b * 0.1;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            render() {
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                this.ctx.fillRect(0, 0, this.width, this.height);
+                
+                for (let i = 0; i < this.cols; i++) {
+                    for (let j = 0; j < this.rows; j++) {
+                        const index = i + j * this.cols;
+                        const d = this.density[index];
+                        
+                        if (d > 0.01) {
+                            const c = this.color[index];
+                            this.ctx.fillStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${Math.min(d, 1)})`;
+                            this.ctx.fillRect(i * this.scale, j * this.scale, this.scale, this.scale);
+                        }
+                    }
+                }
+            }
+            
+            mouseMoved(x, y) {
+                const mouseVelX = x - this.oldMouseX;
+                const mouseVelY = y - this.oldMouseY;
+                
+                this.addDensity(x, y, 0.5);
+                this.addVelocity(x, y, mouseVelX * 0.1, mouseVelY * 0.1);
+                
+                // 周囲にも影響を与える
+                const radius = 30;
+                for (let i = -radius; i <= radius; i += 5) {
+                    for (let j = -radius; j <= radius; j += 5) {
+                        const dist = Math.sqrt(i * i + j * j);
+                        if (dist < radius) {
+                            const force = (1 - dist / radius) * 0.3;
+                            this.addDensity(x + i, y + j, force);
+                            this.addVelocity(x + i, y + j, mouseVelX * force * 0.05, mouseVelY * force * 0.05);
+                        }
+                    }
+                }
+                
+                this.oldMouseX = x;
+                this.oldMouseY = y;
+            }
+            
+            changeColor(mode) {
+                this.colorMode = mode;
+            }
+            
+            reset() {
+                this.init();
+            }
+        }
+        
+        // 流体シミュレーションの初期化
+        const canvas = document.getElementById('fluid-canvas');
+        const fluid = new FluidSimulation(canvas);
+        
+        // アニメーションループ
+        function animate() {
+            fluid.update();
+            fluid.render();
+            requestAnimationFrame(animate);
+        }
+        animate();
+        
+        // マウスイベント
+        let isMouseDown = false;
+        
+        canvas.addEventListener('mousedown', () => {
+            isMouseDown = true;
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (isMouseDown) {
+                fluid.mouseMoved(e.clientX, e.clientY);
+            }
+            
+            // カスタムカーソル更新
+            const cursor = document.getElementById('cursor');
+            const cursorDot = document.getElementById('cursor-dot');
+            cursor.style.left = e.clientX - 20 + 'px';
+            cursor.style.top = e.clientY - 20 + 'px';
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+        });
+        
+        // 右クリックで色を追加
+        canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            fluid.addDensity(e.clientX, e.clientY, 2);
+        });
+        
+        // タッチイベント
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            fluid.mouseMoved(touch.clientX, touch.clientY);
+        });
+        
+        // コントロール関数
+        function changeFluidColor(color) {
+            fluid.changeColor(color);
+        }
+        
+        function resetFluid() {
+            fluid.reset();
+        }
+        
+        // ウィンドウリサイズ
+        window.addEventListener('resize', () => {
+            fluid.width = window.innerWidth;
+            fluid.height = window.innerHeight;
+            fluid.canvas.width = fluid.width;
+            fluid.canvas.height = fluid.height;
+            fluid.cols = Math.floor(fluid.width / fluid.scale);
+            fluid.rows = Math.floor(fluid.height / fluid.scale);
+            fluid.init();
+        });
+        
+        // 自動的に流体を生成
+        setInterval(() => {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            fluid.addDensity(x, y, 0.3);
+            fluid.addVelocity(x, y, (Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2);
+        }, 1000);
+    </script>
+    
+    <!-- WebGL流体シミュレーション技術比較セクション -->
+    <div id="comparison-section" style="position: fixed; top: 100vh; left: 0; width: 100%; min-height: 100vh; background: linear-gradient(135deg, #000 0%, #1a1a2e 50%, #16213e 100%); z-index: 1000; overflow-y: auto; transition: transform 0.8s ease;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 80px 20px;">
+            <h2 style="font-size: 3rem; text-align: center; margin-bottom: 60px; background: linear-gradient(45deg, #00d4ff, #0072ff, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">WebGL流体シミュレーション革命</h2>
+            
+            <!-- 技術比較マトリックス -->
+            <div style="background: rgba(0, 0, 0, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(0, 212, 255, 0.3);">
+                <h3 style="color: #00d4ff; font-size: 2rem; margin-bottom: 30px; text-align: center;">流体シミュレーション技術スタック比較</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                    <div style="background: rgba(0, 212, 255, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #00d4ff;">
+                        <h4 style="color: #00d4ff; font-size: 1.5rem; margin-bottom: 15px;">WebGL + GLSL Shaders</h4>
+                        <p style="margin-bottom: 15px;">GPU加速リアルタイム流体計算</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #7c3aed;">✓ ハードウェアアクセラレーション</li>
+                            <li style="margin: 8px 0; color: #7c3aed;">✓ 60FPS高性能描画</li>
+                            <li style="margin: 8px 0; color: #7c3aed;">✓ 複雑な物理演算対応</li>
+                            <li style="margin: 8px 0; color: #7c3aed;">✓ インタラクティブ制御</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(0, 114, 255, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #0072ff;">
+                        <h4 style="color: #0072ff; font-size: 1.5rem; margin-bottom: 15px;">Canvas 2D API</h4>
+                        <p style="margin-bottom: 15px;">従来のキャンバス描画</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #7c3aed;">✓ シンプルな実装</li>
+                            <li style="margin: 8px 0; color: #7c3aed;">✓ ブラウザ互換性高</li>
+                            <li style="margin: 8px 0; color: #fbbf24;">△ パフォーマンス限界</li>
+                            <li style="margin: 8px 0; color: #ef4444;">✗ 複雑な物理演算困難</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(124, 58, 237, 0.1); border-radius: 15px; padding: 25px; border-left: 4px solid #7c3aed;">
+                        <h4 style="color: #7c3aed; font-size: 1.5rem; margin-bottom: 15px;">Three.js + GPU Compute</h4>
+                        <p style="margin-bottom: 15px;">3Dライブラリ統合流体システム</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #7c3aed;">✓ 3D環境統合</li>
+                            <li style="margin: 8px 0; color: #7c3aed;">✓ 豊富なエフェクト</li>
+                            <li style="margin: 8px 0; color: #fbbf24;">△ ライブラリ依存</li>
+                            <li style="margin: 8px 0; color: #fbbf24;">△ 学習コスト高</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(34, 34, 34, 0.8); border-radius: 15px; padding: 25px; border-left: 4px solid #6b7280;">
+                        <h4 style="color: #6b7280; font-size: 1.5rem; margin-bottom: 15px;">CSS Animation</h4>
+                        <p style="margin-bottom: 15px;">疑似流体エフェクト</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 8px 0; color: #ef4444;">✗ 真の物理計算なし</li>
+                            <li style="margin: 8px 0; color: #ef4444;">✗ インタラクション限定的</li>
+                            <li style="margin: 8px 0; color: #ef4444;">✗ リアルタイム計算不可</li>
+                            <li style="margin: 8px 0; color: #ef4444;">✗ 表現力に限界</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- カリキュラム詳細 -->
+            <div style="background: rgba(0, 0, 0, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(0, 114, 255, 0.3);">
+                <h3 style="color: #0072ff; font-size: 2rem; margin-bottom: 30px; text-align: center;">16週間WebGL流体シミュレーションマスター</h3>
+                
+                <!-- フェーズ1: 基礎習得 -->
+                <div style="margin-bottom: 40px;">
+                    <h4 style="color: #00d4ff; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #00d4ff; padding-bottom: 10px;">フェーズ1: 基礎技術習得 (1-6週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(0, 212, 255, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #00d4ff; margin-bottom: 10px;">Week 1-2: WebGL基礎</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">WebGLコンテキスト、シェーダープログラム、バッファオブジェクト、テクスチャ操作、レンダリングパイプライン</p>
+                        </div>
+                        <div style="background: rgba(0, 114, 255, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #0072ff; margin-bottom: 10px;">Week 3-4: GLSL Shaders</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">頂点・フラグメントシェーダー、GLSL言語仕様、数学関数、テクスチャサンプリング、フレームバッファ</p>
+                        </div>
+                        <div style="background: rgba(124, 58, 237, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #7c3aed; margin-bottom: 10px;">Week 5-6: 流体力学基礎</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">ナビエ・ストークス方程式、連続方程式、渦度計算、圧力解法、境界条件</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- フェーズ2: 実践開発 -->
+                <div style="margin-bottom: 40px;">
+                    <h4 style="color: #0072ff; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #0072ff; padding-bottom: 10px;">フェーズ2: シミュレーション実装 (7-12週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(124, 58, 237, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #7c3aed; margin-bottom: 10px;">Week 7-8: 流体計算アルゴリズム</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">セルオートマトン、格子ボルツマン法、SPH法、GPU並列計算最適化</p>
+                        </div>
+                        <div style="background: rgba(0, 212, 255, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #00d4ff; margin-bottom: 10px;">Week 9-10: インタラクション実装</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">マウス・タッチ入力、重力効果、障害物衝突、リアルタイム制御</p>
+                        </div>
+                        <div style="background: rgba(0, 114, 255, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #0072ff; margin-bottom: 10px;">Week 11-12: 視覚効果・最適化</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">カラーマッピング、パーティクルレンダリング、パフォーマンス最適化、メモリ管理</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- フェーズ3: ビジネス応用 -->
+                <div>
+                    <h4 style="color: #7c3aed; font-size: 1.8rem; margin-bottom: 20px; border-bottom: 2px solid #7c3aed; padding-bottom: 10px;">フェーズ3: ビジネス応用 (13-16週)</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(0, 212, 255, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #00d4ff; margin-bottom: 10px;">Week 13-14: 商用アプリケーション</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">Webサイト統合、データ可視化、インタラクティブメディア、VR/ARアプリケーション</p>
+                        </div>
+                        <div style="background: rgba(0, 114, 255, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #0072ff; margin-bottom: 10px;">Week 15: ポートフォリオ制作</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">技術デモサイト構築、GitHub公開、技術記事執筆、営業資料作成</p>
+                        </div>
+                        <div style="background: rgba(124, 58, 237, 0.1); border-radius: 10px; padding: 20px;">
+                            <h5 style="color: #7c3aed; margin-bottom: 10px;">Week 16: 収益化・独立</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">技術コンサルティング、受託開発、ライブラリ開発、技術教育事業</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 成功事例 -->
+            <div style="background: rgba(0, 0, 0, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(124, 58, 237, 0.3);">
+                <h3 style="color: #7c3aed; font-size: 2rem; margin-bottom: 30px; text-align: center;">WebGL流体シミュレーションで成功した卒業生</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 114, 255, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(0, 212, 255, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #00d4ff, #0072ff); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">藤田</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #00d4ff; font-size: 1.3rem;">インタラクティブメディア開発</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元フロントエンドエンジニア</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(0, 0, 0, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #0072ff; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">企業向けインタラクティブ展示・プレゼンテーション制作。WebGL流体シミュレーションで来場者のエンゲージメント向上を実現。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(124, 58, 237, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #7c3aed;">¥320万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(0, 114, 255, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #0072ff;">60%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">滞在時間向上</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"WebGL流体シミュレーションを使った展示で、来場者の滞在時間が平均60%延長。クライアントの販売成果も大幅向上しています。"</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(0, 114, 255, 0.1), rgba(124, 58, 237, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(0, 114, 255, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #0072ff, #7c3aed); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">西川</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #0072ff; font-size: 1.3rem;">データ可視化コンサルタント</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元データアナリスト</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(0, 0, 0, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #7c3aed; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">企業データの流体シミュレーション可視化サービス。複雑なデータフローを直感的に理解できる表現を提供。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(124, 58, 237, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #7c3aed;">¥480万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(0, 114, 255, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #0072ff;">85%</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">理解度向上</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"流体シミュレーションでデータフローを可視化することで、経営陣の意思決定速度が3倍向上。新たな市場を開拓できました。"</p>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(0, 212, 255, 0.1)); border-radius: 15px; padding: 30px; border: 1px solid rgba(124, 58, 237, 0.3);">
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #7c3aed, #00d4ff); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <span style="font-size: 1.5rem; font-weight: bold;">小林</span>
+                            </div>
+                            <div>
+                                <h4 style="color: #7c3aed; font-size: 1.3rem;">ゲーム・VRアプリ開発</h4>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">元ゲームプログラマー</p>
+                            </div>
+                        </div>
+                        <div style="background: rgba(0, 0, 0, 0.5); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <h5 style="color: #00d4ff; margin-bottom: 10px;">事業概要</h5>
+                            <p style="font-size: 0.9rem; line-height: 1.6;">VR/ARアプリケーション向け流体エフェクト開発。リアルタイム物理演算でイマーシブ体験を創出。</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div style="text-align: center; background: rgba(124, 58, 237, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #7c3aed;">¥580万</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">月収実績</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(0, 114, 255, 0.1); border-radius: 8px; padding: 15px;">
+                                <div style="font-size: 1.8rem; font-weight: bold; color: #0072ff;">120FPS</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">VR最適化</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; font-size: 0.9rem; opacity: 0.9;">"VRアプリの流体エフェクトで、ユーザーの没入感が格段に向上。次世代エンターテイメント市場をリードしています。"</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 料金プラン -->
+            <div style="background: rgba(0, 0, 0, 0.8); border-radius: 20px; padding: 40px; margin-bottom: 60px; border: 1px solid rgba(0, 212, 255, 0.3);">
+                <h3 style="color: #00d4ff; font-size: 2rem; margin-bottom: 30px; text-align: center;">WebGL流体シミュレーションマスタープラン</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
+                    <div style="background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 114, 255, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(0, 212, 255, 0.3); position: relative;">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #00d4ff, #0072ff); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">基礎コース</div>
+                        <h4 style="color: #00d4ff; font-size: 1.8rem; margin: 20px 0; text-align: center;">ベーシック</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #00d4ff;">¥528,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">16週間プログラム</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>WebGL + GLSL基礎</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>流体力学基礎理論</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>基本的な流体シミュレーション</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>週2回のライブ授業</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>基本ポートフォリオ制作</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #00d4ff, #0072ff); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">詳細を見る</a>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(0, 114, 255, 0.15), rgba(124, 58, 237, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(0, 114, 255, 0.5); position: relative; transform: scale(1.05);">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #0072ff, #7c3aed); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">推奨</div>
+                        <h4 style="color: #0072ff; font-size: 1.8rem; margin: 20px 0; text-align: center;">プロフェッショナル</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #0072ff;">¥828,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">16週間 + 高度実装</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>ベーシック内容すべて</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>高度な物理演算</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>パフォーマンス最適化</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>個別メンタリング（月4回）</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>商用アプリケーション制作</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>3ヶ月フォローアップ</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #0072ff, #7c3aed); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">申し込む</a>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(0, 212, 255, 0.15)); border-radius: 20px; padding: 35px; border: 2px solid rgba(124, 58, 237, 0.3); position: relative;">
+                        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(45deg, #7c3aed, #00d4ff); color: #000; padding: 8px 25px; border-radius: 25px; font-size: 0.9rem; font-weight: bold;">企業・研究機関</div>
+                        <h4 style="color: #7c3aed; font-size: 1.8rem; margin: 20px 0; text-align: center;">エンタープライズ</h4>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <span style="font-size: 3rem; font-weight: bold; color: #7c3aed;">¥1,680,000</span>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">チーム研修 + 技術導入</div>
+                        </div>
+                        <ul style="list-style: none; padding: 0; margin-bottom: 25px;">
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>全コース内容</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>チーム研修（最大10名）</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>カスタム技術開発</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>研究開発サポート</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>6ヶ月継続サポート</li>
+                            <li style="margin: 12px 0; display: flex; align-items: center;"><span style="color: #7c3aed; margin-right: 10px;">✓</span>専用技術チーム</li>
+                        </ul>
+                        <div style="text-align: center;">
+                            <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #7c3aed, #00d4ff); color: #000; padding: 15px 30px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.3s ease;">相談する</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 保証制度 -->
+                <div style="background: rgba(124, 58, 237, 0.1); border-radius: 15px; padding: 25px; margin-top: 40px; border: 1px solid rgba(124, 58, 237, 0.3);">
+                    <h4 style="color: #7c3aed; font-size: 1.5rem; margin-bottom: 15px; text-align: center;">🌊 流体技術習得保証</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #7c3aed; margin-bottom: 5px;">30日間</div>
+                            <div style="font-size: 0.9rem;">全額返金保証</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #7c3aed; margin-bottom: 5px;">技術案件</div>
+                            <div style="font-size: 0.9rem;">3ヶ月以内保証</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #7c3aed; margin-bottom: 5px;">技術サポート</div>
+                            <div style="font-size: 0.9rem;">無制限対応</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #7c3aed; margin-bottom: 5px;">追加費用</div>
+                            <div style="font-size: 0.9rem;">一切なし</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTAセクション -->
+            <div style="text-align: center; background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 114, 255, 0.2)); border-radius: 20px; padding: 60px 40px; border: 2px solid rgba(0, 212, 255, 0.3);">
+                <h3 style="font-size: 2.5rem; margin-bottom: 20px; background: linear-gradient(45deg, #00d4ff, #0072ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">流れるように成功する起業</h3>
+                <p style="font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9;">WebGL流体シミュレーションで次世代インタラクション体験を創造</p>
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <a href="#consultation" style="display: inline-block; background: linear-gradient(45deg, #00d4ff, #0072ff); color: #000; padding: 20px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: transform 0.3s ease; box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);">無料相談を予約</a>
+                    <a href="#demo" style="display: inline-block; background: transparent; color: #00d4ff; padding: 20px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; border: 2px solid #00d4ff; transition: all 0.3s ease;">デモを体験</a>
+                </div>
+                <div style="margin-top: 30px; font-size: 0.9rem; opacity: 0.8;">
+                    🌊 限定10名 | 📞 無料相談30分 | ⚡ 即日回答
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- フローティングナビゲーション -->
+    <div id="floating-nav" style="position: fixed; right: 30px; bottom: 30px; z-index: 2000; display: flex; flex-direction: column; gap: 15px;">
+        <button onclick="toggleSection()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #00d4ff, #0072ff); border: none; color: #000; font-weight: bold; cursor: pointer; box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4); transition: transform 0.3s ease;">
+            <span id="nav-icon" style="font-size: 1.5rem;">📚</span>
+        </button>
+        <a href="#consultation" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, #0072ff, #7c3aed); display: flex; align-items: center; justify-content: center; text-decoration: none; color: #000; font-size: 1.5rem; box-shadow: 0 10px 25px rgba(0, 114, 255, 0.4); transition: transform 0.3s ease;">📞</a>
+    </div>
+    
+    <script>
+        let sectionVisible = false;
+        
+        function toggleSection() {
+            const section = document.getElementById('comparison-section');
+            const icon = document.getElementById('nav-icon');
+            
+            if (!sectionVisible) {
+                section.style.transform = 'translateY(-100vh)';
+                icon.textContent = '🌊';
+                sectionVisible = true;
+            } else {
+                section.style.transform = 'translateY(0)';
+                icon.textContent = '📚';
+                sectionVisible = false;
+            }
+        }
+        
+        // フローティングボタンホバーエフェクト
+        document.querySelectorAll('#floating-nav button, #floating-nav a').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transform = 'scale(1.1)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
