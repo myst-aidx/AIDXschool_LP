@@ -659,7 +659,7 @@ function BackgroundParticles() {
   const particlesRef = useRef<THREE.Points>(null!)
   
   const positions = new Float32Array(count * 3)
-  const colors = new Float32Array(count * 3)
+  const colorArray = new Float32Array(count * 3)
   
   for (let i = 0; i < count; i++) {
     positions[i * 3] = (Math.random() - 0.5) * 50
@@ -667,9 +667,9 @@ function BackgroundParticles() {
     positions[i * 3 + 2] = (Math.random() - 0.5) * 50
     
     const color = new THREE.Color(colors.primary)
-    colors[i * 3] = color.r
-    colors[i * 3 + 1] = color.g
-    colors[i * 3 + 2] = color.b
+    colorArray[i * 3] = color.r
+    colorArray[i * 3 + 1] = color.g
+    colorArray[i * 3 + 2] = color.b
   }
   
   useFrame((state) => {
@@ -691,7 +691,7 @@ function BackgroundParticles() {
         <bufferAttribute
           attach="attributes-color"
           count={count}
-          array={colors}
+          array={colorArray}
           itemSize={3}
         />
       </bufferGeometry>
