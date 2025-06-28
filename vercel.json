@@ -1,0 +1,22 @@
+{
+  "buildCommand": "echo 'No build required for static HTML'",
+  "outputDirectory": ".",
+  "installCommand": "echo 'No install required'",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
+}
