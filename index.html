@@ -4,12 +4,368 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIDXschool Landing Pages Gallery</title>
-    <script>
-        // 即座にmain.htmlにリダイレクト
-        window.location.replace('main.html');
-    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script src="assets/enhanced-visuals.js" defer></script>
+    
+    <style>
+        :root {
+            --primary-blue: #4EB5FF;
+            --primary-green: #38C172;
+            --accent-yellow: #FFD93D;
+            --accent-red: #FF6B6B;
+            --text-dark: #1a202c;
+            --text-gray: #4a5568;
+            --bg-light: #f7fafc;
+            --bg-white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
+            --gradient-primary: linear-gradient(135deg, var(--primary-blue), var(--primary-green));
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+        }
+        
+        .lp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .lp-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .lp-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .lp-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .lp-card:hover::before {
+            transform: translateX(0);
+        }
+        
+        .lp-version {
+            display: inline-block;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .lp-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        
+        .lp-description {
+            color: var(--text-gray);
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        
+        .lp-link {
+            display: inline-block;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .lp-link::after {
+            content: '→';
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+        
+        .lp-link:hover {
+            color: var(--primary-green);
+        }
+        
+        .lp-link:hover::after {
+            transform: translateX(5px);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 40px 0 20px;
+            text-align: center;
+        }
+        
+        .utility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .utility-card {
+            background: var(--bg-white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .utility-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .utility-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .external-link {
+            background: #6366F1;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .lp-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>Redirecting to the latest version...</p>
+    <div class="container">
+        <header class="header">
+            <h1>AIDXschool Landing Pages</h1>
+            <p class="subtitle">AI×ノーコード自動化スクール - 全ランディングページギャラリー</p>
+        </header>
+        
+        <section>
+            <h2 class="section-title">メインランディングページ</h2>
+            <div class="lp-grid">
+                <div class="lp-card">
+                    <span class="lp-version">V1</span>
+                    <h3 class="lp-title">基本版</h3>
+                    <p class="lp-description">シンプルで分かりやすい、従来型の情報提供ランディングページ。初めての方にも理解しやすい構成です。</p>
+                    <a href="html-lps/ai-biz-freemium-lp.html" class="lp-link">ページを見る</a>
+                </div>
+                
+                <div class="lp-card">
+                    <span class="lp-version">V2</span>
+                    <h3 class="lp-title">ローダーアニメーション追加版</h3>
+                    <p class="lp-description">洗練されたローディングアニメーションで、プロフェッショナルな印象を演出します。</p>
+                    <a href="html-lps/ai-biz-freemium-lp-v2.html" class="lp-link">ページを見る</a>
+                </div>
+                
+                <div class="lp-card">
+                    <span class="lp-version">V3</span>
+                    <h3 class="lp-title">完全版（全ビジュアル要素搭載）</h3>
+                    <p class="lp-description">パーティクルエフェクト、アニメーション、インタラクティブ要素を完備した最も充実したバージョン。</p>
+                    <a href="html-lps/ai-biz-freemium-lp-v3.html" class="lp-link">ページを見る</a>
+                </div>
+                
+                <div class="lp-card">
+                    <span class="lp-version">V5</span>
+                    <h3 class="lp-title">ストーリーテリング没入型LP</h3>
+                    <p class="lp-description">実際の成功事例を物語形式で紹介。感情に訴えかける共感型のランディングページです。</p>
+                    <a href="html-lps/ai-biz-freemium-lp-v5.html" class="lp-link">ページを見る</a>
+                </div>
+                
+                <div class="lp-card">
+                    <span class="lp-version">V6</span>
+                    <h3 class="lp-title">共感型ストーリーテリングLP</h3>
+                    <p class="lp-description">ユーザーの悩みに深く共感し、解決への道筋を示す心理的アプローチを採用。</p>
+                    <a href="html-lps/ai-biz-freemium-lp-v6.html" class="lp-link">ページを見る</a>
+                </div>
+                
+                <div class="lp-card">
+                    <span class="lp-version">V7</span>
+                    <h3 class="lp-title">リアルタイム成功体験LP</h3>
+                    <p class="lp-description">30秒でAI自動化を体験できるインタラクティブデモ搭載。実際の効果を即座に実感できます。</p>
+                    <a href="html-lps/ai-biz-freemium-lp-v7.html" class="lp-link">ページを見る</a>
+                </div>
+                
+                <div class="lp-card">
+                    <span class="lp-version">V8</span>
+                    <h3 class="lp-title">招待制エリートスクールLP</h3>
+                    <p class="lp-description">95%が不合格になる厳格な審査制度。選ばれた起業家だけが参加できる特別なプログラム。</p>
+                    <a href="html-lps/ai-biz-freemium-lp-v8.html" class="lp-link">ページを見る</a>
+                </div>
+                
+                <div class="lp-card">
+                    <span class="lp-version">V9</span>
+                    <h3 class="lp-title">AIコパイロットLP</h3>
+                    <p class="lp-description">AIがあなたのビジネスパートナーに。24時間365日サポートする次世代の起業支援。</p>
+                    <a href="html-lps/ai-biz-freemium-lp-v9.html" class="lp-link">ページを見る</a>
+                </div>
+                
+                <div class="lp-card">
+                    <span class="lp-version">V10</span>
+                    <h3 class="lp-title">未来体験LP</h3>
+                    <p class="lp-description">2030年のビジネスを今体験。最先端のAI技術で実現する未来の起業スタイル。</p>
+                    <a href="html-lps/ai-biz-freemium-lp-v10.html" class="lp-link">ページを見る</a>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2 class="section-title">アニメーション技術デモ</h2>
+            <div class="lp-grid">
+                <div class="lp-card">
+                    <span class="lp-version">Demo</span>
+                    <h3 class="lp-title">Anime.js エレガントLP</h3>
+                    <p class="lp-description">Anime.jsライブラリを使用した滑らかで洗練されたアニメーション効果のデモンストレーション。</p>
+                    <a href="html-lps/animejs-elegant-lp.html" class="lp-link">ページを見る</a>
+                </div>
+                
+                <div class="lp-card">
+                    <span class="lp-version">Demo</span>
+                    <h3 class="lp-title">AOS スクロールアニメーション</h3>
+                    <p class="lp-description">スクロールに連動した美しいアニメーション効果。ユーザー体験を向上させる技術デモ。</p>
+                    <a href="html-lps/aos-scroll-lp.html" class="lp-link">ページを見る</a>
+                </div>
+                
+                <div class="lp-card">
+                    <span class="lp-version">Demo</span>
+                    <h3 class="lp-title">Lottie アニメーション</h3>
+                    <p class="lp-description">After Effectsで作成された高品質なアニメーションをWebで再現する最新技術。</p>
+                    <a href="html-lps/lottie-animation-lp.html" class="lp-link">ページを見る</a>
+                </div>
+                
+                <div class="lp-card">
+                    <span class="lp-version">Demo</span>
+                    <h3 class="lp-title">Typing.js タイプライター</h3>
+                    <p class="lp-description">文字が一文字ずつ表示されるタイプライター効果で、メッセージを印象的に演出。</p>
+                    <a href="html-lps/typingjs-typewriter-lp.html" class="lp-link">ページを見る</a>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2 class="section-title">その他のリソース</h2>
+            <div class="utility-grid">
+                <div class="utility-card">
+                    <div class="utility-icon external-link">🚀</div>
+                    <h3 class="lp-title">React版デモサイト</h3>
+                    <p class="lp-description">最新のReact技術で構築されたインタラクティブなデモサイト</p>
+                    <a href="https://aid-xschool-azbsp9iy5-mysts-projects-14a5bb19.vercel.app/" target="_blank" class="lp-link">サイトを見る</a>
+                </div>
+                
+                <div class="utility-card">
+                    <div class="utility-icon">🎨</div>
+                    <h3 class="lp-title">ビジュアルアセット集</h3>
+                    <p class="lp-description">プロジェクトで使用されている全てのビジュアル要素のカタログ</p>
+                    <a href="lp-visual-assets.html" class="lp-link">アセットを見る</a>
+                </div>
+                
+                <div class="utility-card">
+                    <div class="utility-icon">📊</div>
+                    <h3 class="lp-title">ビジュアルダッシュボード</h3>
+                    <p class="lp-description">プロジェクトの統計とパフォーマンスを可視化</p>
+                    <a href="visual-dashboard.html" class="lp-link">ダッシュボードを見る</a>
+                </div>
+                
+                <div class="utility-card">
+                    <div class="utility-icon">🏢</div>
+                    <h3 class="lp-title">会社情報</h3>
+                    <p class="lp-description">AIDXschoolの詳細情報とミッション</p>
+                    <a href="company.html" class="lp-link">詳細を見る</a>
+                </div>
+                
+                <div class="utility-card">
+                    <div class="utility-icon">🔒</div>
+                    <h3 class="lp-title">プライバシーポリシー</h3>
+                    <p class="lp-description">お客様の個人情報の取り扱いについて</p>
+                    <a href="privacy-policy.html" class="lp-link">ポリシーを読む</a>
+                </div>
+                
+                <div class="utility-card">
+                    <div class="utility-icon">📋</div>
+                    <h3 class="lp-title">利用規約</h3>
+                    <p class="lp-description">サービスご利用にあたっての規約</p>
+                    <a href="terms.html" class="lp-link">規約を読む</a>
+                </div>
+            </div>
+        </section>
+    </div>
 </body>
 </html>

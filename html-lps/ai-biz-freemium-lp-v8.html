@@ -3,28 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WARNING: KEEP OUT - 自動化禁止区域</title>
+    <title>招待制AIビジネススクール | 95%が不合格になる入学審査</title>
     
-    <meta name="description" content="警告：このサービスはあなたには向いていません。99%の人が失敗します。それでも進みますか？">
+    <meta name="description" content="年収1000万円を超える起業家だけが知っている秘密。あなたには、その準備ができていますか？">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;700;900&family=Bebas+Neue&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Montserrat:wght@300;400;700;900&family=Crimson+Text:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
+    
+    <script src="../assets/enhanced-visuals.js" defer></script>
     
     <style>
         :root {
-            --danger-red: #DC2626;
-            --warning-orange: #F59E0B;
-            --success-gold: #FCD34D;
-            --pure-black: #000000;
-            --dark-gray: #1F1F1F;
-            --light-gray: #4B4B4B;
+            --elite-gold: #D4AF37;
+            --deep-black: #0A0A0A;
+            --rich-navy: #0F172A;
             --pure-white: #FFFFFF;
-            --blood-red: #8B0000;
+            --soft-gray: #94A3B8;
+            --light-gray: #E2E8F0;
+            --accent-red: #DC2626;
+            --success-green: #059669;
             
-            --glitch-1: #FF0000;
-            --glitch-2: #00FF00;
-            --glitch-3: #0000FF;
+            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+            --gradient-dark: linear-gradient(180deg, #0A0A0A 0%, #1E293B 100%);
+            --gradient-elite: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+            
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.2);
+            --shadow-gold: 0 0 40px rgba(212, 175, 55, 0.3);
         }
         
         * {
@@ -35,523 +43,553 @@
         
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background: var(--pure-black);
+            background: var(--deep-black);
             color: var(--pure-white);
             overflow-x: hidden;
-            cursor: crosshair;
+            line-height: 1.6;
         }
         
-        /* グリッチエフェクト */
-        @keyframes glitch {
-            0% {
-                text-shadow: 
-                    0.05em 0 0 var(--glitch-1),
-                    -0.05em -0.025em 0 var(--glitch-2),
-                    0.025em 0.05em 0 var(--glitch-3);
-            }
-            15% {
-                text-shadow: 
-                    0.05em 0 0 var(--glitch-1),
-                    -0.05em -0.025em 0 var(--glitch-2),
-                    0.025em 0.05em 0 var(--glitch-3);
-            }
-            16% {
-                text-shadow: 
-                    -0.05em -0.025em 0 var(--glitch-1),
-                    0.025em 0.025em 0 var(--glitch-2),
-                    -0.05em -0.05em 0 var(--glitch-3);
-            }
-            49% {
-                text-shadow: 
-                    -0.05em -0.025em 0 var(--glitch-1),
-                    0.025em 0.025em 0 var(--glitch-2),
-                    -0.05em -0.05em 0 var(--glitch-3);
-            }
-            50% {
-                text-shadow: 
-                    0.025em 0.05em 0 var(--glitch-1),
-                    0.05em 0 0 var(--glitch-2),
-                    0 -0.05em 0 var(--glitch-3);
-            }
-            99% {
-                text-shadow: 
-                    0.025em 0.05em 0 var(--glitch-1),
-                    0.05em 0 0 var(--glitch-2),
-                    0 -0.05em 0 var(--glitch-3);
-            }
-            100% {
-                text-shadow: 
-                    -0.025em 0 0 var(--glitch-1),
-                    -0.025em -0.025em 0 var(--glitch-2),
-                    -0.025em -0.05em 0 var(--glitch-3);
-            }
+        /* スムーススクロール */
+        html {
+            scroll-behavior: smooth;
         }
         
-        /* 第1関門：ブラックゲート */
-        .gate-1 {
+        /* セクション基本スタイル */
+        .section {
+            position: relative;
+            padding: 100px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* エントランス（第一印象） */
+        .entrance {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: var(--gradient-dark);
             position: relative;
-            background: var(--pure-black);
+            overflow: hidden;
         }
         
-        .gate-1::before {
+        .entrance::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .entrance-content {
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .elite-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: var(--gradient-gold);
+            color: var(--deep-black);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            margin-bottom: 40px;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        .entrance-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(40px, 8vw, 80px);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+        
+        .entrance-subtitle {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--soft-gray);
+            margin-bottom: 48px;
+            line-height: 1.4;
+        }
+        
+        .qualification-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto 48px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .qualification-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--elite-gold);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .qualification-title::before,
+        .qualification-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--elite-gold);
+            opacity: 0.3;
+        }
+        
+        .qualification-list {
+            list-style: none;
+            text-align: left;
+        }
+        
+        .qualification-item {
+            position: relative;
+            padding-left: 32px;
+            margin-bottom: 16px;
+            color: var(--light-gray);
+            font-size: 16px;
+        }
+        
+        .qualification-item::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--elite-gold);
+            font-weight: 700;
+        }
+        
+        .entrance-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 48px;
+            background: var(--gradient-gold);
+            color: var(--deep-black);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-gold);
+        }
+        
+        .entrance-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .entrance-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.5);
+        }
+        
+        .entrance-cta:hover::before {
+            left: 100%;
+        }
+        
+        .entrance-note {
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--soft-gray);
+            opacity: 0.8;
+        }
+        
+        /* 審査プロセス */
+        .screening-process {
+            background: var(--rich-navy);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .screening-process::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: 
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(255, 0, 0, 0.03) 2px,
-                    rgba(255, 0, 0, 0.03) 4px
-                );
-            pointer-events: none;
+            height: 1px;
+            background: var(--gradient-gold);
         }
         
-        .warning-container {
+        .section-header {
             text-align: center;
-            position: relative;
-            z-index: 1;
+            margin-bottom: 80px;
         }
         
-        .warning-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(60px, 10vw, 120px);
-            color: var(--danger-red);
+        .section-badge {
+            display: inline-block;
+            padding: 6px 20px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--elite-gold);
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
             letter-spacing: 0.1em;
-            animation: glitch 2s infinite;
-            margin-bottom: 20px;
+            color: var(--elite-gold);
+            margin-bottom: 24px;
         }
         
-        .warning-subtitle {
+        .section-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+        
+        .section-subtitle {
             font-size: 18px;
-            color: var(--light-gray);
-            margin-bottom: 40px;
-            font-weight: 100;
-            letter-spacing: 0.2em;
-        }
-        
-        .enter-button {
-            background: none;
-            border: 1px solid var(--danger-red);
-            color: var(--danger-red);
-            padding: 10px 20px;
-            font-size: 12px;
-            cursor: pointer;
-            opacity: 0.3;
-            transition: all 0.3s;
-            letter-spacing: 0.1em;
-        }
-        
-        .enter-button:hover {
-            opacity: 1;
-            background: var(--danger-red);
-            color: var(--pure-black);
-            transform: scale(1.05);
-        }
-        
-        /* 第2関門：資格審査 */
-        .gate-2 {
-            min-height: 100vh;
-            padding: 80px 20px;
-            background: var(--dark-gray);
-            display: none;
-        }
-        
-        .gate-content {
-            max-width: 800px;
+            color: var(--soft-gray);
+            max-width: 600px;
             margin: 0 auto;
         }
         
-        .gate-title {
-            font-size: clamp(32px, 5vw, 48px);
-            text-align: center;
-            margin-bottom: 40px;
-            color: var(--danger-red);
-            font-weight: 900;
-        }
-        
-        .disqualification-list {
-            background: var(--pure-black);
-            padding: 40px;
-            border: 2px solid var(--danger-red);
-            margin-bottom: 40px;
-        }
-        
-        .disqualification-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .disqualification-item:hover {
-            color: var(--danger-red);
-        }
-        
-        .checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--danger-red);
-            margin-right: 16px;
-            position: relative;
-            transition: all 0.3s;
-        }
-        
-        .checkbox.checked::after {
-            content: '✗';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: var(--danger-red);
-            font-size: 20px;
-        }
-        
-        .proceed-section {
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-        
-        .proceed-section.visible {
-            opacity: 1;
-        }
-        
-        .proceed-button {
-            background: var(--danger-red);
-            border: none;
-            color: var(--pure-white);
-            padding: 15px 40px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        
-        .proceed-button.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
-        .proceed-button.active:hover {
-            background: var(--blood-red);
-            transform: scale(1.05);
-        }
-        
-        /* 第3関門：失敗の墓場 */
-        .gate-3 {
-            min-height: 100vh;
-            padding: 80px 20px;
-            background: var(--pure-black);
-            display: none;
-        }
-        
-        .graveyard {
+        .screening-steps {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
             margin-bottom: 60px;
         }
         
-        .tombstone {
-            background: var(--dark-gray);
-            border: 2px solid var(--light-gray);
-            padding: 30px;
+        .screening-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 40px;
             text-align: center;
             position: relative;
-            overflow: hidden;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
         
-        .tombstone::before {
-            content: '†';
+        .screening-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--elite-gold);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .screening-number {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            color: var(--danger-red);
-            opacity: 0.5;
-        }
-        
-        .tombstone:hover {
-            border-color: var(--danger-red);
-            transform: translateY(-5px);
-        }
-        
-        .failure-name {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--danger-red);
-        }
-        
-        .failure-reason {
-            font-size: 14px;
-            color: var(--light-gray);
-            margin-bottom: 10px;
-        }
-        
-        .failure-loss {
-            font-size: 16px;
-            color: var(--warning-orange);
-        }
-        
-        .courage-question {
-            text-align: center;
-            margin-top: 60px;
-        }
-        
-        .courage-text {
-            font-size: 24px;
-            margin-bottom: 30px;
-            color: var(--danger-red);
-        }
-        
-        /* 第4関門：適性テスト */
-        .gate-4 {
-            min-height: 100vh;
-            padding: 80px 20px;
-            background: var(--dark-gray);
-            display: none;
-        }
-        
-        .test-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: var(--pure-black);
-            padding: 40px;
-            border: 2px solid var(--danger-red);
-        }
-        
-        .timer {
-            text-align: center;
-            font-size: 48px;
-            color: var(--danger-red);
-            font-weight: 900;
-            margin-bottom: 30px;
-            font-family: 'Bebas Neue', sans-serif;
-        }
-        
-        .puzzle-question {
-            font-size: 20px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .puzzle-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-        
-        .puzzle-option {
-            background: var(--dark-gray);
-            border: 2px solid var(--light-gray);
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 18px;
-        }
-        
-        .puzzle-option:hover {
-            border-color: var(--danger-red);
-            transform: scale(1.05);
-        }
-        
-        .puzzle-option.wrong {
-            background: var(--danger-red);
-            animation: shake 0.5s;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-        
-        /* 第5関門：最終警告 */
-        .gate-5 {
-            min-height: 100vh;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-gold);
+            color: var(--deep-black);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--pure-black);
-            display: none;
+            font-weight: 900;
+            font-size: 18px;
         }
         
-        .final-warning {
-            text-align: center;
+        .screening-icon {
+            font-size: 48px;
+            margin-bottom: 24px;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease;
         }
         
-        .stop-sign {
-            font-size: 200px;
-            color: var(--danger-red);
-            margin-bottom: 30px;
-            animation: pulse 2s infinite;
+        .screening-card:hover .screening-icon {
+            filter: grayscale(0%);
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-        
-        .determination-test {
-            margin-top: 40px;
-        }
-        
-        .click-counter {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: var(--warning-orange);
-        }
-        
-        .yes-button {
-            background: var(--danger-red);
-            border: none;
-            color: var(--pure-white);
-            padding: 20px 60px;
+        .screening-title {
             font-size: 24px;
             font-weight: 700;
-            cursor: pointer;
-            transition: all 0.1s;
+            margin-bottom: 16px;
+            color: var(--elite-gold);
         }
         
-        .yes-button:active {
-            transform: scale(0.95);
+        .screening-desc {
+            color: var(--soft-gray);
+            line-height: 1.8;
         }
         
-        /* 第6関門：真実の扉 */
-        .gate-6 {
-            min-height: 100vh;
-            padding: 80px 20px;
-            background: linear-gradient(to bottom, var(--pure-black), var(--dark-gray));
-            display: none;
-            opacity: 0;
-            transition: opacity 1s;
+        .screening-stat {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
         }
         
-        .gate-6.reveal {
-            opacity: 1;
-            background: linear-gradient(to bottom, var(--dark-gray), var(--pure-white));
+        .screening-percentage {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--accent-red);
+            margin-bottom: 4px;
         }
         
-        .truth-container {
+        .screening-label {
+            font-size: 14px;
+            color: var(--soft-gray);
+        }
+        
+        /* 実力診断 */
+        .assessment {
+            background: var(--deep-black);
+            padding: 100px 20px;
+        }
+        
+        .assessment-container {
             max-width: 800px;
             margin: 0 auto;
+        }
+        
+        .assessment-intro {
             text-align: center;
+            margin-bottom: 60px;
         }
         
-        .truth-title {
-            font-size: clamp(36px, 5vw, 56px);
-            margin-bottom: 30px;
+        .assessment-title {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 24px;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .assessment-description {
+            font-size: 18px;
+            color: var(--soft-gray);
+            line-height: 1.8;
+        }
+        
+        .question-card {
+            background: var(--rich-navy);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
             opacity: 0;
-            transform: translateY(50px);
-            animation: revealText 1s forwards 0.5s;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
         }
         
-        @keyframes revealText {
+        @keyframes fadeInUp {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
         
-        .truth-content {
-            font-size: 20px;
-            line-height: 1.8;
-            margin-bottom: 40px;
-            opacity: 0;
-            animation: revealText 1s forwards 1s;
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
         }
         
-        .truth-content.delay-1 {
-            animation-delay: 1.5s;
-        }
-        
-        .truth-content.delay-2 {
-            animation-delay: 2s;
-        }
-        
-        /* 第7関門：選ばれし者の間 */
-        .gate-7 {
-            min-height: 100vh;
-            padding: 80px 20px;
-            background: var(--pure-white);
-            color: var(--pure-black);
-            display: none;
-        }
-        
-        .vip-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        
-        .vip-title {
-            font-family: 'Crimson Text', serif;
-            font-size: clamp(40px, 6vw, 64px);
-            text-align: center;
-            margin-bottom: 40px;
-            color: var(--success-gold);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .vip-badge {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 40px;
-            background: var(--success-gold);
+        .question-number {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-gold);
+            color: var(--deep-black);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 80px;
-            box-shadow: 0 10px 30px rgba(252, 211, 77, 0.3);
-            animation: glow 2s infinite;
+            font-weight: 700;
+            flex-shrink: 0;
         }
         
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 10px 30px rgba(252, 211, 77, 0.3); }
-            50% { box-shadow: 0 10px 50px rgba(252, 211, 77, 0.6); }
+        .question-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--pure-white);
         }
         
-        .vip-content {
-            text-align: center;
-            font-size: 18px;
-            line-height: 1.8;
-            margin-bottom: 60px;
-        }
-        
-        .vip-benefits {
+        .answer-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            gap: 16px;
+        }
+        
+        .answer-option {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .answer-option:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--elite-gold);
+            transform: translateX(8px);
+        }
+        
+        .answer-option.selected {
+            background: var(--gradient-gold);
+            color: var(--deep-black);
+            font-weight: 700;
+        }
+        
+        .answer-option::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -30px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--elite-gold);
+            border-radius: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+        }
+        
+        .answer-option:hover::before {
+            left: 20px;
+        }
+        
+        .answer-option.selected::before {
+            background: var(--deep-black);
+            left: 20px;
+        }
+        
+        .assessment-progress {
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-gold);
+            width: 0;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-size: 14px;
+            color: var(--soft-gray);
+        }
+        
+        /* 結果と特典 */
+        .results {
+            background: var(--gradient-elite);
+            padding: 100px 20px;
+            text-align: center;
+        }
+        
+        .results-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .result-badge {
+            display: inline-block;
+            padding: 12px 32px;
+            background: var(--gradient-gold);
+            color: var(--deep-black);
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            margin-bottom: 32px;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+        }
+        
+        .result-title {
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 900;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+        
+        .result-description {
+            font-size: 20px;
+            color: var(--soft-gray);
+            margin-bottom: 48px;
+            line-height: 1.8;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
             margin-bottom: 60px;
         }
         
         .benefit-card {
-            background: var(--pure-black);
-            color: var(--pure-white);
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 16px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-gold);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
         
         .benefit-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .benefit-card:hover::before {
+            transform: scaleX(1);
         }
         
         .benefit-icon {
@@ -562,470 +600,595 @@
         .benefit-title {
             font-size: 24px;
             font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--success-gold);
+            margin-bottom: 12px;
+            color: var(--elite-gold);
         }
         
         .benefit-desc {
-            font-size: 16px;
-            color: var(--light-gray);
+            color: var(--soft-gray);
+            line-height: 1.6;
         }
         
-        .vip-cta {
+        /* 最終CTA */
+        .final-cta {
+            background: var(--deep-black);
+            padding: 100px 20px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         
-        .vip-button {
-            background: var(--success-gold);
-            border: none;
-            color: var(--pure-black);
-            padding: 20px 60px;
-            font-size: 20px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(252, 211, 77, 0.3);
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
         }
         
-        .vip-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(252, 211, 77, 0.5);
-        }
-        
-        /* ノイズエフェクト */
-        .noise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            opacity: 0.03;
+        .cta-container {
+            position: relative;
             z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
-        .noise::before {
+        .cta-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 900;
+            margin-bottom: 24px;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .cta-description {
+            font-size: 20px;
+            color: var(--soft-gray);
+            margin-bottom: 48px;
+            line-height: 1.8;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .cta-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 24px 60px;
+            background: var(--gradient-gold);
+            color: var(--deep-black);
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-gold);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-primary::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
+            left: -100%;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj4KICA8ZGVmcz4KICAgIDxmaWx0ZXIgaWQ9Im5vaXNlIj4KICAgICAgPGZlVHVyYnVsZW5jZSBiYXNlRnJlcXVlbmN5PSIwLjkiIG51bU9jdGF2ZXM9IjQiIC8+CiAgICA8L2ZpbHRlcj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMSIgLz4KPC9zdmc+');
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
         }
         
-        /* カーソルエフェクト */
-        .cursor-follower {
+        .cta-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 80px rgba(212, 175, 55, 0.6);
+        }
+        
+        .cta-primary:hover::before {
+            left: 100%;
+        }
+        
+        .cta-secondary {
+            color: var(--soft-gray);
+            text-decoration: none;
+            font-size: 16px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .cta-secondary::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--elite-gold);
+            transition: width 0.3s ease;
+        }
+        
+        .cta-secondary:hover {
+            color: var(--elite-gold);
+        }
+        
+        .cta-secondary:hover::after {
+            width: 100%;
+        }
+        
+        /* 限定性表示 */
+        .scarcity {
+            margin-top: 48px;
+            padding: 24px;
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid var(--accent-red);
+            border-radius: 12px;
+        }
+        
+        .scarcity-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-red);
+            margin-bottom: 12px;
+        }
+        
+        .scarcity-text {
+            color: var(--light-gray);
+            font-size: 16px;
+        }
+        
+        .scarcity-number {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--accent-red);
+        }
+        
+        /* フローティング要素 */
+        .floating-indicator {
             position: fixed;
-            width: 20px;
-            height: 20px;
-            background: var(--danger-red);
-            border-radius: 50%;
-            pointer-events: none;
-            transition: all 0.1s;
-            z-index: 9999;
-            opacity: 0.5;
+            bottom: 30px;
+            right: 30px;
+            background: var(--gradient-gold);
+            color: var(--deep-black);
+            padding: 16px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            animation: pulse 2s ease-in-out infinite;
+            cursor: pointer;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         /* レスポンシブ */
         @media (max-width: 768px) {
-            .warning-title {
-                font-size: 60px;
+            .section {
+                padding: 60px 20px;
             }
             
-            .graveyard {
+            .screening-steps {
                 grid-template-columns: 1fr;
             }
             
-            .stop-sign {
-                font-size: 120px;
+            .benefits-grid {
+                grid-template-columns: 1fr;
             }
             
-            .vip-benefits {
-                grid-template-columns: 1fr;
+            .entrance-title {
+                font-size: 40px;
+            }
+            
+            .qualification-box {
+                padding: 24px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- ノイズエフェクト -->
-    <div class="noise"></div>
-    
-    <!-- カーソルフォロワー -->
-    <div class="cursor-follower" id="cursorFollower"></div>
-    
-    <!-- 第1関門：ブラックゲート -->
-    <section class="gate-1" id="gate1">
-        <div class="warning-container">
-            <h1 class="warning-title">WARNING: KEEP OUT</h1>
-            <p class="warning-subtitle">自動化禁止区域</p>
-            <button class="enter-button" onclick="enterGate2()">それでも進む</button>
+    <!-- エントランス -->
+    <section class="entrance">
+        <div class="entrance-content">
+            <div class="elite-badge">INVITATION ONLY</div>
+            
+            <h1 class="entrance-title">
+                95%が不合格になる<br>
+                エリート起業家養成所
+            </h1>
+            
+            <p class="entrance-subtitle">
+                "Not everyone is meant to be an entrepreneur"
+            </p>
+            
+            <div class="qualification-box">
+                <h2 class="qualification-title">入学資格</h2>
+                <ul class="qualification-list">
+                    <li class="qualification-item">現状に本気で不満を持っている</li>
+                    <li class="qualification-item">他人と同じことをしたくない</li>
+                    <li class="qualification-item">失敗を恐れず挑戦できる</li>
+                    <li class="qualification-item">月収100万円では満足できない</li>
+                    <li class="qualification-item">自分の限界を超えたい</li>
+                </ul>
+            </div>
+            
+            <a href="#screening" class="entrance-cta">
+                <span>入学審査を受ける</span>
+                <span>→</span>
+            </a>
+            
+            <p class="entrance-note">
+                ※審査料無料・合格率5%未満
+            </p>
         </div>
     </section>
     
-    <!-- 第2関門：資格審査 -->
-    <section class="gate-2" id="gate2">
-        <div class="gate-content">
-            <h2 class="gate-title">あなたには向いていません</h2>
+    <!-- 審査プロセス -->
+    <section class="screening-process section" id="screening">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">SCREENING PROCESS</span>
+                <h2 class="section-title">3段階の厳格な審査</h2>
+                <p class="section-subtitle">
+                    多くの人は最初の審査で脱落します。<br>
+                    あなたは最後まで残れるでしょうか？
+                </p>
+            </div>
             
-            <div class="disqualification-list">
-                <div class="disqualification-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>楽して稼ぎたいと思っている</span>
+            <div class="screening-steps">
+                <div class="screening-card">
+                    <div class="screening-number">1</div>
+                    <div class="screening-icon">🧠</div>
+                    <h3 class="screening-title">適性診断</h3>
+                    <p class="screening-desc">
+                        起業家としての基本的な資質を診断。論理的思考力、リスク管理能力、革新性を測定します。
+                    </p>
+                    <div class="screening-stat">
+                        <div class="screening-percentage">73%</div>
+                        <div class="screening-label">がここで脱落</div>
+                    </div>
                 </div>
-                <div class="disqualification-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>3日で結果を求める</span>
+                
+                <div class="screening-card">
+                    <div class="screening-number">2</div>
+                    <div class="screening-icon">💡</div>
+                    <h3 class="screening-title">実践課題</h3>
+                    <p class="screening-desc">
+                        実際のビジネス課題を解決。24時間以内に革新的なソリューションを提案していただきます。
+                    </p>
+                    <div class="screening-stat">
+                        <div class="screening-percentage">18%</div>
+                        <div class="screening-label">がここで脱落</div>
+                    </div>
                 </div>
-                <div class="disqualification-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>自己投資を惜しむ</span>
+                
+                <div class="screening-card">
+                    <div class="screening-number">3</div>
+                    <div class="screening-icon">🎯</div>
+                    <h3 class="screening-title">最終面接</h3>
+                    <p class="screening-desc">
+                        成功した起業家による1対1の面接。ビジョン、情熱、実行力を総合的に評価します。
+                    </p>
+                    <div class="screening-stat">
+                        <div class="screening-percentage">4%</div>
+                        <div class="screening-label">が最終脱落</div>
+                    </div>
                 </div>
-                <div class="disqualification-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>失敗を恐れて行動しない</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 実力診断 -->
+    <section class="assessment section">
+        <div class="assessment-container">
+            <div class="assessment-intro">
+                <h2 class="assessment-title">第1審査：適性診断</h2>
+                <p class="assessment-description">
+                    以下の質問に正直に答えてください。<br>
+                    嘘をついても、あなたのためになりません。
+                </p>
+            </div>
+            
+            <div id="assessmentQuestions">
+                <div class="question-card" style="animation-delay: 0.1s">
+                    <div class="question-header">
+                        <span class="question-number">Q1</span>
+                        <p class="question-text">失敗についてどう考えますか？</p>
+                    </div>
+                    <div class="answer-options">
+                        <div class="answer-option" onclick="selectAnswer(this, 1)">
+                            失敗は避けるべきもの
+                        </div>
+                        <div class="answer-option" onclick="selectAnswer(this, 5)">
+                            失敗は成功への投資
+                        </div>
+                        <div class="answer-option" onclick="selectAnswer(this, 3)">
+                            状況による
+                        </div>
+                    </div>
                 </div>
-                <div class="disqualification-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>他人のせいにする癖がある</span>
+                
+                <div class="question-card" style="animation-delay: 0.2s">
+                    <div class="question-header">
+                        <span class="question-number">Q2</span>
+                        <p class="question-text">月収100万円を達成したら？</p>
+                    </div>
+                    <div class="answer-options">
+                        <div class="answer-option" onclick="selectAnswer(this, 1)">
+                            十分満足できる
+                        </div>
+                        <div class="answer-option" onclick="selectAnswer(this, 3)">
+                            もう少し欲しい
+                        </div>
+                        <div class="answer-option" onclick="selectAnswer(this, 5)">
+                            通過点に過ぎない
+                        </div>
+                    </div>
                 </div>
-                <div class="disqualification-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>継続力がない</span>
-                </div>
-                <div class="disqualification-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>現状に満足している</span>
-                </div>
-                <div class="disqualification-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>新しいことを学ぶのが嫌い</span>
-                </div>
-                <div class="disqualification-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>責任を取りたくない</span>
-                </div>
-                <div class="disqualification-item" onclick="toggleCheck(this)">
-                    <div class="checkbox"></div>
-                    <span>今すぐ結果が欲しい</span>
+                
+                <div class="question-card" style="animation-delay: 0.3s">
+                    <div class="question-header">
+                        <span class="question-number">Q3</span>
+                        <p class="question-text">新しいことを学ぶ時間は？</p>
+                    </div>
+                    <div class="answer-options">
+                        <div class="answer-option" onclick="selectAnswer(this, 1)">
+                            週に1時間未満
+                        </div>
+                        <div class="answer-option" onclick="selectAnswer(this, 3)">
+                            週に1-5時間
+                        </div>
+                        <div class="answer-option" onclick="selectAnswer(this, 5)">
+                            毎日欠かさず
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <div class="proceed-section" id="proceedSection">
-                <p style="color: var(--danger-red); margin-bottom: 20px;">
-                    1つでも当てはまる人は、お帰りください。
+            <div class="assessment-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-text">
+                    <span id="currentQuestion">0</span> / <span id="totalQuestions">3</span> 完了
                 </p>
-                <button class="proceed-button" id="proceedButton" onclick="enterGate3()">
-                    全て当てはまらない
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px; display: none;" id="submitSection">
+                <button onclick="submitAssessment()" class="entrance-cta">
+                    診断結果を見る
                 </button>
             </div>
         </div>
     </section>
     
-    <!-- 第3関門：失敗の墓場 -->
-    <section class="gate-3" id="gate3">
-        <div class="gate-content">
-            <h2 class="gate-title">先人たちの屍</h2>
+    <!-- 結果と特典 -->
+    <section class="results section" id="results" style="display: none;">
+        <div class="results-container">
+            <div class="result-badge">CONGRATULATIONS</div>
             
-            <div class="graveyard">
-                <div class="tombstone">
-                    <div class="failure-name">山田太郎（32歳）</div>
-                    <div class="failure-reason">「簡単だと思った」</div>
-                    <div class="failure-loss">損失：3日間と5万円</div>
-                </div>
-                <div class="tombstone">
-                    <div class="failure-name">佐藤花子（28歳）</div>
-                    <div class="failure-reason">「YouTubeで十分だと思った」</div>
-                    <div class="failure-loss">損失：6ヶ月間の迷走</div>
-                </div>
-                <div class="tombstone">
-                    <div class="failure-name">田中一郎（45歳）</div>
-                    <div class="failure-reason">「自己流でやろうとした」</div>
-                    <div class="failure-loss">損失：顧客3社との契約</div>
-                </div>
-                <div class="tombstone">
-                    <div class="failure-name">鈴木美咲（26歳）</div>
-                    <div class="failure-reason">「サポートを使わなかった」</div>
-                    <div class="failure-loss">損失：起業の夢</div>
-                </div>
-                <div class="tombstone">
-                    <div class="failure-name">高橋健（38歳）</div>
-                    <div class="failure-reason">「途中で諦めた」</div>
-                    <div class="failure-loss">損失：年収2倍のチャンス</div>
-                </div>
-                <div class="tombstone">
-                    <div class="failure-name">伊藤さゆり（31歳）</div>
-                    <div class="failure-reason">「本気じゃなかった」</div>
-                    <div class="failure-loss">損失：自由な人生</div>
-                </div>
-            </div>
+            <h2 class="result-title">
+                あなたには素質があります
+            </h2>
             
-            <div class="courage-question">
-                <p class="courage-text">それでも、あなたは違うと言えますか？</p>
-                <button class="proceed-button active" onclick="enterGate4()">
-                    私は違う
-                </button>
-            </div>
-        </div>
-    </section>
-    
-    <!-- 第4関門：適性テスト -->
-    <section class="gate-4" id="gate4">
-        <div class="gate-content">
-            <h2 class="gate-title">適性テスト</h2>
-            
-            <div class="test-container">
-                <div class="timer" id="timer">60</div>
-                
-                <div class="puzzle-question">
-                    次の数列の？に入る数字は？<br>
-                    2, 4, 8, 16, ?
-                </div>
-                
-                <div class="puzzle-options">
-                    <div class="puzzle-option" onclick="checkAnswer(this, false)">24</div>
-                    <div class="puzzle-option" onclick="checkAnswer(this, true)">32</div>
-                    <div class="puzzle-option" onclick="checkAnswer(this, false)">20</div>
-                    <div class="puzzle-option" onclick="checkAnswer(this, false)">18</div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- 第5関門：最終警告 -->
-    <section class="gate-5" id="gate5">
-        <div class="final-warning">
-            <div class="stop-sign">🛑</div>
-            <h2 class="gate-title">最終警告</h2>
-            <p style="font-size: 20px; margin-bottom: 40px;">
-                本当に覚悟はありますか？
+            <p class="result-description">
+                診断の結果、あなたは上位5%の起業家資質を持っています。<br>
+                次のステージへ進む準備はできていますか？
             </p>
             
-            <div class="determination-test">
-                <div class="click-counter">
-                    YESと答えてください：<span id="clickCount">0</span>/100回
-                </div>
-                <button class="yes-button" onclick="countYes()">YES</button>
-            </div>
-        </div>
-    </section>
-    
-    <!-- 第6関門：真実の扉 -->
-    <section class="gate-6" id="gate6">
-        <div class="truth-container">
-            <h2 class="truth-title">実は...</h2>
-            
-            <p class="truth-content">
-                ここまで来たあなたは、すでに特別です。
-            </p>
-            
-            <p class="truth-content delay-1">
-                99%の人は、最初の警告で帰ります。<br>
-                95%の人は、資格審査で諦めます。<br>
-                90%の人は、失敗を見て怖くなります。
-            </p>
-            
-            <p class="truth-content delay-2">
-                でも、あなたは違いました。<br>
-                <br>
-                困難に立ち向かい、<br>
-                挑戦を恐れず、<br>
-                最後まで諦めなかった。<br>
-                <br>
-                そんなあなただけに、<br>
-                本当の真実をお見せします。
-            </p>
-        </div>
-    </section>
-    
-    <!-- 第7関門：選ばれし者の間 -->
-    <section class="gate-7" id="gate7">
-        <div class="vip-container">
-            <h1 class="vip-title">Welcome to the Elite</h1>
-            
-            <div class="vip-badge">👑</div>
-            
-            <div class="vip-content">
-                <p>
-                    あなたは選ばれました。<br>
-                    <br>
-                    実は、私たちが本当に求めていたのは、<br>
-                    困難に立ち向かう勇気と、<br>
-                    最後まで諦めない強い意志を持つ人。<br>
-                    <br>
-                    つまり、今ここにいるあなたです。
-                </p>
-            </div>
-            
-            <div class="vip-benefits">
+            <div class="benefits-grid">
                 <div class="benefit-card">
-                    <div class="benefit-icon">🎯</div>
-                    <h3 class="benefit-title">完全個別対応</h3>
-                    <p class="benefit-desc">あなただけの専属メンターが24時間サポート</p>
+                    <div class="benefit-icon">🎓</div>
+                    <h3 class="benefit-title">個別メンタリング</h3>
+                    <p class="benefit-desc">
+                        年収1億円起業家による直接指導
+                    </p>
                 </div>
+                
                 <div class="benefit-card">
                     <div class="benefit-icon">🚀</div>
-                    <h3 class="benefit-title">最速成長プログラム</h3>
-                    <p class="benefit-desc">通常の10倍速で成果を出す秘密のメソッド</p>
+                    <h3 class="benefit-title">AI自動化ツール</h3>
+                    <p class="benefit-desc">
+                        通常100万円相当のツールを無料提供
+                    </p>
                 </div>
+                
                 <div class="benefit-card">
                     <div class="benefit-icon">💎</div>
-                    <h3 class="benefit-title">永久サポート権</h3>
-                    <p class="benefit-desc">一度参加すれば、生涯にわたってサポート</p>
+                    <h3 class="benefit-title">エリートコミュニティ</h3>
+                    <p class="benefit-desc">
+                        成功者だけが集まる秘密のグループ
+                    </p>
                 </div>
-            </div>
-            
-            <div class="vip-cta">
-                <p style="font-size: 20px; margin-bottom: 30px;">
-                    月間限定3名のみ。<br>
-                    あなたが、今月最後の1名です。
-                </p>
-                <button class="vip-button" onclick="apply()">
-                    エリートプログラムに参加する
-                </button>
             </div>
         </div>
     </section>
     
+    <!-- 最終CTA -->
+    <section class="final-cta section">
+        <div class="cta-container">
+            <h2 class="cta-title">
+                最後のチャンス
+            </h2>
+            
+            <p class="cta-description">
+                このページを閉じれば、二度とこの機会は訪れません。<br>
+                平凡な人生か、特別な人生か。選択はあなた次第です。
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="#" class="cta-primary" onclick="applyNow()">
+                    第2審査へ進む
+                </a>
+                <a href="#" class="cta-secondary">
+                    諦めて普通の人生を選ぶ
+                </a>
+            </div>
+            
+            <div class="scarcity">
+                <h3 class="scarcity-title">⚠️ 緊急通知</h3>
+                <p class="scarcity-text">
+                    今期の募集枠：残り <span class="scarcity-number" id="spotsLeft">7</span> 名<br>
+                    （定員に達し次第、募集終了）
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- フローティングインジケーター -->
+    <div class="floating-indicator" onclick="scrollToTop()">
+        合格率 5%
+    </div>
+    
     <script>
-        // カーソルフォロワー
-        const cursor = document.getElementById('cursorFollower');
+        // 診断システム
+        let totalScore = 0;
+        let answeredQuestions = 0;
+        const totalQuestions = 3;
+        
+        function selectAnswer(element, score) {
+            // 同じ質問の他の選択肢をリセット
+            const options = element.parentElement.querySelectorAll('.answer-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // 選択した答えをマーク
+            element.classList.add('selected');
+            
+            // スコア加算（重複カウント防止）
+            if (!element.dataset.counted) {
+                totalScore += score;
+                answeredQuestions++;
+                element.dataset.counted = 'true';
+                
+                // プログレスバー更新
+                updateProgress();
+                
+                // 全問回答したら送信ボタン表示
+                if (answeredQuestions === totalQuestions) {
+                    document.getElementById('submitSection').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('submitSection').scrollIntoView({ behavior: 'smooth' });
+                    }, 300);
+                }
+            }
+        }
+        
+        function updateProgress() {
+            const percentage = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('currentQuestion').textContent = answeredQuestions;
+        }
+        
+        function submitAssessment() {
+            // 結果セクションを表示
+            document.getElementById('results').style.display = 'block';
+            
+            // スムーズスクロール
+            setTimeout(() => {
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+            
+            // スコアに基づいてメッセージを変更することも可能
+            if (totalScore < 9) {
+                // 低スコアの場合の処理
+                document.querySelector('.result-title').textContent = 'もう少し準備が必要です';
+                document.querySelector('.result-description').textContent = 
+                    'まだ起業の準備が整っていないようです。まずは基礎から学びましょう。';
+            }
+        }
+        
+        function applyNow() {
+            alert('第2審査の詳細をメールでお送りします。');
+            // 実際の申込み処理
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // 残り枠数のカウントダウン
+        function updateSpots() {
+            const spotsElement = document.getElementById('spotsLeft');
+            const currentSpots = parseInt(spotsElement.textContent);
+            
+            if (currentSpots > 3 && Math.random() < 0.3) {
+                spotsElement.textContent = currentSpots - 1;
+                
+                // アニメーション
+                spotsElement.style.animation = 'pulse 0.5s ease';
+                setTimeout(() => {
+                    spotsElement.style.animation = '';
+                }, 500);
+            }
+        }
+        
+        // 10秒ごとに残り枠を減らす
+        setInterval(updateSpots, 10000);
+        
+        // スクロールアニメーション
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // アニメーション要素を監視
+        document.querySelectorAll('.screening-card, .benefit-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+        
+        // マウスカーソル追従エフェクト（控えめ）
+        const cursor = document.createElement('div');
+        cursor.style.cssText = `
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--elite-gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            opacity: 0.5;
+        `;
+        document.body.appendChild(cursor);
+        
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX - 10 + 'px';
             cursor.style.top = e.clientY - 10 + 'px';
         });
         
-        // ゲート遷移関数
-        function enterGate2() {
-            document.getElementById('gate1').style.display = 'none';
-            document.getElementById('gate2').style.display = 'block';
-            window.scrollTo(0, 0);
-        }
-        
-        function enterGate3() {
-            document.getElementById('gate2').style.display = 'none';
-            document.getElementById('gate3').style.display = 'block';
-            window.scrollTo(0, 0);
-        }
-        
-        function enterGate4() {
-            document.getElementById('gate3').style.display = 'none';
-            document.getElementById('gate4').style.display = 'block';
-            window.scrollTo(0, 0);
-            startTimer();
-        }
-        
-        function enterGate5() {
-            document.getElementById('gate4').style.display = 'none';
-            document.getElementById('gate5').style.display = 'block';
-            window.scrollTo(0, 0);
-        }
-        
-        function enterGate6() {
-            document.getElementById('gate5').style.display = 'none';
-            document.getElementById('gate6').style.display = 'block';
-            document.getElementById('gate6').classList.add('reveal');
-            window.scrollTo(0, 0);
-            
-            setTimeout(() => {
-                enterGate7();
-            }, 8000);
-        }
-        
-        function enterGate7() {
-            document.getElementById('gate6').style.display = 'none';
-            document.getElementById('gate7').style.display = 'block';
-            window.scrollTo(0, 0);
-        }
-        
-        // チェックボックス処理
-        let checkedCount = 0;
-        function toggleCheck(item) {
-            const checkbox = item.querySelector('.checkbox');
-            checkbox.classList.toggle('checked');
-            
-            if (checkbox.classList.contains('checked')) {
-                checkedCount++;
-            } else {
-                checkedCount--;
-            }
-            
-            const proceedSection = document.getElementById('proceedSection');
-            const proceedButton = document.getElementById('proceedButton');
-            
-            if (checkedCount > 0) {
-                proceedSection.classList.add('visible');
-                proceedButton.classList.remove('active');
-                proceedButton.textContent = 'お帰りください';
-                proceedButton.onclick = () => {
-                    alert('向いていません。他のサービスをお探しください。');
-                    window.location.href = 'https://google.com';
-                };
-            } else {
-                proceedSection.classList.add('visible');
-                proceedButton.classList.add('active');
-                proceedButton.textContent = '全て当てはまらない';
-                proceedButton.onclick = enterGate3;
-            }
-        }
-        
-        // タイマー処理
-        let timerInterval;
-        function startTimer() {
-            let timeLeft = 60;
-            const timerElement = document.getElementById('timer');
-            
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                timerElement.textContent = timeLeft;
-                
-                if (timeLeft <= 10) {
-                    timerElement.style.color = '#FF0000';
-                }
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    alert('時間切れです。最初からやり直してください。');
-                    location.reload();
-                }
-            }, 1000);
-        }
-        
-        // 答え確認
-        function checkAnswer(option, isCorrect) {
-            if (isCorrect) {
-                clearInterval(timerInterval);
-                alert('ギリギリ合格です。');
-                enterGate5();
-            } else {
-                option.classList.add('wrong');
-                setTimeout(() => {
-                    alert('不正解。最初からやり直してください。');
-                    location.reload();
-                }, 500);
-            }
-        }
-        
-        // YES カウント
-        let yesCount = 0;
-        function countYes() {
-            yesCount++;
-            document.getElementById('clickCount').textContent = yesCount;
-            
-            if (yesCount >= 100) {
-                enterGate6();
-            }
-        }
-        
-        // 申込み処理
-        function apply() {
-            alert('おめでとうございます。あなたは選ばれました。詳細をメールでお送りします。');
-        }
-        
-        // コンソール警告
-        console.log('%c⚠️ WARNING ⚠️', 'color: red; font-size: 30px; font-weight: bold;');
-        console.log('%cDeveloper Tools を開いたあなたも特別です。', 'color: yellow; font-size: 16px;');
-        console.log('%c隠しパスワード: ELITE2024', 'color: lime; font-size: 14px;');
+        // ホバー時にカーソルを大きく
+        document.querySelectorAll('a, button, .answer-option').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(2)';
+                cursor.style.opacity = '1';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursor.style.opacity = '0.5';
+            });
+        });
     </script>
 </body>
 </html>

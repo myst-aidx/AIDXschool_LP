@@ -396,6 +396,613 @@
             opacity: 0;
         }
         
+        /* 問題解決セクション */
+        .problem-solution {
+            padding: 100px 20px;
+            background: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            text-align: center;
+            margin-bottom: 60px;
+            font-weight: 900;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .problem-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+        
+        .problem-card {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .problem-card::before {
+            content: '😓';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+        
+        .problem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .problem-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .problem-desc {
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        .solution-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 60px;
+            border-radius: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .solution-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(108,99,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        /* 講師紹介セクション */
+        .instructors {
+            padding: 100px 20px;
+            background: #f8f9fa;
+        }
+        
+        .instructor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .instructor-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .instructor-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .instructor-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+        }
+        
+        .instructor-info {
+            padding: 30px;
+        }
+        
+        .instructor-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .instructor-title {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .instructor-bio {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .instructor-stats {
+            display: flex;
+            gap: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .instructor-stat {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* 詳細な特徴セクション */
+        .detailed-features {
+            padding: 100px 20px;
+            background: white;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .feature-card {
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .feature-description {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            color: #666;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        /* 生徒の声セクション */
+        .testimonials {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .testimonials .section-title {
+            color: white;
+        }
+        
+        .testimonials .section-title::after {
+            background: white;
+        }
+        
+        .testimonial-slider {
+            position: relative;
+            max-width: 900px;
+            margin: 60px auto;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .testimonial-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .author-info {
+            text-align: left;
+        }
+        
+        .author-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .author-title {
+            opacity: 0.8;
+        }
+        
+        /* 料金プランセクション */
+        .pricing {
+            padding: 100px 20px;
+            background: #f8f9fa;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: 30px;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+        
+        .plan-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .plan-price span {
+            font-size: 1.2rem;
+            color: #666;
+        }
+        
+        .plan-description {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+        
+        .plan-features li {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+        
+        .plan-features li::before {
+            content: '✓';
+            color: var(--accent);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .plan-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .plan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108,99,255,0.3);
+        }
+        
+        /* FAQセクション */
+        .faq {
+            padding: 100px 20px;
+            background: white;
+        }
+        
+        .faq-container {
+            max-width: 800px;
+            margin: 60px auto;
+        }
+        
+        .faq-item {
+            background: #f8f9fa;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question {
+            padding: 25px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background: #e9ecef;
+        }
+        
+        .faq-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+        
+        .faq-answer-content {
+            padding: 0 30px 25px;
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        /* フッター */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 20px 30px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            padding: 8px 0;
+        }
+        
+        .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+        }
+        
+        /* インタラクティブ要素のスタイル */
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .floating-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+        
+        .scroll-dot {
+            width: 10px;
+            height: 10px;
+            background: rgba(108, 99, 255, 0.3);
+            border-radius: 50%;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-dot.active {
+            background: var(--primary);
+            transform: scale(1.5);
+        }
+        
+        .cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            opacity: 0;
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(108, 99, 255, 0.1);
+            z-index: 1000;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
         /* レスポンシブ */
         @media (max-width: 768px) {
             .timeline-item:nth-child(odd),
@@ -413,10 +1020,44 @@
             .timeline-dot {
                 left: 30px;
             }
+            
+            .scroll-indicator {
+                display: none;
+            }
+            
+            .cursor-follower {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- プログレスバー -->
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+    
+    <!-- カーソルフォロワー -->
+    <div class="cursor-follower"></div>
+    
+    <!-- フローティングパーティクル -->
+    <div class="floating-particles" id="floatingParticles"></div>
+    
+    <!-- スクロールインジケーター -->
+    <div class="scroll-indicator" id="scrollIndicator">
+        <div class="scroll-dot active" data-section="hero"></div>
+        <div class="scroll-dot" data-section="stats"></div>
+        <div class="scroll-dot" data-section="timeline"></div>
+        <div class="scroll-dot" data-section="skills"></div>
+        <div class="scroll-dot" data-section="morph"></div>
+        <div class="scroll-dot" data-section="problems"></div>
+        <div class="scroll-dot" data-section="instructors"></div>
+        <div class="scroll-dot" data-section="features"></div>
+        <div class="scroll-dot" data-section="testimonials"></div>
+        <div class="scroll-dot" data-section="pricing"></div>
+        <div class="scroll-dot" data-section="faq"></div>
+    </div>
+    
     <!-- ローディングスクリーン -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-dots">
@@ -427,7 +1068,7 @@
     </div>
     
     <!-- ヒーローセクション -->
-    <section class="hero">
+    <section class="hero" id="hero">
         <div class="hero-bg-shapes">
             <div class="bg-shape" style="width: 300px; height: 300px; background: var(--primary); top: -150px; left: -150px;"></div>
             <div class="bg-shape" style="width: 200px; height: 200px; background: var(--secondary); bottom: -100px; right: -100px;"></div>
@@ -442,7 +1083,7 @@
     </section>
     
     <!-- 数値カウンター -->
-    <section class="stats-section">
+    <section class="stats-section" id="stats">
         <div class="stats-container">
             <div class="stat-item">
                 <div class="stat-number" data-target="98">0</div>
@@ -514,7 +1155,7 @@
     </section>
     
     <!-- スキルバー -->
-    <section class="skills-section">
+    <section class="skills-section" id="skills">
         <h2 class="section-title">習得できるスキル</h2>
         
         <div class="skills-container">
@@ -561,7 +1202,7 @@
     </section>
     
     <!-- モーフィングシェイプ -->
-    <section class="morph-section">
+    <section class="morph-section" id="morph">
         <h2 class="section-title">変化し続ける成長の形</h2>
         
         <div class="morph-container">
@@ -577,7 +1218,7 @@
     </section>
     
     <!-- CTA -->
-    <section class="cta-section">
+    <section class="cta-section" id="cta">
         <h2 class="cta-title">今すぐ始めよう</h2>
         <p class="cta-subtitle">
             Anime.jsのようにシンプルで美しい成長を、<br>
@@ -1193,6 +1834,678 @@
             });
             btn.addEventListener('mouseleave', () => {
                 btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+
+    <!-- 問題解決セクション -->
+    <section class="problem-solution" id="problems">
+        <div class="section-container">
+            <h2 class="section-title">こんな悩みはありませんか？</h2>
+            
+            <div class="problem-cards">
+                <div class="problem-card">
+                    <h3 class="problem-title">単調なウェブサイト</h3>
+                    <p class="problem-desc">
+                        静的なコンテンツばかりで、ユーザーの注目を集められない。
+                        滞在時間が短く、コンバージョン率が低い。
+                    </p>
+                </div>
+                
+                <div class="problem-card">
+                    <h3 class="problem-title">技術的な壁</h3>
+                    <p class="problem-desc">
+                        複雑なアニメーションライブラリの学習曲線が急で、
+                        実装に時間がかかりすぎてしまう。
+                    </p>
+                </div>
+                
+                <div class="problem-card">
+                    <h3 class="problem-title">差別化の難しさ</h3>
+                    <p class="problem-desc">
+                        競合サイトとの差別化が難しく、
+                        印象に残るサイトが作れない。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="solution-box">
+                <h3 style="font-size: 2rem; margin-bottom: 20px;">AIDXschoolが解決します</h3>
+                <p style="font-size: 1.2rem; line-height: 1.8;">
+                    Anime.jsを使った洗練されたアニメーション技術で、<br>
+                    訪問者を魅了する動的なウェブ体験を実現します。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 講師紹介セクション -->
+    <section class="instructors" id="instructors">
+        <div class="section-container">
+            <h2 class="section-title">経験豊富な講師陣</h2>
+            
+            <div class="instructor-grid">
+                <div class="instructor-card">
+                    <div class="instructor-image">👨‍💻</div>
+                    <div class="instructor-info">
+                        <h3 class="instructor-name">山田 太郎</h3>
+                        <p class="instructor-title">シニアフロントエンドエンジニア</p>
+                        <p class="instructor-bio">
+                            10年以上のWeb開発経験。大手企業のUIアニメーション設計を多数手掛ける。
+                            Anime.jsのコントリビューター。
+                        </p>
+                        <div class="instructor-stats">
+                            <div class="instructor-stat">
+                                <div class="stat-number">500+</div>
+                                <div class="stat-label">プロジェクト</div>
+                            </div>
+                            <div class="instructor-stat">
+                                <div class="stat-number">1000+</div>
+                                <div class="stat-label">受講生</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="instructor-card">
+                    <div class="instructor-image">👩‍🎨</div>
+                    <div class="instructor-info">
+                        <h3 class="instructor-name">佐藤 花子</h3>
+                        <p class="instructor-title">UI/UXデザイナー</p>
+                        <p class="instructor-bio">
+                            モーションデザインのスペシャリスト。ユーザー心理を踏まえた
+                            効果的なアニメーション設計を得意とする。
+                        </p>
+                        <div class="instructor-stats">
+                            <div class="instructor-stat">
+                                <div class="stat-number">300+</div>
+                                <div class="stat-label">デザイン</div>
+                            </div>
+                            <div class="instructor-stat">
+                                <div class="stat-number">50+</div>
+                                <div class="stat-label">受賞歴</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="instructor-card">
+                    <div class="instructor-image">🚀</div>
+                    <div class="instructor-info">
+                        <h3 class="instructor-name">鈴木 次郎</h3>
+                        <p class="instructor-title">起業家・メンター</p>
+                        <p class="instructor-bio">
+                            自身もAI起業で成功。技術を収益化する
+                            ビジネスモデル構築の専門家。
+                        </p>
+                        <div class="instructor-stats">
+                            <div class="instructor-stat">
+                                <div class="stat-number">¥5億</div>
+                                <div class="stat-label">売上実績</div>
+                            </div>
+                            <div class="instructor-stat">
+                                <div class="stat-number">200+</div>
+                                <div class="stat-label">起業支援</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 詳細な特徴セクション -->
+    <section class="detailed-features" id="features">
+        <div class="section-container">
+            <h2 class="section-title">AIDXschoolの特徴</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">実践的カリキュラム</h3>
+                    <p class="feature-desc">
+                        理論だけでなく、実際のプロジェクトを通じて
+                        アニメーション技術を習得。即戦力となるスキルを身につけます。
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3 class="feature-title">1対1メンタリング</h3>
+                    <p class="feature-desc">
+                        経験豊富な講師による個別指導で、
+                        あなたのペースで確実にスキルアップ。
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💼</div>
+                    <h3 class="feature-title">案件獲得サポート</h3>
+                    <p class="feature-desc">
+                        卒業後の案件獲得まで徹底サポート。
+                        フリーランスとして独立するまでの道筋を示します。
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3 class="feature-title">コミュニティ</h3>
+                    <p class="feature-desc">
+                        卒業生ネットワークで情報交換。
+                        継続的な学習と成長の機会を提供。
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">モバイル対応</h3>
+                    <p class="feature-desc">
+                        レスポンシブデザインとモバイル最適化の
+                        アニメーション技術も習得。
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3 class="feature-title">最新ツール</h3>
+                    <p class="feature-desc">
+                        Anime.jsはもちろん、関連する最新の
+                        開発ツールやフレームワークも学習。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 受講生の声セクション -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-container">
+            <h2 class="section-title">受講生の声</h2>
+            
+            <div class="testimonial-slider">
+                <div class="testimonial-card active">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">
+                            "Anime.jsの基礎から応用まで体系的に学べました。
+                            今では月収200万円を超えるフリーランスとして活動しています。"
+                        </p>
+                        <div class="testimonial-author">
+                            <img src="data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='30' fill='%236C63FF'/%3E%3C/svg%3E" alt="Avatar">
+                            <div>
+                                <h4>田中 健一</h4>
+                                <p>フロントエンドエンジニア</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">
+                            "デザイナーだった私が、アニメーションを実装できるようになり、
+                            市場価値が大幅に上がりました。案件の幅も広がりました。"
+                        </p>
+                        <div class="testimonial-author">
+                            <img src="data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='30' fill='%23FF6584'/%3E%3C/svg%3E" alt="Avatar">
+                            <div>
+                                <h4>高橋 美咲</h4>
+                                <p>UI/UXデザイナー</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">
+                            "プログラミング初心者でしたが、丁寧なサポートのおかげで
+                            今では自信を持ってアニメーションを実装できます。"
+                        </p>
+                        <div class="testimonial-author">
+                            <img src="data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='30' fill='%234ECDC4'/%3E%3C/svg%3E" alt="Avatar">
+                            <div>
+                                <h4>伊藤 翔太</h4>
+                                <p>Web制作フリーランス</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-nav">
+                <button class="nav-btn active" onclick="showTestimonial(0)"></button>
+                <button class="nav-btn" onclick="showTestimonial(1)"></button>
+                <button class="nav-btn" onclick="showTestimonial(2)"></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 料金プランセクション -->
+    <section class="pricing" id="pricing">
+        <div class="section-container">
+            <h2 class="section-title">料金プラン</h2>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3 class="plan-name">ベーシックプラン</h3>
+                    <div class="plan-price">
+                        <span class="price-amount">¥98,000</span>
+                        <span class="price-period">3ヶ月</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✓ Anime.js基礎コース</li>
+                        <li>✓ 実践プロジェクト3つ</li>
+                        <li>✓ メールサポート</li>
+                        <li>✓ 修了証明書</li>
+                    </ul>
+                    <a href="#" class="plan-cta">このプランを選ぶ</a>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="popular-badge">人気No.1</div>
+                    <h3 class="plan-name">プロフェッショナル</h3>
+                    <div class="plan-price">
+                        <span class="price-amount">¥198,000</span>
+                        <span class="price-period">6ヶ月</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✓ 全コース受講可能</li>
+                        <li>✓ 実践プロジェクト10個以上</li>
+                        <li>✓ 1対1メンタリング（週1回）</li>
+                        <li>✓ 案件獲得サポート</li>
+                        <li>✓ 永続的なコミュニティアクセス</li>
+                    </ul>
+                    <a href="#" class="plan-cta featured">このプランを選ぶ</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3 class="plan-name">エンタープライズ</h3>
+                    <div class="plan-price">
+                        <span class="price-amount">¥398,000</span>
+                        <span class="price-period">12ヶ月</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✓ 全コース＋特別講座</li>
+                        <li>✓ 無制限プロジェクト</li>
+                        <li>✓ 専属メンター</li>
+                        <li>✓ 起業サポート</li>
+                        <li>✓ 収益保証プログラム</li>
+                    </ul>
+                    <a href="#" class="plan-cta">このプランを選ぶ</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQセクション -->
+    <section class="faq" id="faq">
+        <div class="section-container">
+            <h2 class="section-title">よくある質問</h2>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        <span>プログラミング初心者でも大丈夫ですか？</span>
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>
+                            はい、大丈夫です。HTMLとCSSの基礎知識があれば、
+                            JavaScriptやAnime.jsは基礎から丁寧に教えます。
+                            初心者の方でも段階的に学習できるカリキュラムを用意しています。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        <span>受講期間中のサポート体制は？</span>
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>
+                            専用のSlackチャンネルで質問し放題、週1回のオンライン面談、
+                            コードレビューなど、充実したサポート体制を整えています。
+                            つまずいても必ず解決できるよう、講師陣が全力でサポートします。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        <span>卒業後の案件獲得は本当にできますか？</span>
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>
+                            卒業生の90%以上が3ヶ月以内に初案件を獲得しています。
+                            ポートフォリオ作成支援、案件の紹介、営業方法の指導など、
+                            実践的なサポートを提供しています。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <h3 class="faq-question" onclick="toggleFaq(this)">
+                        <span>返金保証はありますか？</span>
+                        <span class="faq-icon">+</span>
+                    </h3>
+                    <div class="faq-answer">
+                        <p>
+                            受講開始から30日間の返金保証があります。
+                            カリキュラムが合わないと感じた場合は、
+                            理由を問わず全額返金いたします。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AIDXschool</h3>
+                    <p>AI×DXで起業を支援する<br>オンラインスクール</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>コース</h3>
+                    <ul>
+                        <li><a href="#">Anime.js基礎</a></li>
+                        <li><a href="#">実践アニメーション</a></li>
+                        <li><a href="#">ビジネス応用</a></li>
+                        <li><a href="#">起業支援プログラム</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>サポート</h3>
+                    <ul>
+                        <li><a href="#">よくある質問</a></li>
+                        <li><a href="#">お問い合わせ</a></li>
+                        <li><a href="#">利用規約</a></li>
+                        <li><a href="#">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>フォロー</h3>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">YouTube</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">LINE</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 AIDXschool. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 追加のJavaScript -->
+    <script>
+        // 受講生の声スライダー
+        let currentTestimonial = 0;
+        const testimonials = document.querySelectorAll('.testimonial-card');
+        const navBtns = document.querySelectorAll('.nav-btn');
+
+        function showTestimonial(index) {
+            testimonials.forEach((t, i) => {
+                t.classList.toggle('active', i === index);
+            });
+            navBtns.forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            currentTestimonial = index;
+        }
+
+        // 自動スライド
+        setInterval(() => {
+            const nextIndex = (currentTestimonial + 1) % testimonials.length;
+            showTestimonial(nextIndex);
+        }, 5000);
+
+        // FAQ開閉
+        function toggleFaq(element) {
+            const faqItem = element.parentElement;
+            const answer = faqItem.querySelector('.faq-answer');
+            const icon = element.querySelector('.faq-icon');
+            
+            faqItem.classList.toggle('active');
+            
+            if (faqItem.classList.contains('active')) {
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+                icon.textContent = '−';
+            } else {
+                answer.style.maxHeight = '0';
+                icon.textContent = '+';
+            }
+        }
+
+        // 新しいセクションのアニメーション
+        const newSections = document.querySelectorAll('.problem-solution, .instructors, .detailed-features, .testimonials, .pricing, .faq');
+        
+        newSections.forEach(section => {
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // セクション別のアニメーション
+                        if (entry.target.classList.contains('problem-solution')) {
+                            anime({
+                                targets: '.problem-card',
+                                opacity: [0, 1],
+                                translateY: [50, 0],
+                                duration: 800,
+                                delay: anime.stagger(200),
+                                easing: 'easeOutQuad'
+                            });
+                        }
+                        
+                        if (entry.target.classList.contains('instructors')) {
+                            anime({
+                                targets: '.instructor-card',
+                                opacity: [0, 1],
+                                scale: [0.8, 1],
+                                duration: 800,
+                                delay: anime.stagger(200),
+                                easing: 'easeOutBack'
+                            });
+                        }
+                        
+                        if (entry.target.classList.contains('detailed-features')) {
+                            anime({
+                                targets: '.feature-card',
+                                opacity: [0, 1],
+                                translateX: function(el, i) {
+                                    return i % 2 === 0 ? [-50, 0] : [50, 0];
+                                },
+                                duration: 800,
+                                delay: anime.stagger(150),
+                                easing: 'easeOutQuad'
+                            });
+                        }
+                        
+                        if (entry.target.classList.contains('pricing')) {
+                            anime({
+                                targets: '.pricing-card',
+                                opacity: [0, 1],
+                                translateY: [50, 0],
+                                duration: 1000,
+                                delay: anime.stagger(200, {from: 'center'}),
+                                easing: 'easeOutElastic(1, .5)'
+                            });
+                        }
+                        
+                        sectionObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            
+            sectionObserver.observe(section);
+        });
+
+        // インタラクティブ要素のJavaScript
+        
+        // プログレスバー
+        function updateProgressBar() {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.querySelector('.progress-fill').style.width = scrollPercent + '%';
+        }
+        
+        window.addEventListener('scroll', updateProgressBar);
+        
+        // カーソルフォロワー
+        const cursorFollower = document.querySelector('.cursor-follower');
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorFollower.style.opacity = '1';
+        });
+        
+        function animateCursor() {
+            followerX += (mouseX - followerX) * 0.1;
+            followerY += (mouseY - followerY) * 0.1;
+            
+            cursorFollower.style.left = followerX - 20 + 'px';
+            cursorFollower.style.top = followerY - 20 + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        
+        // ホバー効果
+        document.querySelectorAll('a, button').forEach(elem => {
+            elem.addEventListener('mouseenter', () => {
+                cursorFollower.style.transform = 'scale(1.5)';
+                cursorFollower.style.borderColor = 'var(--secondary)';
+            });
+            elem.addEventListener('mouseleave', () => {
+                cursorFollower.style.transform = 'scale(1)';
+                cursorFollower.style.borderColor = 'var(--primary)';
+            });
+        });
+        
+        // フローティングパーティクル
+        function createFloatingParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'floating-particle';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = Math.random() * window.innerHeight + 'px';
+            
+            const colors = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            document.getElementById('floatingParticles').appendChild(particle);
+            
+            anime({
+                targets: particle,
+                translateX: anime.random(-200, 200),
+                translateY: anime.random(-200, 200),
+                scale: [0, anime.random(0.5, 1.5)],
+                opacity: [0, 0.6, 0],
+                duration: anime.random(3000, 6000),
+                easing: 'easeInOutQuad',
+                complete: function() {
+                    particle.remove();
+                }
+            });
+        }
+        
+        // パーティクルを定期的に生成
+        setInterval(createFloatingParticle, 300);
+        
+        // スクロールインジケーター
+        const sections = ['hero', 'stats', 'timeline', 'skills', 'morph', 'problems', 'instructors', 'features', 'testimonials', 'pricing', 'faq'];
+        const scrollDots = document.querySelectorAll('.scroll-dot');
+        
+        // スクロールドットクリック
+        scrollDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                const targetSection = document.getElementById(sections[index]);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        
+        // 現在のセクションをハイライト
+        function updateScrollIndicator() {
+            const scrollPosition = window.scrollY + window.innerHeight / 2;
+            
+            sections.forEach((sectionId, index) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    const sectionTop = section.offsetTop;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
+                        scrollDots.forEach(dot => dot.classList.remove('active'));
+                        scrollDots[index].classList.add('active');
+                    }
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateScrollIndicator);
+        
+        // パララックス効果
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.bg-shape');
+            
+            parallaxElements.forEach((element, index) => {
+                const speed = 0.5 + (index * 0.1);
+                element.style.transform = `translate(${scrolled * speed * 0.1}px, ${scrolled * speed * 0.2}px)`;
+            });
+        });
+        
+        // テキストのグリッチエフェクト
+        const glitchElements = document.querySelectorAll('h1, h2');
+        
+        glitchElements.forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                anime({
+                    targets: element,
+                    translateX: [
+                        { value: -2, duration: 100 },
+                        { value: 2, duration: 100 },
+                        { value: -2, duration: 100 },
+                        { value: 0, duration: 100 }
+                    ],
+                    easing: 'steps(2)'
+                });
+            });
+        });
+        
+        // 要素の3D回転効果
+        document.querySelectorAll('.pricing-card, .instructor-card, .feature-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
             });
         });
     </script>

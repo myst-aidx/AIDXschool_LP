@@ -400,6 +400,487 @@
             cursor: not-allowed;
         }
         
+        /* サジェスト機能 */
+        .suggestions-container {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-chat);
+            border-radius: 15px;
+            margin-bottom: 10px;
+            padding: 10px;
+            display: none;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .suggestions-container.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .suggestion-item {
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .suggestion-item:hover {
+            background: var(--input-bg);
+            color: var(--text-primary);
+        }
+        
+        .suggestion-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bubble-user);
+            border-radius: 50%;
+            font-size: 10px;
+        }
+        
+        /* ツールチップ */
+        .tooltip {
+            position: relative;
+        }
+        
+        .tooltip-content {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bubble-ai);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .tooltip:hover .tooltip-content {
+            opacity: 1;
+        }
+        
+        .tooltip-content::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: var(--bubble-ai);
+        }
+        
+        /* プログレスインジケーター改善 */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 0 10px;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            color: var(--text-secondary);
+            position: relative;
+            flex: 1;
+        }
+        
+        .progress-step.active {
+            color: var(--accent);
+        }
+        
+        .progress-step.completed {
+            color: var(--text-primary);
+        }
+        
+        .progress-step-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--input-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .progress-step.active .progress-step-dot {
+            background: var(--bubble-user);
+            animation: pulse 2s infinite;
+        }
+        
+        .progress-step.completed .progress-step-dot {
+            background: var(--accent);
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+            }
+        }
+        
+        .progress-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--input-bg);
+            z-index: 1;
+        }
+        
+        .progress-step.completed:not(:last-child)::after {
+            background: var(--accent);
+        }
+        
+        /* ヘルプボタン */
+        .help-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .help-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .help-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: var(--bg-chat);
+            border-radius: 15px;
+            padding: 20px;
+            width: 250px;
+            display: none;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .help-menu.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .help-item {
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .help-item:hover {
+            background: var(--input-bg);
+        }
+        
+        /* デモ開始ボタン */
+        .demo-start-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .demo-start-button {
+            background: var(--success-gradient);
+            color: var(--bg-dark);
+            border: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(79, 172, 254, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .demo-start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(79, 172, 254, 0.4);
+        }
+        
+        .demo-icon {
+            font-size: 24px;
+        }
+        
+        .demo-note {
+            margin-top: 10px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        /* デモモード */
+        .demo-mode-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--success-gradient);
+            color: var(--bg-dark);
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .demo-mode-banner.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        .demo-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-chat);
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: none;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+        }
+        
+        .demo-controls.active {
+            display: flex;
+        }
+        
+        .demo-control-btn {
+            background: var(--bubble-user);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-control-btn:hover {
+            background: var(--primary-gradient);
+        }
+        
+        .demo-speed {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        /* デモ解説吹き出し */
+        .demo-bubble {
+            position: absolute;
+            background: var(--accent);
+            color: var(--bg-dark);
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);
+            display: none;
+            z-index: 1002;
+            max-width: 250px;
+            animation: bubblePop 0.3s ease;
+        }
+        
+        .demo-bubble.active {
+            display: block;
+        }
+        
+        .demo-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 10px solid transparent;
+            border-top-color: var(--accent);
+        }
+        
+        @keyframes bubblePop {
+            0% {
+                transform: scale(0);
+            }
+            80% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        /* タイピングエフェクト */
+        .typing-text {
+            display: inline-block;
+            overflow: hidden;
+            border-right: 2px solid var(--bubble-user);
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% {
+                border-color: var(--bubble-user);
+            }
+            51%, 100% {
+                border-color: transparent;
+            }
+        }
+        
+        /* ウェルカムツアー */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            z-index: 2000;
+        }
+        
+        .welcome-overlay.active {
+            display: block;
+        }
+        
+        .spotlight {
+            position: absolute;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.8);
+            animation: spotlightPulse 2s infinite;
+        }
+        
+        @keyframes spotlightPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .tour-tooltip {
+            position: absolute;
+            background: var(--bg-chat);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 300px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tour-tooltip h3 {
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        
+        .tour-tooltip p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .tour-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .tour-button {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .tour-button.primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+        
+        .tour-button.secondary {
+            background: var(--input-bg);
+            color: var(--text-primary);
+        }
+        
         /* 結果セクション */
         .result-section {
             max-width: 800px;
@@ -610,6 +1091,15 @@
         <p class="header-subtitle">
             5つの質問に答えるだけで、AI起業の具体的なプランが完成
         </p>
+        
+        <!-- デモ開始ボタン -->
+        <div class="demo-start-section">
+            <button class="demo-start-button" onclick="startAutoDemo()">
+                <span class="demo-icon">▶️</span>
+                <span>デモを見る（1分で体験）</span>
+            </button>
+            <p class="demo-note">実際の診断プロセスを自動でお見せします</p>
+        </div>
     </header>
     
     <!-- チャットコンテナ -->
@@ -642,6 +1132,28 @@
         </div>
         
         <div class="progress-container">
+            <div class="progress-steps" id="progressSteps">
+                <div class="progress-step active" data-step="1">
+                    <div class="progress-step-dot">1</div>
+                    <span>基本情報</span>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="progress-step-dot">2</div>
+                    <span>スキル確認</span>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="progress-step-dot">3</div>
+                    <span>目標設定</span>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="progress-step-dot">4</div>
+                    <span>リソース</span>
+                </div>
+                <div class="progress-step" data-step="5">
+                    <div class="progress-step-dot">5</div>
+                    <span>プラン生成</span>
+                </div>
+            </div>
             <div class="progress-label">診断進捗: <span id="progressText">0%</span></div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
@@ -649,6 +1161,9 @@
         </div>
         
         <div class="chat-input-area">
+            <div class="suggestions-container" id="suggestionsContainer">
+                <!-- サジェストアイテムがここに追加される -->
+            </div>
             <input 
                 type="text" 
                 class="chat-input" 
@@ -656,8 +1171,9 @@
                 placeholder="メッセージを入力..." 
                 disabled
             >
-            <button class="send-button" id="sendButton" disabled>
+            <button class="send-button tooltip" id="sendButton" disabled>
                 ➤
+                <span class="tooltip-content">Enterキーでも送信できます</span>
             </button>
         </div>
     </div>
@@ -720,6 +1236,61 @@
             </div>
         </div>
     </section>
+    
+    <!-- ヘルプボタン -->
+    <div class="help-button" id="helpButton">
+        <span style="font-size: 24px;">?</span>
+        <div class="help-menu" id="helpMenu">
+            <div class="help-item" onclick="startTour()">
+                <span>🎯</span>
+                <span>使い方を見る</span>
+            </div>
+            <div class="help-item" onclick="startDemo()">
+                <span>🤖</span>
+                <span>デモを体験</span>
+            </div>
+            <div class="help-item" onclick="showFAQ()">
+                <span>💡</span>
+                <span>よくある質問</span>
+            </div>
+            <div class="help-item" onclick="resetChat()">
+                <span>🔄</span>
+                <span>最初からやり直す</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- デモモードバナー -->
+    <div class="demo-mode-banner" id="demoModeBanner">
+        🎮 デモモード中 - 実際のAIがあなたの回答を分析します
+    </div>
+    
+    <!-- デモコントロール -->
+    <div class="demo-controls" id="demoControls">
+        <button class="demo-control-btn" onclick="pauseDemo()">⏸️ 一時停止</button>
+        <div class="demo-speed">
+            <span>速度:</span>
+            <input type="range" id="demoSpeed" min="0.5" max="2" step="0.5" value="1">
+            <span id="speedLabel">1x</span>
+        </div>
+        <button class="demo-control-btn" onclick="stopDemo()">⏹️ 停止</button>
+    </div>
+    
+    <!-- デモ解説吹き出し -->
+    <div class="demo-bubble" id="demoBubble"></div>
+    
+    <!-- ウェルカムツアーオーバーレイ -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="spotlight" id="tourSpotlight"></div>
+        <div class="tour-tooltip" id="tourTooltip">
+            <h3>ようこそ！</h3>
+            <p>AIとの対話を通じて、あなただけの起業プランを作成します。</p>
+            <div class="tour-buttons">
+                <button class="tour-button secondary" onclick="skipTour()">スキップ</button>
+                <button class="tour-button primary" onclick="nextTourStep()">次へ</button>
+            </div>
+        </div>
+    </div>
     
     <script>
         // チャットボットロジック
@@ -985,8 +1556,388 @@
             nextQuestion();
         }
         
+        // サジェスト機能
+        const suggestions = {
+            0: ["田中太郎", "山田花子", "佐藤一郎", "鈴木美咲"],
+            1: [],
+            2: [],
+            3: [],
+            4: []
+        };
+        
+        const contextualSuggestions = {
+            "会社員": ["副業から始めたい", "週末起業を考えています", "リモートワークを活かしたい"],
+            "フリーランス": ["事業を拡大したい", "自動化で効率を上げたい", "新しい収入源が欲しい"],
+            "経営者": ["新規事業を立ち上げたい", "業務効率化したい", "AI導入を検討中"],
+            "学生": ["在学中に起業したい", "将来に向けて準備したい", "スキルを身につけたい"]
+        };
+        
+        function showSuggestions(input) {
+            const container = document.getElementById('suggestionsContainer');
+            const currentQuestion = questions[currentStep];
+            
+            if (currentQuestion.options) return; // 選択肢がある質問はサジェスト不要
+            
+            let relevantSuggestions = suggestions[currentStep] || [];
+            
+            // コンテキストに基づくサジェスト
+            if (currentStep === 2 && userAnswers[1]) {
+                relevantSuggestions = contextualSuggestions[userAnswers[1].value] || [];
+            }
+            
+            // 入力に基づくフィルタリング
+            if (input) {
+                relevantSuggestions = relevantSuggestions.filter(s => 
+                    s.toLowerCase().includes(input.toLowerCase())
+                );
+            }
+            
+            if (relevantSuggestions.length > 0) {
+                container.innerHTML = relevantSuggestions.map(suggestion => `
+                    <div class="suggestion-item" onclick="selectSuggestion('${suggestion}')">
+                        <div class="suggestion-icon">💡</div>
+                        <span>${suggestion}</span>
+                    </div>
+                `).join('');
+                container.classList.add('active');
+            } else {
+                container.classList.remove('active');
+            }
+        }
+        
+        function selectSuggestion(value) {
+            chatInput.value = value;
+            document.getElementById('suggestionsContainer').classList.remove('active');
+            chatInput.focus();
+        }
+        
+        // プログレスステップ更新
+        function updateProgressSteps(step) {
+            const steps = document.querySelectorAll('.progress-step');
+            steps.forEach((el, index) => {
+                if (index < step) {
+                    el.classList.add('completed');
+                    el.classList.remove('active');
+                    el.querySelector('.progress-step-dot').innerHTML = '✓';
+                } else if (index === step) {
+                    el.classList.add('active');
+                    el.classList.remove('completed');
+                } else {
+                    el.classList.remove('active', 'completed');
+                }
+            });
+        }
+        
+        // ヘルプメニュー
+        const helpButton = document.getElementById('helpButton');
+        const helpMenu = document.getElementById('helpMenu');
+        
+        helpButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            helpMenu.classList.toggle('active');
+        });
+        
+        document.addEventListener('click', () => {
+            helpMenu.classList.remove('active');
+        });
+        
+        // ツアー機能
+        let tourStep = 0;
+        const tourSteps = [
+            {
+                element: '.chat-area',
+                title: 'AIとの対話エリア',
+                content: 'ここでAIアドバイザーと会話します。質問に答えていくだけで、あなたに最適な起業プランが作成されます。',
+                position: 'center'
+            },
+            {
+                element: '.progress-steps',
+                title: '進捗インジケーター',
+                content: '現在の診断進捗が一目でわかります。全5ステップで完了です。',
+                position: 'bottom'
+            },
+            {
+                element: '.chat-input',
+                title: '入力エリア',
+                content: 'ここに回答を入力します。サジェスト機能があるので、入力の参考にしてください。',
+                position: 'top'
+            }
+        ];
+        
+        function startTour() {
+            tourStep = 0;
+            document.getElementById('welcomeOverlay').classList.add('active');
+            showTourStep();
+        }
+        
+        function showTourStep() {
+            if (tourStep >= tourSteps.length) {
+                skipTour();
+                return;
+            }
+            
+            const step = tourSteps[tourStep];
+            const element = document.querySelector(step.element);
+            const spotlight = document.getElementById('tourSpotlight');
+            const tooltip = document.getElementById('tourTooltip');
+            
+            if (element) {
+                const rect = element.getBoundingClientRect();
+                spotlight.style.left = rect.left - 10 + 'px';
+                spotlight.style.top = rect.top - 10 + 'px';
+                spotlight.style.width = rect.width + 20 + 'px';
+                spotlight.style.height = rect.height + 20 + 'px';
+                
+                tooltip.querySelector('h3').textContent = step.title;
+                tooltip.querySelector('p').textContent = step.content;
+                
+                // ツールチップの位置調整
+                if (step.position === 'bottom') {
+                    tooltip.style.top = rect.bottom + 20 + 'px';
+                    tooltip.style.left = rect.left + 'px';
+                } else if (step.position === 'top') {
+                    tooltip.style.top = rect.top - tooltip.offsetHeight - 20 + 'px';
+                    tooltip.style.left = rect.left + 'px';
+                } else {
+                    tooltip.style.top = '50%';
+                    tooltip.style.left = '50%';
+                    tooltip.style.transform = 'translate(-50%, -50%)';
+                }
+            }
+        }
+        
+        function nextTourStep() {
+            tourStep++;
+            showTourStep();
+        }
+        
+        function skipTour() {
+            document.getElementById('welcomeOverlay').classList.remove('active');
+        }
+        
+        // デモモード変数
+        let demoActive = false;
+        let demoPaused = false;
+        let demoSpeed = 1;
+        let demoInterval;
+        let typeInterval;
+        
+        // 自動デモ開始（メインボタンから）
+        function startAutoDemo() {
+            // スクロールしてチャットエリアを表示
+            document.querySelector('.chat-container').scrollIntoView({ behavior: 'smooth' });
+            
+            setTimeout(() => {
+                startDemo();
+            }, 500);
+        }
+        
+        // デモモード
+        function startDemo() {
+            demoActive = true;
+            demoPaused = false;
+            document.getElementById('demoModeBanner').classList.add('active');
+            document.getElementById('demoControls').classList.add('active');
+            resetChat();
+            
+            // デモのステップと解説
+            const demoSteps = [
+                {
+                    answer: "田中花子",
+                    explanation: "まずは名前を入力します",
+                    bubblePosition: { bottom: 120, right: 20 }
+                },
+                {
+                    answer: "フリーランス",
+                    explanation: "現在の職業を選択",
+                    bubblePosition: { top: 300, left: 20 }
+                },
+                {
+                    answer: "時間の自由が欲しい",
+                    explanation: "起業の動機を選びます",
+                    bubblePosition: { top: 300, left: 20 }
+                },
+                {
+                    answer: "週10-20時間",
+                    explanation: "使える時間を選択",
+                    bubblePosition: { top: 300, left: 20 }
+                },
+                {
+                    answer: "コンテンツ制作",
+                    explanation: "興味のある分野を選択",
+                    bubblePosition: { top: 300, left: 20 }
+                }
+            ];
+            
+            let demoStep = 0;
+            
+            function showDemoBubble(text, position) {
+                const bubble = document.getElementById('demoBubble');
+                bubble.textContent = text;
+                bubble.style.bottom = position.bottom ? position.bottom + 'px' : 'auto';
+                bubble.style.top = position.top ? position.top + 'px' : 'auto';
+                bubble.style.left = position.left ? position.left + 'px' : 'auto';
+                bubble.style.right = position.right ? position.right + 'px' : 'auto';
+                bubble.classList.add('active');
+                
+                setTimeout(() => {
+                    bubble.classList.remove('active');
+                }, 3000 / demoSpeed);
+            }
+            
+            function typeText(text, callback) {
+                let index = 0;
+                chatInput.value = '';
+                chatInput.classList.add('typing-text');
+                
+                typeInterval = setInterval(() => {
+                    if (!demoActive || demoPaused) return;
+                    
+                    if (index < text.length) {
+                        chatInput.value += text[index];
+                        index++;
+                    } else {
+                        clearInterval(typeInterval);
+                        chatInput.classList.remove('typing-text');
+                        if (callback) callback();
+                    }
+                }, 100 / demoSpeed);
+            }
+            
+            function runDemoStep() {
+                if (!demoActive || demoPaused) return;
+                
+                if (demoStep < demoSteps.length) {
+                    const step = demoSteps[demoStep];
+                    showDemoBubble(step.explanation, step.bubblePosition);
+                    
+                    setTimeout(() => {
+                        if (!demoActive) return;
+                        
+                        if (questions[demoStep].options) {
+                            // 選択肢の場合
+                            const buttons = document.querySelectorAll('.option-button');
+                            buttons.forEach((btn, index) => {
+                                if (btn.textContent === step.answer) {
+                                    // ボタンをハイライト
+                                    btn.style.transform = 'scale(1.1)';
+                                    btn.style.boxShadow = '0 0 20px rgba(79, 172, 254, 0.6)';
+                                    
+                                    setTimeout(() => {
+                                        if (!demoActive) return;
+                                        btn.click();
+                                        btn.style.transform = '';
+                                        btn.style.boxShadow = '';
+                                        demoStep++;
+                                        setTimeout(runDemoStep, 1500 / demoSpeed);
+                                    }, 1000 / demoSpeed);
+                                }
+                            });
+                        } else {
+                            // テキスト入力の場合
+                            typeText(step.answer, () => {
+                                setTimeout(() => {
+                                    if (!demoActive) return;
+                                    sendButton.click();
+                                    demoStep++;
+                                    setTimeout(runDemoStep, 1500 / demoSpeed);
+                                }, 500 / demoSpeed);
+                            });
+                        }
+                    }, 1000 / demoSpeed);
+                } else {
+                    // デモ完了
+                    setTimeout(() => {
+                        showDemoBubble("診断完了！あなたもぜひお試しください", { bottom: 200, left: '50%' });
+                        setTimeout(() => {
+                            if (demoActive) {
+                                stopDemo();
+                            }
+                        }, 3000);
+                    }, 2000);
+                }
+            }
+            
+            setTimeout(runDemoStep, 1500);
+        }
+        
+        // デモ一時停止
+        function pauseDemo() {
+            demoPaused = !demoPaused;
+            const btn = event.target;
+            btn.textContent = demoPaused ? '▶️ 再開' : '⏸️ 一時停止';
+        }
+        
+        // デモ停止
+        function stopDemo() {
+            demoActive = false;
+            demoPaused = false;
+            clearInterval(typeInterval);
+            document.getElementById('demoModeBanner').classList.remove('active');
+            document.getElementById('demoControls').classList.remove('active');
+            document.getElementById('demoBubble').classList.remove('active');
+            chatInput.classList.remove('typing-text');
+            
+            // リセット確認
+            if (confirm('デモを終了しました。最初からやり直しますか？')) {
+                resetChat();
+            }
+        }
+        
+        // デモ速度調整
+        document.getElementById('demoSpeed').addEventListener('input', (e) => {
+            demoSpeed = parseFloat(e.target.value);
+            document.getElementById('speedLabel').textContent = demoSpeed + 'x';
+        });
+        
+        // FAQ機能
+        function showFAQ() {
+            alert('よくある質問機能は現在準備中です。');
+        }
+        
+        // リセット機能
+        function resetChat() {
+            currentStep = 0;
+            userAnswers = [];
+            chatArea.innerHTML = '';
+            document.getElementById('resultSection').style.display = 'none';
+            document.querySelector('.chat-container').style.display = 'block';
+            updateProgress(0);
+            updateProgressSteps(0);
+            
+            setTimeout(() => {
+                addMessage(questions[0].text, false, questions[0].options);
+                chatInput.disabled = false;
+                sendButton.disabled = false;
+            }, 500);
+        }
+        
+        // 入力イベントの拡張
+        chatInput.addEventListener('input', (e) => {
+            showSuggestions(e.target.value);
+        });
+        
+        chatInput.addEventListener('focus', () => {
+            if (chatInput.value) {
+                showSuggestions(chatInput.value);
+            }
+        });
+        
+        // オリジナルのnextQuestion関数を拡張
+        const originalNextQuestion = nextQuestion;
+        nextQuestion = function() {
+            updateProgressSteps(currentStep);
+            originalNextQuestion();
+        };
+        
         // 初期化
         window.onload = () => {
+            // ウェルカムツアーを表示（初回のみ）
+            if (!localStorage.getItem('tourCompleted')) {
+                setTimeout(startTour, 1500);
+                localStorage.setItem('tourCompleted', 'true');
+            }
+            
             setTimeout(() => {
                 addMessage(questions[0].text, false, questions[0].options);
                 chatInput.disabled = false;

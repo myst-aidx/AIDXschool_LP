@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="assets/icons.css">
     <link rel="stylesheet" href="assets/animations.css">
     <link rel="stylesheet" href="assets/loader.css">
+    <script src="../assets/enhanced-visuals.js" defer></script>
     
     <style>
         :root {
@@ -1708,7 +1709,22 @@
 </head>
 <body>
     <div class="page-loader" id="pageLoader">
-        <div class="loader"></div>
+        <div class="loader-container">
+            <div class="loader-circle"></div>
+            <div class="loader-circle-progress"></div>
+            <div class="loader-content">
+                <div class="loader-logo"></div>
+                <div class="loader-text">読み込み中...</div>
+            </div>
+            <div class="loader-dots">
+                <span class="loader-dot"></span>
+                <span class="loader-dot"></span>
+                <span class="loader-dot"></span>
+            </div>
+        </div>
+        <div class="loader-progress">
+            <div class="loader-progress-bar"></div>
+        </div>
     </div>
     
     <div class="floating-cta" id="floatingCTA">
@@ -1728,13 +1744,13 @@
     
     <section class="hero-section">
         <canvas id="particles-bg"></canvas>
-        <div class="floating-shapes">
+        <div class="floating-shapes float-animation">
             <div class="shape shape-1"></div>
             <div class="shape shape-2"></div>
             <div class="shape shape-3"></div>
         </div>
         
-        <div class="hero-content">
+        <div class="hero-content animate-on-scroll fade-in-scale">
             <div class="hero-badge">
                 <div class="hero-badge-icon">✨</div>
                 <span>500社以上が導入！業務効率化の決定版</span>
@@ -1766,13 +1782,13 @@
             </div>
             
             <div class="hero-cta">
-                <a href="https://lin.ee/abc123" class="btn-primary">
+                <a href="https://lin.ee/abc123" class="btn-primary shimmer">
                     <span>無料相談を予約する</span>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/>
                     </svg>
                 </a>
-                <a href="#demo" class="btn-secondary">
+                <a href="#demo" class="btn-secondary glow">
                     <span>デモを見る</span>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
@@ -1818,7 +1834,7 @@
             </p>
         </div>
         
-        <div class="workflow-visual">
+        <div class="workflow-visual animate-on-scroll">
             <svg class="workflow-diagram" viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -1886,8 +1902,8 @@
             <h2 class="section-title">業務効率化の課題を解決します</h2>
         </div>
         
-        <div class="problem-grid">
-            <div class="problem-card">
+        <div class="problem-grid stagger-animation">
+            <div class="problem-card card-3d">
                 <div class="problem-icon">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="50" cy="50" r="45" fill="#FFE5E5"/>
@@ -1903,7 +1919,7 @@
                 </p>
             </div>
             
-            <div class="problem-card">
+            <div class="problem-card card-3d">
                 <div class="problem-icon">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="50" cy="50" r="45" fill="#FFE5E5"/>
@@ -1918,7 +1934,7 @@
                 </p>
             </div>
             
-            <div class="problem-card">
+            <div class="problem-card card-3d">
                 <div class="problem-icon">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="50" cy="50" r="45" fill="#FFE5E5"/>
@@ -1932,7 +1948,7 @@
                 </p>
             </div>
             
-            <div class="problem-card">
+            <div class="problem-card card-3d">
                 <div class="problem-icon">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="50" cy="50" r="45" fill="#FFE5E5"/>
@@ -2065,7 +2081,7 @@
         </div>
         
         <div class="benefits-grid">
-            <div class="benefit-card">
+            <div class="benefit-card card-3d animate-on-scroll">
                 <div class="benefit-icon-wrapper">
                     <div class="benefit-icon">⏰</div>
                 </div>
@@ -2091,7 +2107,7 @@
                 </div>
             </div>
             
-            <div class="benefit-card">
+            <div class="benefit-card card-3d animate-on-scroll">
                 <div class="benefit-icon-wrapper">
                     <div class="benefit-icon">💰</div>
                 </div>
@@ -2117,7 +2133,7 @@
                 </div>
             </div>
             
-            <div class="benefit-card">
+            <div class="benefit-card card-3d animate-on-scroll">
                 <div class="benefit-icon-wrapper">
                     <div class="benefit-icon">📈</div>
                 </div>
@@ -2560,8 +2576,8 @@
             <div class="cta-shape cta-shape-2"></div>
         </div>
         
-        <div class="cta-content">
-            <span class="cta-badge">🎯 今すぐ始めよう</span>
+        <div class="cta-content animate-on-scroll">
+            <span class="cta-badge pulse-animation">🎯 今すぐ始めよう</span>
             <h2 class="cta-title">
                 業務効率化の第一歩を<br>
                 今日から始めませんか？
@@ -2652,7 +2668,7 @@
         </div>
     </footer>
     
-    <script src="assets/animations.js"></script>
+    <!-- Removed animations.js to avoid particle canvas conflict -->
     <script>
         // ページローダー
         window.addEventListener('load', () => {
@@ -2769,20 +2785,30 @@
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                     
+                    // アニメーションクラスの追加
+                    if (entry.target.classList.contains('animate-on-scroll')) {
+                        entry.target.classList.add('animate-in');
+                    }
+                    if (entry.target.classList.contains('stagger-animation')) {
+                        entry.target.classList.add('animate-in');
+                    }
+                    
                     // カウントアニメーション
                     if (entry.target.classList.contains('stat-number')) {
                         const target = parseInt(entry.target.dataset.count);
                         animateCount(entry.target, target);
-                        observer.unobserve(entry.target);
+                        v3Observer.unobserve(entry.target);
                     }
                 }
             });
-        }, observerOptions);
+        }, v3ObserverOptions);
         
         // 監視対象要素
-        document.querySelectorAll('.stat-number').forEach(el => observer.observe(el));
-        document.querySelectorAll('.timeline-item').forEach(el => observer.observe(el));
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        document.querySelectorAll('.stat-number').forEach(el => v3Observer.observe(el));
+        document.querySelectorAll('.timeline-item').forEach(el => v3Observer.observe(el));
+        document.querySelectorAll('.fade-in').forEach(el => v3Observer.observe(el));
+        document.querySelectorAll('.animate-on-scroll').forEach(el => v3Observer.observe(el));
+        document.querySelectorAll('.stagger-animation').forEach(el => v3Observer.observe(el));
         
         // フローティングCTA表示
         const floatingCTA = document.getElementById('floatingCTA');
