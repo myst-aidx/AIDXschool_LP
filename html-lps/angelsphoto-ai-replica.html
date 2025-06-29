@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AngelsPhoto.ai - AI遺影生成サービス</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-orange: #FF6B35;
+            --primary-gold: #FFD700;
+            --text-dark: #2C2C2C;
+            --text-gray: #666666;
+            --bg-cream: #FFF8F0;
+            --bg-white: #FFFFFF;
+            --shadow-soft: 0 4px 20px rgba(0,0,0,0.1);
+            --shadow-card: 0 8px 32px rgba(0,0,0,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background: var(--bg-white);
+        }
+
+        /* ヒーローセクション */
+        .hero-section {
+            min-height: 100vh;
+            background: linear-gradient(
+                rgba(0,0,0,0.4), 
+                rgba(0,0,0,0.6)
+            ), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23F5F5F5" width="1200" height="800"/><text x="600" y="400" font-family="serif" font-size="48" text-anchor="middle" fill="%23999">遺影写真背景</text></svg>');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: white;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 0 20px;
+            z-index: 2;
+        }
+
+        .award-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary-gold);
+            color: var(--text-dark);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--primary-orange);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(255, 107, 53, 0.4);
+        }
+
+        /* 機能説明セクション */
+        .features-section {
+            padding: 100px 20px;
+            background: var(--bg-cream);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 900;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            margin-bottom: 80px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 60px;
+            margin-top: 60px;
+        }
+
+        .step-card {
+            text-align: center;
+            background: var(--bg-white);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-orange);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-icon {
+            font-size: 4rem;
+            margin: 30px 0 20px;
+            display: block;
+        }
+
+        .step-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .step-description {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        /* ビフォーアフターセクション */
+        .before-after-section {
+            padding: 100px 20px;
+            background: var(--bg-white);
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .example-card {
+            background: var(--bg-white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .comparison-container {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .before-image, .after-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .before-image {
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-gray);
+        }
+
+        .after-image {
+            background: linear-gradient(135deg, #fff8f0, #f5f0e8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            width: 50%;
+            border-right: 3px solid var(--primary-orange);
+        }
+
+        .comparison-slider {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: var(--primary-orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            z-index: 2;
+        }
+
+        .example-info {
+            padding: 25px;
+        }
+
+        .example-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .example-description {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        .cta-section {
+            padding: 80px 20px;
+            background: var(--bg-cream);
+            text-align: center;
+        }
+
+        .cta-large {
+            display: inline-block;
+            background: var(--primary-orange);
+            color: white;
+            padding: 25px 60px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.4rem;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .cta-large:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(255, 107, 53, 0.4);
+        }
+
+        /* 料金プランセクション */
+        .pricing-section {
+            padding: 100px 20px;
+            background: var(--bg-cream);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .pricing-card {
+            background: var(--bg-white);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: var(--shadow-card);
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .pricing-card.featured {
+            border: 3px solid var(--primary-orange);
+            transform: scale(1.05);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-orange);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .plan-header {
+            margin-bottom: 30px;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .plan-price {
+            margin-bottom: 20px;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary-orange);
+        }
+
+        .period {
+            font-size: 1rem;
+            color: var(--text-gray);
+            margin-left: 5px;
+        }
+
+        .plan-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .plan-features li {
+            padding: 8px 0;
+            color: var(--text-dark);
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-button {
+            display: inline-block;
+            background: var(--text-gray);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .plan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .featured-button {
+            background: var(--primary-orange);
+        }
+
+        .featured-button:hover {
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        /* 統計・実績セクション */
+        .stats-section {
+            padding: 100px 20px;
+            background: var(--bg-white);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin: 60px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--bg-cream);
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary-orange);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .testimonials {
+            margin-top: 80px;
+        }
+
+        .testimonials-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 40px;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background: var(--bg-cream);
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            color: var(--text-gray);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        /* フッターセクション */
+        .footer-section {
+            background: var(--text-dark);
+            color: white;
+            padding: 80px 20px 40px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary-orange);
+            margin-bottom: 20px;
+        }
+
+        .footer-description {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        .footer-subtitle {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #cccccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .contact-info p {
+            color: #cccccc;
+            margin-bottom: 10px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #444;
+            padding-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-badges {
+            display: flex;
+            gap: 15px;
+        }
+
+        .security-badge {
+            background: var(--primary-orange);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .hero-section {
+                min-height: 80vh;
+            }
+            
+            .features-section, .before-after-section, .pricing-section, .stats-section {
+                padding: 60px 20px;
+            }
+            
+            .steps-grid, .examples-grid, .pricing-grid, .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .comparison-container {
+                height: 250px;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+                margin-top: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-badges {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .cta-button, .cta-large {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+            
+            .pricing-card {
+                padding: 30px 20px;
+            }
+            
+            .stat-number {
+                font-size: 1.8rem;
+            }
+            
+            .testimonial-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヒーローセクション -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="award-badge">
+                🏆 AI技術賞受賞サービス
+            </div>
+            
+            <h1 class="hero-title">
+                故人を美しく偲ぶ<br>
+                AI遺影生成サービス
+            </h1>
+            
+            <p class="hero-subtitle">
+                最新のAI技術で、大切な人の思い出を<br>
+                美しい遺影写真として永遠に残します
+            </p>
+            
+            <a href="#start" class="cta-button">
+                今すぐ無料で始める
+            </a>
+        </div>
+    </section>
+
+    <!-- 機能説明セクション -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">簡単3ステップでAI遺影完成</h2>
+            <p class="section-subtitle">
+                どなたでも簡単に美しい遺影写真を作成できます
+            </p>
+            
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <span class="step-icon">📤</span>
+                    <h3 class="step-title">写真をアップロード</h3>
+                    <p class="step-description">
+                        お手持ちの写真を簡単にアップロード。<br>
+                        スマートフォンからでも手軽にご利用いただけます。
+                    </p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <span class="step-icon">🤖</span>
+                    <h3 class="step-title">AIが自動処理</h3>
+                    <p class="step-description">
+                        最新のAI技術により、自動で背景を調整し、<br>
+                        故人様にふさわしい美しい仕上がりに。
+                    </p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <span class="step-icon">✨</span>
+                    <h3 class="step-title">高品質遺影完成</h3>
+                    <p class="step-description">
+                        プロ品質の遺影写真が完成。<br>
+                        ダウンロードして印刷、すぐにご利用いただけます。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ビフォーアフターセクション -->
+    <section class="before-after-section">
+        <div class="container">
+            <h2 class="section-title">AI遺影の変換例</h2>
+            <p class="section-subtitle">
+                実際の変換事例をご覧ください。美しい仕上がりをご確認いただけます。
+            </p>
+            
+            <div class="examples-grid">
+                <div class="example-card">
+                    <div class="comparison-container">
+                        <div class="before-image">変換前の写真</div>
+                        <div class="after-image">変換後の遺影</div>
+                        <div class="comparison-slider">⟷</div>
+                    </div>
+                    <div class="example-info">
+                        <h3 class="example-title">一般的なスナップ写真から</h3>
+                        <p class="example-description">
+                            日常の写真でも、AIが自動で背景を調整し、格調高い遺影に変換いたします。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="comparison-container">
+                        <div class="before-image">変換前の写真</div>
+                        <div class="after-image">変換後の遺影</div>
+                        <div class="comparison-slider">⟷</div>
+                    </div>
+                    <div class="example-info">
+                        <h3 class="example-title">集合写真から個人を抽出</h3>
+                        <p class="example-description">
+                            複数人が写った写真からでも、個人を美しく抽出し、遺影として仕上げます。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="example-card">
+                    <div class="comparison-container">
+                        <div class="before-image">変換前の写真</div>
+                        <div class="after-image">変換後の遺影</div>
+                        <div class="comparison-slider">⟷</div>
+                    </div>
+                    <div class="example-info">
+                        <h3 class="example-title">古い写真の復元と美化</h3>
+                        <p class="example-description">
+                            色褪せた古い写真でも、AIが自動で補正し、美しい遺影に蘇らせます。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 料金プランセクション -->
+    <section class="pricing-section">
+        <div class="container">
+            <h2 class="section-title">料金プラン</h2>
+            <p class="section-subtitle">
+                お客様のニーズに合わせて最適なプランをお選びいただけます
+            </p>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3 class="plan-name">ベーシック</h3>
+                        <div class="plan-price">
+                            <span class="price">¥2,980</span>
+                            <span class="period">/回</span>
+                        </div>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✓ 1枚の遺影生成</li>
+                        <li>✓ 基本的な背景調整</li>
+                        <li>✓ 高解像度ダウンロード</li>
+                        <li>✓ 24時間サポート</li>
+                    </ul>
+                    <a href="#order" class="plan-button">今すぐ注文</a>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="popular-badge">人気</div>
+                    <div class="plan-header">
+                        <h3 class="plan-name">プレミアム</h3>
+                        <div class="plan-price">
+                            <span class="price">¥4,980</span>
+                            <span class="period">/回</span>
+                        </div>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✓ 3枚の遺影生成</li>
+                        <li>✓ 高度な背景調整</li>
+                        <li>✓ 色彩補正・美化処理</li>
+                        <li>✓ 印刷用データ提供</li>
+                        <li>✓ 優先サポート</li>
+                    </ul>
+                    <a href="#order" class="plan-button featured-button">今すぐ注文</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3 class="plan-name">プロフェッショナル</h3>
+                        <div class="plan-price">
+                            <span class="price">¥9,980</span>
+                            <span class="period">/回</span>
+                        </div>
+                    </div>
+                    <ul class="plan-features">
+                        <li>✓ 10枚の遺影生成</li>
+                        <li>✓ プロ仕様の仕上げ</li>
+                        <li>✓ 複数スタイル対応</li>
+                        <li>✓ 専門デザイナー監修</li>
+                        <li>✓ 無制限修正</li>
+                        <li>✓ 専任サポート</li>
+                    </ul>
+                    <a href="#order" class="plan-button">今すぐ注文</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 統計・実績セクション -->
+    <section class="stats-section">
+        <div class="container">
+            <h2 class="section-title">多くのお客様にご利用いただいています</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">50,000+</div>
+                    <div class="stat-label">累計利用者数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">98.5%</div>
+                    <div class="stat-label">顧客満足度</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24時間</div>
+                    <div class="stat-label">平均納期</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">★4.9</div>
+                    <div class="stat-label">平均評価</div>
+                </div>
+            </div>
+            
+            <div class="testimonials">
+                <h3 class="testimonials-title">お客様の声</h3>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">
+                            「古い写真からでも、とても美しい遺影を作成していただけました。家族全員が感動しています。」
+                        </p>
+                        <div class="testimonial-author">- 田中様（東京都）</div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">
+                            「AIとは思えないほど自然で、故人の面影をしっかりと残してくれました。本当にありがとうございました。」
+                        </p>
+                        <div class="testimonial-author">- 佐藤様（大阪府）</div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">
+                            「急ぎでしたが、24時間以内に高品質な遺影をご提供いただき、葬儀に間に合いました。」
+                        </p>
+                        <div class="testimonial-author">- 山田様（愛知県）</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA強化セクション -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="section-title">大切な人の思い出を美しく残しませんか</h2>
+            <p class="section-subtitle">
+                今なら初回限定で無料お試しが可能です
+            </p>
+            <a href="#start" class="cta-large">
+                無料で今すぐ始める
+            </a>
+        </div>
+    </section>
+
+    <!-- フッターセクション -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3 class="footer-title">AngelsPhoto.ai</h3>
+                    <p class="footer-description">
+                        最新のAI技術で、故人を美しく偲ぶ遺影写真を生成するサービスです。
+                        大切な人の思い出を永遠に残すお手伝いをいたします。
+                    </p>
+                </div>
+                
+                <div class="footer-column">
+                    <h4 class="footer-subtitle">サービス</h4>
+                    <ul class="footer-links">
+                        <li><a href="#pricing">料金プラン</a></li>
+                        <li><a href="#examples">変換例</a></li>
+                        <li><a href="#how-it-works">使い方</a></li>
+                        <li><a href="#support">サポート</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4 class="footer-subtitle">会社情報</h4>
+                    <ul class="footer-links">
+                        <li><a href="#about">会社概要</a></li>
+                        <li><a href="#privacy">プライバシーポリシー</a></li>
+                        <li><a href="#terms">利用規約</a></li>
+                        <li><a href="#contact">お問い合わせ</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4 class="footer-subtitle">お問い合わせ</h4>
+                    <div class="contact-info">
+                        <p>📧 support@angelsphoto.ai</p>
+                        <p>📞 0120-123-456</p>
+                        <p>⏰ 24時間365日サポート</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 AngelsPhoto.ai. All rights reserved.</p>
+                <div class="footer-badges">
+                    <span class="security-badge">🔒 SSL暗号化</span>
+                    <span class="security-badge">✓ プライバシー保護</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        console.log('AngelsPhoto.ai レプリカページ - 全セクション完成');
+        
+        // 簡単なスクロールアニメーション
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // アニメーション対象の要素を観察
+            document.querySelectorAll('.step-card, .example-card, .pricing-card, .stat-item').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI遺影生成サービス - AngelsPhoto.ai 完全レプリカ</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            line-height: 1.4;
+            color: #333;
+            background: #fff;
+        }
+
+        /* ヒーローセクション - 濃いグレー背景 */
+        .hero {
+            background: #2a2a2a;
+            padding: 60px 20px 80px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: #FFD700;
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .hero-phone {
+            width: 200px;
+            height: 400px;
+            background: #333;
+            border-radius: 25px;
+            margin: 0 auto 40px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .hero-phone::before {
+            content: '📱';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+        }
+
+        .hero-cta {
+            background: #FF6B35;
+            color: white;
+            padding: 18px 50px;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* 機能セクション - ベージュ背景 */
+        .features {
+            background: #FFF8F0;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 50px;
+            line-height: 1.2;
+        }
+
+        .features-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .feature-item {
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: #FFD700;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* プロセスセクション - 白背景 */
+        .process {
+            background: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .process-steps {
+            max-width: 800px;
+            margin: 50px auto 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: #ddd;
+            z-index: 1;
+        }
+
+        .process-step {
+            position: relative;
+            z-index: 2;
+            background: white;
+            padding: 20px;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: #FF6B35;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .step-desc {
+            font-size: 13px;
+            color: #666;
+            max-width: 150px;
+        }
+
+        /* 料金セクション - ピンク/オレンジグラデーション */
+        .pricing {
+            background: linear-gradient(135deg, #FFE5CC 0%, #FFD4B3 100%);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .pricing-grid {
+            max-width: 900px;
+            margin: 50px auto 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            transform: translateY(-10px);
+            border: 3px solid #FF6B35;
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #FF6B35;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .price {
+            font-size: 36px;
+            font-weight: 900;
+            color: #FF6B35;
+            margin-bottom: 10px;
+        }
+
+        .price-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .features-list {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .features-list li {
+            list-style: none;
+            padding: 5px 0;
+            font-size: 14px;
+            color: #333;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .features-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .pricing-btn {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* 統計セクション - テクスチャ背景 */
+        .stats {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="%23fff" opacity="0.1"/><circle cx="80" cy="40" r="1" fill="%23fff" opacity="0.1"/><circle cx="40" cy="80" r="1" fill="%23fff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .stats-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 50px;
+        }
+
+        .stats-grid {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            color: #FFD700;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        /* お客様の声 */
+        .testimonials {
+            background: #FFF8F0;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .testimonials-grid {
+            max-width: 1000px;
+            margin: 50px auto 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .testimonial {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .testimonial-text {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .testimonial-author {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* フッター */
+        .footer {
+            background: #2a2a2a;
+            color: white;
+            padding: 50px 20px 30px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            margin-bottom: 30px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        .footer-links a:hover {
+            color: #FFD700;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .features-grid,
+            .pricing-grid,
+            .stats-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .process-steps {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .process-steps::before {
+                display: none;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+            
+            .stat-number {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヒーロー -->
+    <section class="hero">
+        <div class="hero-badge">🏆 AI技術賞受賞サービス</div>
+        <h1 class="hero-title">
+            最新AIで作る<br>
+            美しい遺影写真
+        </h1>
+        <p class="hero-subtitle">
+            故人様のお写真から、AIが自動で美しい遺影を生成いたします
+        </p>
+        <div class="hero-phone"></div>
+        <a href="#order" class="hero-cta">今すぐ無料で始める</a>
+    </section>
+
+    <!-- 機能 -->
+    <section class="features">
+        <h2 class="section-title">AIが実現する3つの特徴</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">高品質AI処理</h3>
+                <p class="feature-desc">最新のAI技術により、自然で美しい仕上がりを実現</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">24時間以内納品</h3>
+                <p class="feature-desc">お急ぎの際も安心。最短24時間で高品質な遺影をお届け</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">💎</div>
+                <h3 class="feature-title">プロ品質仕上げ</h3>
+                <p class="feature-desc">専門デザイナー監修による、葬儀社推奨の品質</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- プロセス -->
+    <section class="process">
+        <h2 class="section-title">簡単3ステップ</h2>
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">写真アップロード</h3>
+                <p class="step-desc">お手持ちの写真を簡単アップロード</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">AI自動処理</h3>
+                <p class="step-desc">AIが背景調整と美化を自動実行</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">完成・ダウンロード</h3>
+                <p class="step-desc">高解像度データを即座にお渡し</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 料金 -->
+    <section class="pricing">
+        <h2 class="section-title">お手軽料金プラン</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="price">¥2,980</div>
+                <p class="price-desc">ベーシック</p>
+                <ul class="features-list">
+                    <li>1枚の遺影生成</li>
+                    <li>基本的な背景調整</li>
+                    <li>高解像度データ</li>
+                    <li>24時間サポート</li>
+                </ul>
+                <button class="pricing-btn">選択する</button>
+            </div>
+            
+            <div class="pricing-card featured">
+                <div class="pricing-badge">人気</div>
+                <div class="price">¥4,980</div>
+                <p class="price-desc">スタンダード</p>
+                <ul class="features-list">
+                    <li>3枚の遺影生成</li>
+                    <li>高度な背景調整</li>
+                    <li>色彩補正・美化処理</li>
+                    <li>印刷用データ提供</li>
+                    <li>優先サポート</li>
+                </ul>
+                <button class="pricing-btn">選択する</button>
+            </div>
+            
+            <div class="pricing-card">
+                <div class="price">¥9,980</div>
+                <p class="price-desc">プレミアム</p>
+                <ul class="features-list">
+                    <li>10枚の遺影生成</li>
+                    <li>プロ仕様の仕上げ</li>
+                    <li>複数スタイル対応</li>
+                    <li>専門デザイナー監修</li>
+                    <li>無制限修正</li>
+                    <li>専任サポート</li>
+                </ul>
+                <button class="pricing-btn">選択する</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 統計 -->
+    <section class="stats">
+        <h2 class="stats-title">多くの方にご利用いただいています</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">50,000</div>
+                <div class="stat-label">累計利用者数</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98.5%</div>
+                <div class="stat-label">顧客満足度</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24時間</div>
+                <div class="stat-label">平均納期</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">★4.9</div>
+                <div class="stat-label">平均評価</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- お客様の声 -->
+    <section class="testimonials">
+        <h2 class="section-title">お客様の声</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial">
+                <p class="testimonial-text">「古い写真からでも、本当に美しい遺影を作成していただけました。家族全員が感動しています。」</p>
+                <div class="testimonial-author">田中様（東京都）</div>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">「AIとは思えないほど自然で、故人の面影をしっかりと残してくれました。ありがとうございました。」</p>
+                <div class="testimonial-author">佐藤様（大阪府）</div>
+            </div>
+            <div class="testimonial">
+                <p class="testimonial-text">「急ぎでしたが、24時間以内に高品質な遺影をご提供いただき、葬儀に間に合いました。」</p>
+                <div class="testimonial-author">山田様（愛知県）</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#about">会社概要</a>
+                <a href="#privacy">プライバシーポリシー</a>
+                <a href="#terms">利用規約</a>
+                <a href="#contact">お問い合わせ</a>
+            </div>
+            <p>&copy; 2024 AngelsPhoto.ai. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        console.log('AngelsPhoto.ai 完全レプリカ - デザイン詳細再現版');
+    </script>
+</body>
+</html>
